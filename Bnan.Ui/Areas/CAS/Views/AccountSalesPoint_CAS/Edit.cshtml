@@ -1,0 +1,507 @@
+﻿@using Bnan.Ui.ViewModels.CAS
+@using Bnan.Core.Extensions
+@model CAS_AccountSalesPointVM
+
+@inject IViewLocalizer localizer
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+<link href="~/css/toastr.css" rel="stylesheet" />
+
+     <div class="col my-2 d-flex align-items-center justify-content-center">
+                    <div class="container NewUpdate-container">
+            <form asp-area="CAS" asp-controller="AccountSalesPoint_CAS" asp-action="Edit" class="needs-validation" novalidate>
+                <input hidden asp-for="CrCasAccountSalesPointCode" />
+                <input hidden asp-for="CrCasAccountSalesPointLessor" />
+                <input hidden asp-for="CrCasAccountSalesPointBrn" />
+                <input hidden asp-for="CrCasAccountSalesPointAccountBank" />
+                <input hidden asp-for="CrCasAccountSalesPointTotalBalance" />
+                <input hidden asp-for="CrCasAccountSalesPointTotalReserved" />
+                <input hidden asp-for="CrCasAccountSalesPointTotalAvailable" />
+                <input hidden asp-for="CrCasAccountSalesPointBranchStatus" />
+                <input hidden asp-for="CrCasAccountSalesPointBankStatus" />
+                <input hidden asp-for="CrCasAccountSalesPointArName" />
+                <input hidden asp-for="CrCasAccountSalesPointEnName" />
+                <input hidden asp-for="CrCasAccountSalesPointNo" />
+                <input hidden asp-for="CrCasAccountSalesPointBank" />
+                <input hidden asp-for="CrCasAccountSalesPointSerial" />
+                <input hidden asp-for="CrCasAccountSalesPointStatus" id="CrCasAccountSalesPointStatus" />
+
+            <div class="row mt-3 g-3">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-9">
+                                        <div class="row g-3 my-2">
+                                            <div class="col-md-6">
+                                <h3>@localizer["Edit SalesPoint Data"] </h3>
+                            </div>
+                            <div class="col-md-6 save-col">
+                                <button type="submit" class="custom-img-btn" id="SaveEdit">
+                                    <img src="~/CasSys/images/save.svg" />
+                                </button>
+                                <button type="button" class="custom-img-btn" id="HoldBtn" data-bs-toggle="modal" data-bs-target="#Stop-Modal">
+                                    <img id="StopModalIcon" src="~/CasSys/images/stop.svg" />
+                                </button>
+                                <button type="button" class="custom-img-btn" id="DeleteBtn" data-bs-toggle="modal" data-bs-target="#Delete-Modal">
+                                    <img id="modalIcon" src="~/MasSystem/images/delete.svg" />
+                                </button>
+                                <button type="button" class="custom-img-btn"> <a href="/CAS/AccountSalesPoint_CAS/Index"><img class="Chevron" src="~/CasSys/images/Chevron_Left.svg" /></a></button>
+                                            </div>
+                                        </div>
+                                        <div class="container-fluid">
+                                            <div class="row mt-3 g-3">
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                            <p> @localizer["Branch"]</p>
+                                                        </div>
+                                                        <div class=" col-md-auto Saved-data">
+                                            <p> @(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.all_branchesNames?.FirstOrDefault()?.nameEn : Model.all_branchesNames?.FirstOrDefault()?.nameAr) </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                            <p> @localizer["AccountBank_NNo"]</p>
+                                                        </div>
+                                                        <div class=" col-md-auto Saved-data">
+                                                            <p> @(Model.this_AccountData?.CrCasAccountBankIban) </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                            <p> @localizer["AccountBank_new"]</p>
+                                                        </div>
+                                                        <div class=" col-md-auto Saved-data">
+                                            <p> @(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.this_AccountData?.CrCasAccountBankEnName : Model.this_AccountData?.CrCasAccountBankArName) </p>
+                                        </div>
+                                                    </div>
+                                                </div>
+
+                                           
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                            <p> @localizer["SalesPointCode"]</p>
+                                                        </div>
+                                                        <div class=" col-md-auto Saved-data">
+                                                            <p> @(Model.CrCasAccountSalesPointNo) </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                              
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                            <p> @localizer["SalesPointName_new"]</p>
+                                                            </div>
+                                                            <div class=" col-md-auto Saved-data">
+                                            <p> @(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.CrCasAccountSalesPointEnName : Model.CrCasAccountSalesPointArName) </p>
+                                            @*<p> @(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.CrCasAccountSalesPointEnName : Model.CrCasAccountSalesPointArName),@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.This_BankName?.CrMasSupAccountBankEnName : Model.This_BankName?.CrMasSupAccountBankArName) </p>*@
+                                        </div>
+                                                        </div>
+                                                    </div>
+
+                                           
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                            <p> @localizer["TotalBalance"]</p>
+                                                        </div>
+                                                        <div class=" col-md-auto Saved-data">
+                                                            <p> @Model.CrCasAccountSalesPointTotalBalance?.ToString("N2",CultureInfo.InvariantCulture) </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                           
+                                                <div class="col-md-10">
+                                    <label>@localizer["Reason_s"]</label>
+                                                    <textarea class=" form-control textarea-inputs"
+                                                        rows="1" maxlength="100" asp-for="CrCasAccountSalesPointReasons"
+                                                        type="text"></textarea>
+                                    <div class="invaild">
+                                        <div class="invalid-feedback">
+                                            <span class="text-danger" asp-validation-for="CrCasAccountSalesPointReasons"></span>
+                                            <span class="text-danger" id="CrCasAccountSalesPointReasons-Error"></span>
+                                        </div>
+                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>  
+
+
+
+
+
+<!-- delete modal -->
+<div class="modal fade" id="Delete-Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="Delete-ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border: 1px solid var(--main-color);">
+            <div class="content" id="modalContent">
+            </div>
+            <!-- Hidden spinner  -->
+            <div class="modal-body text-center" id="spinner" style="display: none;">
+                <span class="State-Modal-loader"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Stopp  modal -->
+<div class="modal fade" id="Stop-Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="Stop-ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border: 1px solid var(--main-color);">
+            <div class=" content" id="Stop-modal-Content">
+            </div>
+            <!-- Hidden spinner  -->
+            <div class="modal-body text-center" id="spinner2" style="display: none;">
+                <span class="State-Modal-loader"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/toastr.js"></script>
+  
+
+    <script>
+        // To Handle Background
+        $("#wrapper").addClass("Branches-wrapper");
+    </script>
+    <script>
+        // This To Focus On input when page load
+        if ('@requestCulture?.RequestCulture.UICulture.Name' == "en-US") {
+            $("#CrCasAccountSalesPointEnName").focus();
+        }
+        else {
+            $("#CrCasAccountSalesPointArName").focus();
+        }
+        //////////////////////////////////////////
+        var statusInput = $("#CrCasAccountSalesPointStatus");
+        var OldArName = $("#CrCasAccountSalesPointArName").val();
+        var OldEnName = $("#CrCasAccountSalesPointEnName").val();
+
+
+
+        function Check_onChange_input(existName, dataField, oldValue) {
+            //get the old value
+            if (dataField === oldValue) {
+                // Clear any existing error message if the values match
+                $(`#${existName}-Error`).hide();
+                return;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "/CAS/AccountSalesPoint_CAS/CheckChangedField",
+                data: { existName: existName, dataField: dataField },
+                success: function (result) {
+                    console.log("feedback", result);
+                    // Hide all previous error messages
+                    $('.invalid-feedback').show();
+
+                    // Show new error messages if they exist
+                    if (result.errors && result.errors.length > 0) {
+                        result.errors.forEach(function (error) {
+                            // Use the ID from the error object to find the correct element
+                            $(`#${error.field}-Error`).text(error.message).show();
+                        });
+                    } else {
+                        // Hide the error message if no errors
+                        $(`#${existName}-Error`).text("");
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        //// Example usage for Arabic Name input
+        //$('#CrCasAccountSalesPointArName').on('change', function () {
+        //    var newValue = $(this).val();
+        //    Check_onChange_input('CrCasAccountSalesPointArName', newValue, OldArName);
+        //});
+
+        //// Example usage for English Name input
+        //$('#CrCasAccountSalesPointEnName').on('change', function () {
+        //    var newValue = $(this).val();
+        //    Check_onChange_input('CrCasAccountSalesPointEnName', newValue, OldEnName);
+        //});
+        //$('#CrCasAccountSalesPointEmail').on('change', function () {
+        //    var newValue = $(this).val();
+        //    Check_onChange_input('CrCasAccountSalesPointEmail', newValue, OldEmail);
+        //});
+        //$('#CrCasAccountSalesPointMobile').on('change', function () {
+        //    var newValue = $(this).val();
+        //    Check_onChange_input('CrCasAccountSalesPointMobile', newValue, OldMobile);
+        //});
+
+    </script>
+    <script>
+        function updateAccountSalesPoint_CASStatus(status) {
+            var code = document.getElementById("CrCasAccountSalesPointCode").value;
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "POST",
+                    url: "/CAS/AccountSalesPoint_CAS/EditStatus",
+                    data: { status: status, code: code },
+                    success: function (result) {
+                        toastr.options = { "positionClass": "@localizer["toastPostion"]" };
+
+                        if (result == "true") {
+                            //@*toastr.success("@localizer["ToastSave"]");*@
+                            resolve(true);
+                        } else if (result == "false_auth") {
+                            toastr.error("@localizer["AuthEmplpoyee_No_auth"]");
+                            resolve(false);
+                        }
+                        else if (result == "udelete") {
+                        //@*   toastr.error("@localizer["SureTo_Cannot_delete"]"); //*@
+                            resolve(false);
+                        } else if (result == "un_NoUpdateStatus") {
+                        //@* toastr.error("@localizer["AuthEmplpoyee_NoUpdateStatus"]"); //*@
+                            resolve(false);
+                        }
+                        else {
+                            toastr.error("@localizer["ToastFailed"]");
+                            resolve(false);
+                        }
+                    },
+                    error: function () {
+                        toastr.error("@localizer["ToastFailed"]");
+                        resolve(false);
+                    }
+                });
+            });
+        }
+    </script>
+    
+    <script>
+        let isDeleted = false;
+        let isStoped = false
+        if (statusInput.val() == '@Status.Hold') {
+            isDeleted = false;
+            isStoped = true
+        }
+        else if (statusInput.val() == '@Status.Deleted') {
+            isDeleted = true;
+            isStoped = false
+        }
+
+        window.onload = () => {
+            DeleteState(isDeleted);
+            StopState(isStoped);
+        };
+
+        function DeleteState(deleted) {
+            isDeleted = deleted;
+
+            document.getElementById("modalContent").style.display = "block";
+            document.getElementById("modalIcon").src = isDeleted
+                ? "/MasSystem/images/Property 1=recycle.svg"
+                : "/MasSystem/images/delete.svg";
+
+            document.getElementById("modalContent").innerHTML = isDeleted
+                ? `
+                                                            <div class="modal-header border-0">
+                                                              <h1 class="modal-title fs-4 m-auto d-flex align-items-start gap-2" id="Delete-ModalLabel">
+                                                                        <img src="/MasSystem/images/Green-recycle.svg" /> @localizer["SureToRetriveDelete"]
+                                                              </h1>
+                                                            </div>
+                                                            <div class="modal-body">
+
+                                                                            <p>@localizer["ModalFirstMessage_AccountSalesPoint_CAS_UnDelete"]</p>
+                                                                            <p>@localizer["ModalSecondMessage_AccountSalesPoint_CAS_UnDelete"]</p>
+        
+
+                                                            </div>
+                                                            <div class="modal-footer border-0">
+                                                              <div class="container">
+                                                                <div class="row">
+                                                                  <div class="col-md-6 text-center">
+                                                                    <button type="button" class="btn btn-modal-Save" id="RetriveBtn" onclick="DeleteLoad()">@localizer["Okay"]</button>
+                                                                  </div>
+                                                                  <div class="col-md-6 text-center">
+                                                                    <button type="button" class="btn btn-Cancel" data-bs-dismiss="modal">@localizer["Cancel"]</button>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                            </div>`
+                : `
+                                                            <div class="modal-header border-0">
+                                                              <h1 class="modal-title fs-4 m-auto d-flex align-items-start gap-2" id="Delete-ModalLabel">
+                                                                        <img src="/MasSystem/images/delete (2).svg" /> @localizer["SureTodelete"]
+                                                              </h1>
+                                                            </div>
+                                                            <div class="modal-body">
+        @if (Model.CrCasAccountSalesPointTotalBalance > 0)
+        {
+                                                                                    <p>@localizer["SureTo_Cannot_delete"]</p>
+        }
+        else
+        {
+                                                                                    <p>@localizer["ModalFirstMessage_AccountSalesPoint_CAS_Delete"]</p>
+                                                                                    <p>@localizer["ModalSecondMessage_AccountSalesPoint_CAS_Delete"]</p>
+        }
+                                                            </div>
+                                                            <div class="modal-footer border-0">
+                                                              <div class="container">
+                                                                <div class="row">
+                                                                  <div class="col-md-6 text-center">
+                                                                    <button type="button" class="btn btn-modal-Save" id="DeleteBtn" onclick="DeleteLoad()">@localizer["Okay"]</button>
+                                                                  </div>
+                                                                  <div class="col-md-6 text-center">
+                                                                    <button type="button" class="btn btn-Cancel" data-bs-dismiss="modal">@localizer["Cancel"]</button>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                            </div>`;
+        }
+        function DeleteLoad() {
+            const modalContent = document.getElementById("modalContent");
+            const spinner = document.getElementById("spinner");
+            const deleteModal = document.getElementById("Delete-Modal");
+            const modalIcon = document.getElementById("modalIcon");
+
+            modalContent.style.display = "none";
+            spinner.style.display = "flex";
+
+            setTimeout(async () => {
+                spinner.style.display = "none";
+                const modal = bootstrap.Modal.getInstance(deleteModal);
+                modal.hide();
+
+                const newStatus = isDeleted ? '@Status.UnDeleted' : '@Status.Deleted';
+                const success = await updateAccountSalesPoint_CASStatus(newStatus);
+                if (success) {
+                    statusInput.val(isDeleted ? '@Status.Active' : '@Status.Deleted');
+                    isDeleted = !isDeleted;
+
+                    modalIcon.src = isDeleted
+                        ? "/MasSystem/images/Property 1=recycle.svg"
+                        : "/MasSystem/images/delete.svg";
+
+                    DeleteState(isDeleted);
+                    setTimeout(function () {
+                        location.href = '@Url.Action("DisplayToastSuccess_withIndex", "AccountSalesPoint_CAS")';
+                    }, 500); // التأخير لمدة .5 ثوانٍ
+                }
+                else {
+                    modalIcon.src = isDeleted
+                        ? "/MasSystem/images/Property 1=recycle.svg"
+                        : "/MasSystem/images/delete.svg";
+
+                    DeleteState(isDeleted);
+                }
+            }, 500);
+        }
+
+        function StopState(Stoped) {
+            isStoped = Stoped;
+
+            document.getElementById("Stop-modal-Content").style.display = "block";
+            document.getElementById("StopModalIcon").src = isStoped
+                ? "/MasSystem/images/Property 1=active.svg"
+                : "/MasSystem/images/stop.svg";
+
+            document.getElementById("Stop-modal-Content").innerHTML = isStoped
+                ? `
+                                                            <div class="modal-header border-0">
+                                                              <h1 class="modal-title fs-4 m-auto d-flex align-items-start gap-2" id="Delete-ModalLabel">
+                                                                        <img src="/MasSystem/images/GreenStop.svg" /> @localizer["SureToRetriveHold"]
+                                                              </h1>
+                                                            </div>
+                                                            <div class="modal-body">
+
+                                                              <p>@localizer["ModalFirstMessage_AccountSalesPoint_CAS_UnHold"]</p>
+                                                              <p>@localizer["ModalSecondMessage_AccountSalesPoint_CAS_UnHold"]</p>
+                                                        
+                                                            </div>
+                                                            <div class="modal-footer border-0">
+                                                              <div class="container">
+                                                                <div class="row">
+                                                                  <div class="col-md-6 text-center">
+                                                                    <button type="button" class="btn btn-modal-Save" id="RetriveBtn" onclick="StopLoad()">@localizer["Okay"]</button>
+                                                                  </div>
+                                                                  <div class="col-md-6 text-center">
+                                                                    <button type="button" class="btn btn-Cancel" data-bs-dismiss="modal">@localizer["Cancel"]</button>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                            </div>`
+                : `
+                                                            <div class="modal-header border-0">
+                                                              <h1 class="modal-title fs-4 m-auto d-flex align-items-start gap-2" id="Delete-ModalLabel">
+                                                                        <img src="/MasSystem/images/RedStop.svg" /> @localizer["SureToHold"]
+                                                              </h1>
+                                                            </div>
+                                                            <div class="modal-body">
+        
+                                                                            <p>@localizer["ModalFirstMessage_AccountSalesPoint_CAS_Hold"]</p>
+                                                                            <p>@localizer["ModalSecondMessage_AccountSalesPoint_CAS_Hold"]</p>
+
+                                                            </div>
+                                                            <div class="modal-footer border-0">
+                                                              <div class="container">
+                                                                <div class="row">
+                                                                  <div class="col-md-6 text-center">
+                                                                    <button type="button" class="btn btn-modal-Save" id="HoldBtn" onclick="StopLoad()">@localizer["Okay"]</button>
+                                                                  </div>
+                                                                  <div class="col-md-6 text-center">
+                                                                    <button type="button" class="btn btn-Cancel" data-bs-dismiss="modal">@localizer["Cancel"]</button>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                            </div>`;
+        }
+        function StopLoad() {
+            const stopModalContent = document.getElementById("Stop-modal-Content");
+            const spinner = document.getElementById("spinner2");
+            const modalElement = document.getElementById("Stop-Modal");
+            const stopModalIcon = document.getElementById("StopModalIcon");
+
+            stopModalContent.style.display = "none";
+            spinner.style.display = "flex";
+
+            setTimeout(async () => {
+                spinner.style.display = "none";
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                modal.hide();
+
+                const newStatus = isStoped ? '@Status.UnHold' : '@Status.Hold';
+                const success = await updateAccountSalesPoint_CASStatus(newStatus);
+                if (success) {
+                    statusInput.val(isStoped ? '@Status.Active' : '@Status.Hold');
+                    isStoped = !isStoped;
+
+                    stopModalIcon.src = isStoped
+                        ? "/MasSystem/images/Property 1=active.svg"
+                        : "/MasSystem/images/stop.svg";
+
+                    StopState(isStoped);
+                    setTimeout(function () {
+                        location.href = '@Url.Action("DisplayToastSuccess_withIndex", "AccountSalesPoint_CAS")';
+                    }, 500); // التأخير لمدة .5 ثوانٍ
+                }
+            }, 500);
+        }
+
+    </script>
+}

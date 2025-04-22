@@ -1,0 +1,1028 @@
+﻿@inject IViewLocalizer localizer
+@model LessorImagesVM
+@inject IViewLocalizer localizer
+@{
+	var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+	ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+<style>
+	.ImagesScrolledDiv {
+		height: 450px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+
+		.ImagesScrolledDiv::-webkit-scrollbar {
+			width: 7px !important;
+			height: 5px;
+		}
+
+		.ImagesScrolledDiv::-webkit-scrollbar-track {
+			background: rgba(230, 229, 228, 0.089);
+			border-radius: 5px;
+		}
+
+		.ImagesScrolledDiv::-webkit-scrollbar-thumb {
+			background: rgba(255, 150, 38, 0.40);
+			border-radius: 5px;
+		}
+
+			.ImagesScrolledDiv::-webkit-scrollbar-thumb:hover {
+				border-radius: 8px;
+				background: rgba(250, 136, 13, 0.4);
+			}
+</style>
+<div class="col my-2 d-flex align-items-center justify-content-center">
+	<div class="container  main-container ">
+		<form asp-area="MAS" asp-controller="LessorImages" asp-action="Edit" enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
+			<input type="hidden" asp-for="CrMasLessorImageCode">
+
+			<div class="row  mt-3 g-3">
+
+				<div class="row justify-content-center">
+					<div class="col-lg-9">
+						<div class="row g-3 my-2">
+							<div class="col">
+								<h3> @localizer["LessorImgss"] </h3>
+							</div>
+							<div class="col-md-auto save-col">
+								<button type="submit" class="custom-img-btn">
+									<img src="~/MasSystem/images/save.svg" />
+								</button>
+								<button type="button" class="custom-img-btn"> <a href="/MAS/LessorImages/Index"><img class="Chevron" src="~/MasSystem/images/Chevron_Left.svg" /></a></button>
+							</div>
+						</div>
+						<div class="container-fluid">
+							<div class="row  mt-3 g-3 ">
+
+								<div class="col-md-12">
+									<h4 class="subtitle mb-3">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.CrMasLessorNameEn : Model.CrMasLessorNameAr) </h4>
+								</div>
+								<div class="col-md-auto">
+									<div class="row align-items-baseline">
+										<div class="col-md-auto">
+											<label for="ImagesSelector" class="form-label">@localizer["LessorImg"] </label>
+										</div>
+										<div class="col">
+											<select class="form-select select-style " name="ImagesSelector"
+													id="ImagesSelector">
+												<option value="A" selected> @localizer["Notifications"] </option>
+												<option value="C">   @localizer["FinancialDocuments"] </option>
+												<option value="E">   @localizer["ImagesContract"]  </option>
+												<option value="G">  @localizer["ContractConditions"] </option>
+												<option value="I">  @localizer["FilesDownload"]   </option>
+											</select>
+
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 ImagesScrolledDiv">
+									<div class="row g-4  Images-section" id="AImages">
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageLogo))
+													{
+														<span class="drop-zone__prompt">
+															<img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"]
+														</span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageLogo" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageLogo)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageLogo))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageLogo)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["Logo1"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageLoaderLogo))
+													{
+														<span class="drop-zone__prompt">
+															<img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"]
+														</span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageLoaderLogo" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageLoaderLogo)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageLoaderLogo))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageLoaderLogo)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["LogoLoader"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageWhatsupLogo))
+													{
+														<span class="drop-zone__prompt">
+															<img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"]
+														</span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageWhatsupLogo" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageWhatsupLogo)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageWhatsupLogo))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageWhatsupLogo)');"></div>
+													}
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["LogoWhatsup"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageStamp))
+													{
+														<span class="drop-zone__prompt">
+															<img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"]
+														</span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageStamp" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageStamp)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageStamp))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageStamp)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["Stamp"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageAuthenticatedElectronically))
+													{
+														<span class="drop-zone__prompt">
+															<img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"]
+														</span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageAuthenticatedElectronically" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageAuthenticatedElectronically)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageAuthenticatedElectronically))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageAuthenticatedElectronically)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["StampNotarization"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractCard))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractCard" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractCard)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractCard))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractCard)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["Card1"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageQrCodeAuthenticated))
+													{
+														<span class="drop-zone__prompt">
+															<img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"]
+														</span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageQrCodeAuthenticated" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageQrCodeAuthenticated)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageQrCodeAuthenticated))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageQrCodeAuthenticated)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["OTPImg"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageQrCodeSite))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageQrCodeSite" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageQrCodeSite)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageQrCodeSite))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageQrCodeSite)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["SiteLogo"] </p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row g-4  Images-section" id="CImages">
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageTaxInvoice))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageTaxInvoice" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageTaxInvoice)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageTaxInvoice))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageTaxInvoice)');"></div>
+													}
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["InitialInvoice"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImagePerformInvoice))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImagePerformInvoice" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImagePerformInvoice)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImagePerformInvoice))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImagePerformInvoice)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ActualInvoice"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageReceipt))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageReceipt" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageReceipt)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageReceipt))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageReceipt)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["CatchReceipt"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageExchange))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageExchange" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageExchange)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageExchange))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageExchange)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ExchangeReceipt"]</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row g-4  Images-section" id="EImages">
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage1))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage1" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage1)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage1))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage1)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage1"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage2))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage2" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage2)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage2))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage2)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage2"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage3))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage3" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage3)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage3))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage3)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage3"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage4))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage4" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage4)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage4))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage4)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage4"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage5))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage5" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage5)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage5))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage5)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage5"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage6))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage6" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage6)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage6))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage6)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage6"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage7))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage7" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage7)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage7))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage7)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage7"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage8))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage8" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage8)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage8))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage8)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage8"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage9))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage9" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage9)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage9))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage9)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage9"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage10))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage10" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage10)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage10))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage10)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP"> @localizer["ContractPage10"]  </p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage11))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage11" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage11)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage11))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage11)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage11"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageContractPage12))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageContractPage12" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageContractPage12)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageContractPage12))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageContractPage12)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractPage12"]</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row g-4  Images-section" id="GImages">
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageArConditionPage1))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageArConditionPage1" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageArConditionPage1)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageArConditionPage1))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageArConditionPage1)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractTermArPage1"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageArConditionPage2))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageArConditionPage2" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageArConditionPage2)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageArConditionPage2))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageArConditionPage2)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractTermArPage2"] </p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageArConditionPage3))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageArConditionPage3" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageArConditionPage3)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageArConditionPage3))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageArConditionPage3)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractTermArPage3"] </p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageEnConditionPage1))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageEnConditionPage1" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageEnConditionPage1)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageEnConditionPage1))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageEnConditionPage1)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractTermEnPage1"] </p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageEnConditionPage2))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageEnConditionPage2" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageEnConditionPage2)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageEnConditionPage2))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageEnConditionPage2)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractTermEnPage2"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageEnConditionPage3))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageEnConditionPage3" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageEnConditionPage3)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageEnConditionPage3))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageEnConditionPage3)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["ContractTermEnPage3"]</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row g-4  Images-section" id="IImages">
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageArDailyReport))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageArDailyReport" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageArDailyReport)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageArDailyReport))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageArDailyReport)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["DailyArReport"]</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-auto">
+											<div class="dropzone-Card">
+												<div class="drop-zone">
+													<div class="layer" style="display: none;">
+														<i class="fa-regular fa-circle-xmark removeImage"></i>
+													</div>
+													@if (string.IsNullOrEmpty(Model.CrMasLessorImageEnDailyReport))
+													{
+														<span class="drop-zone__prompt"> <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"] </span>
+													}
+													<input type="file" asp-for="FileCrMasLessorImageEnDailyReport" class="drop-zone__input" data-path="@Url.Content(Model.CrMasLessorImageEnDailyReport)">
+													@if (!string.IsNullOrEmpty(Model.CrMasLessorImageEnDailyReport))
+													{
+														<div class="drop-zone__thumb" style="background-image: url('@Url.Content(Model.CrMasLessorImageEnDailyReport)');"></div>
+													}
+
+												</div>
+												<div class="fileNameDiv">
+													<p class="text-center pt-1 mb-1 fileNameP">@localizer["DailyEnReport"]</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+@section Scripts {
+	<script>
+		const dataSelector = document.getElementById("ImagesSelector");
+		const dataSections = document.querySelectorAll(".Images-section");
+
+		dataSelector.addEventListener("change", () => {
+			dataSections.forEach(section => section.style.display = 'none');
+
+			const selectedValue = dataSelector.value;
+
+			const selectedDataSection = document.getElementById(`${selectedValue}Images`);
+			if (selectedDataSection) {
+				selectedDataSection.style.display = 'flex';
+			}
+		});
+
+	</script>
+	<script>
+		document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
+			const dropZoneElement = inputElement.closest(".drop-zone");
+			const dropZoneCard = inputElement.closest(".dropzone-Card");
+			const layerElement = dropZoneElement.querySelector(".layer");
+			const removeImageButton = dropZoneElement.querySelector(".removeImage");
+			const fileNameP = dropZoneCard.querySelector(".fileNameP");
+
+			if (fileNameP) fileNameP.dataset.originalText = fileNameP.innerHTML;
+
+			layerElement.addEventListener("mouseenter", (e) => {
+				e.stopPropagation();
+				if (!removeImageButton.hasAttribute("data-listener")) {
+					removeImageButton.setAttribute("data-listener", "true");
+					removeImageButton.addEventListener("click", (e) => {
+						e.stopPropagation();
+						removeImage(dropZoneElement, dropZoneCard, inputElement);
+						console.log("removed");
+					});
+				}
+			});
+
+			dropZoneElement.addEventListener("click", (e) => {
+				if (!layerElement.contains(e.target)) {
+					inputElement.click();
+				}
+			});
+
+			inputElement.addEventListener("change", (e) => {
+				if (inputElement.files.length) {
+					updateThumbnail(dropZoneElement, dropZoneCard, inputElement.files[0]);
+				}
+			});
+
+			dropZoneElement.addEventListener("dragover", (e) => {
+				e.preventDefault();
+				dropZoneElement.classList.add("drop-zone--over");
+			});
+
+			["dragleave", "dragend"].forEach((type) => {
+				dropZoneElement.addEventListener(type, (e) => {
+					dropZoneElement.classList.remove("drop-zone--over");
+				});
+			});
+
+			dropZoneElement.addEventListener("drop", (e) => {
+				e.preventDefault();
+
+				if (e.dataTransfer.files.length) {
+					inputElement.files = e.dataTransfer.files;
+					updateThumbnail(dropZoneElement, dropZoneCard, e.dataTransfer.files[0]);
+				}
+
+				dropZoneElement.classList.remove("drop-zone--over");
+			});
+
+			dropZoneElement.addEventListener("mouseenter", () => {
+				if (inputElement.files.length) {
+					layerElement.style.display = "flex";
+				}
+			});
+
+			dropZoneElement.addEventListener("mouseleave", () => {
+				layerElement.style.display = "none";
+			});
+		});
+
+		function removeImage(dropZoneElement, dropZoneCard, inputElement) {
+			inputElement.value = "";
+			const layerElement = dropZoneElement.querySelector(".layer");
+			layerElement.style.display = "none";
+			const thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
+			if (thumbnailElement) {
+				thumbnailElement.remove();
+			}
+			const promptElement = dropZoneElement.querySelector(".drop-zone__prompt");
+			if (!promptElement) {
+				const newPromptElement = document.createElement("span");
+				newPromptElement.classList.add("drop-zone__prompt");
+		newPromptElement.innerHTML = `<img src="/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"]`;
+		dropZoneElement.appendChild(newPromptElement);
+			}
+
+			var fileNameP = dropZoneCard.querySelector(".fileNameP");
+			if (fileNameP) fileNameP.innerHTML = fileNameP.dataset.originalText;
+
+			dropZoneElement.style.border = "";
+			var fileNameDiv = dropZoneCard.querySelector(".fileNameDiv");
+			if (fileNameDiv) fileNameDiv.style.background = "";
+		}
+
+		function updateThumbnail(dropZoneElement, dropZoneCard, file) {
+			let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
+
+			const promptElement = dropZoneElement.querySelector(".drop-zone__prompt");
+			if (promptElement) {
+				promptElement.remove();
+			}
+
+			if (!thumbnailElement) {
+				thumbnailElement = document.createElement("div");
+				thumbnailElement.classList.add("drop-zone__thumb");
+				dropZoneElement.appendChild(thumbnailElement);
+				dropZoneElement.style.border = "none";
+			}
+
+			// const fileNameP = dropZoneCard.querySelector(".fileNameP");
+			const fileNameDiv = dropZoneCard.querySelector(".fileNameDiv");
+
+			// if (fileNameP) {
+			//     fileNameP.innerHTML = file.name;
+			// }
+			if (fileNameDiv) {
+				fileNameDiv.style.background = "#39629C";
+			}
+
+			if (file.type.startsWith("image/")) {
+				const reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.onload = () => {
+					thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
+				};
+			} else {
+				thumbnailElement.style.backgroundImage = null;
+			}
+		}
+
+		function AddThumbnail() {
+			document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
+				const dropZoneElement = inputElement.closest(".drop-zone");
+				const dropZoneCard = inputElement.closest(".dropzone-Card");
+				const layerElement = dropZoneElement.querySelector(".layer");
+				const removeImageButton = dropZoneElement.querySelector(".removeImage");
+				const fileNameP = dropZoneCard.querySelector(".fileNameP");
+				const fileNameDiv = dropZoneCard.querySelector(".fileNameDiv");
+				let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
+								console.log("thumbnailElement",thumbnailElement)
+
+				// الحصول على مسار الصورة من البيانات المدخلة
+				const imagePath = inputElement.dataset.path;
+				// const imageName = fileNameP.textContent;
+
+				// إذا كان المسار فارغًا أو غير موجود، يمكن أن نعرض صورة افتراضية
+				if (!imagePath) {
+					thumbnailElement = document.createElement("div");
+					thumbnailElement.classList.remove("drop-zone__thumb");
+					return;
+				}
+				else{
+					dropZoneElement.style.border = "none";
+				}
+
+				// إذا كانت الصورة موجودة في المسار المحدد
+				const promptElement = dropZoneElement.querySelector(".drop-zone__prompt");
+				if (promptElement) {
+					promptElement.remove();
+				}
+				console.log("thumbnailElement",thumbnailElement)
+				console.log("imagePath",imagePath)
+				if (!thumbnailElement) {
+					thumbnailElement = document.createElement("div");
+					thumbnailElement.classList.add("drop-zone__thumb");
+					dropZoneElement.appendChild(thumbnailElement);
+				}
+
+				// تعيين الخلفية للصورة
+				// fileNameP.innerHTML = imageName || "Image"; // يمكن تعديل النص ليكون أكثر ديناميكية
+				fileNameDiv.style.background = "#39629C";
+				thumbnailElement.style.backgroundImage = `url('${imagePath}')`;
+
+				// إضافة أحداث للمؤشر
+				dropZoneElement.addEventListener("mouseenter", () => {
+					if (thumbnailElement.style.backgroundImage) {
+						layerElement.style.display = 'flex';
+					}
+				});
+
+				dropZoneElement.addEventListener("mouseleave", () => {
+					layerElement.style.display = 'none';
+				});
+
+				const removeIcon = layerElement.querySelector("i");
+				removeIcon.addEventListener("click", () => {
+					thumbnailElement.style.backgroundImage = '';
+					fileNameP.innerHTML = '';
+					fileNameDiv.style.background = '';
+					layerElement.style.display = 'none';
+				});
+			});
+		}
+
+		window.onload = () => {
+			AddThumbnail();
+		};
+
+	</script>
+
+}

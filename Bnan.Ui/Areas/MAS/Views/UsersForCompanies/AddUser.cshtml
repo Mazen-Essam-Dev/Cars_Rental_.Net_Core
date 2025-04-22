@@ -1,0 +1,298 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@model Bnan.Ui.ViewModels.MAS.Users.CompanyUserVM
+
+@inject IViewLocalizer localizer
+@inject UserManager<CrMasUserInformation> userManager
+
+@{
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var user = await userManager.GetUserAsync(User);
+    var userInfo = await userManager.Users
+        .Include(l => l.CrMasUserInformationLessorNavigation)
+            .ThenInclude(l => l.CrMasLessorImage) // دمج استعلام المؤجر
+        .FirstOrDefaultAsync(l => l.UserName == user.UserName);
+}
+<link rel="stylesheet" href="@Url.Content("~/PdfJS/style/style/style.css")">
+
+<div class="col my-2 d-flex align-items-center justify-content-center">
+    <div class="container NewUpdate-container">
+        <form class="needs-validation" novalidate asp-area="MAS" asp-controller="UsersForCompanies" asp-action="AddUser" id="userForm" enctype="multipart/form-data">
+            <input hidden id="WelcomeCardMessage" name="WelcomeCardMessage" />
+            <div class="row  mt-3 g-3">
+                <div class="row justify-content-center">
+                    <div class="col-lg-9">
+                        <div class="row g-3 my-2">
+                            <div class="col">
+                                <h3>@localizer["AddCompanyUser"]</h3>
+                            </div>
+                            <div class="col-md-auto save-col">
+                                <button type="button" id="submitButton" class="custom-img-btn"><img src="~/MasSystem/images/save.svg" /></button>
+                                <button type="button" class="custom-img-btn">
+                                    <a href="/MAS/UsersForCompanies/Index">
+                                        <img class="Chevron" src="~/MasSystem/images/Chevron_Left.svg" />
+                                    </a>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row  mt-3 g-3 ">
+
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="CrMasUserInformationCode" class="form-label">
+                                                @localizer["UserCode"]
+                                                <i class="fa-solid fa-star-of-life RequirdStar"></i>
+                                            </label>
+                                            <input type="text" id="CrMasUserInformationCode" class="form-control inputs" asp-for="CrMasUserInformationCode" maxlength="7" onkeypress="return isEnglishAndNumbers(event)" oninput="removeInvalidChars(this)" required>
+                                            <div class="invaild">
+                                                <div class="invalid-feedback">
+                                                    <span asp-validation-for="@Model.CrMasUserInformationCode" class="text-danger"></span>
+                                                    <span class="text-danger" id="CrMasUserInformationCode-Error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="CrMasUserInformationId" class="form-label">
+                                                @localizer["UserID"]
+                                            </label>
+                                            <input type="text" id="CrMasUserInformationId" class="form-control inputs " asp-for="CrMasUserInformationId" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="10">
+                                            <div class="invaild">
+                                                <div class="invalid-feedback">
+                                                    <span asp-validation-for="@Model.CrMasUserInformationId" class="text-danger"></span>
+                                                    <span class="text-danger" id="CrMasUserInformationId-Error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-6">
+                                            <label for="CrMasUserInformationArName" class="form-label">
+                                                @localizer["UserNameAr_add"]
+                                                <i class="fa-solid fa-star-of-life RequirdStar"></i>
+                                            </label>
+                                            <input type="text" id="CrMasUserInformationArName" asp-for="CrMasUserInformationArName" class="form-control inputs arabic-input" maxlength="40" oninput="this.value=this.value.replace(/[^\u0600-\u06FF\ufb50-\ufdff\ufe70-\ufeff\s]/g, '')" required>
+                                            <div class="invaild">
+                                                <div class="invalid-feedback">
+                                                    <span asp-validation-for="@Model.CrMasUserInformationArName" class="text-danger"></span>
+                                                    <span class="text-danger" id="CrMasUserInformationArName-Error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="CrMasUserInformationEnName" class="form-label">
+                                                @localizer["UserNameEn_add"]
+                                                <i class="fa-solid fa-star-of-life RequirdStar"></i>
+                                            </label>
+                                            <input type="text" id="CrMasUserInformationEnName" asp-for="CrMasUserInformationEnName" class="form-control inputs english-input" maxlength="40" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" required>
+                                            <div class="invaild">
+                                                <div class="invalid-feedback">
+                                                    <span asp-validation-for="@Model.CrMasUserInformationEnName" class="text-danger"></span>
+                                                    <span class="text-danger" id="CrMasUserInformationEnName-Error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6 ">
+                                            <label for="Category" class="form-label"> @localizer["Company"] <i class="fa-solid fa-star-of-life RequirdStar"></i> </label>
+                                            <select class="form-select select-style " asp-for="CrMasUserInformationLessor" id="Company" required>
+                                                <option></option>
+                                                @if (requestCulture?.RequestCulture.UICulture.Name == "en-US")
+                                                {
+                                                    foreach (var callingKey in (List<SelectListItem>)ViewData["LessorsEn"])
+                                                    {
+                                                        <option value="@callingKey.Value">@callingKey.Text</option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    foreach (var callingKey in (List<SelectListItem>)ViewData["LessorsAr"])
+                                                    {
+                                                        <option value="@callingKey.Value">@callingKey.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                            <div class="invaild">
+                                                <div class="invalid-feedback">
+                                                    <span asp-validation-for="@Model.CrMasUserInformationLessor" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="CrMasUserInformationMobileNo" class="form-label">
+                                                @localizer["MobilePhone"]
+                                                <!-- <i class="fa-solid fa-star-of-life RequirdStar"></i>  -->
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="tel" class="form-control inputs tel-input" id="CrMasUserInformationMobileNo" asp-for="CrMasUserInformationMobileNo" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="15">
+                                                <select class="input-group-text select-style counterCode" asp-for="CrMasUserInformationCallingKey">
+                                                    @foreach (var callingKey in (List<SelectListItem>)ViewData["CallingKeys"])
+                                                    {
+                                                        <option value="@callingKey.Text">@callingKey.Text</option>
+                                                    }
+                                                </select>
+                                                <div class="invaild">
+                                                    <div class="invalid-feedback">
+                                                        <span asp-validation-for="@Model.CrMasUserInformationMobileNo" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="CrMasUserInformationEmail" class="form-label">
+                                                @localizer["Email"]
+                                            </label>
+                                            <input type="email" id="CrMasUserInformationEmail" asp-for="CrMasUserInformationEmail" class="form-control inputs english-input" maxlength="100">
+                                            <div class="invaild">
+                                                <div class="invalid-feedback">
+                                                    <span asp-validation-for="@Model.CrMasUserInformationEmail" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row align-items-end g-3">
+                                        <div class="col">
+                                            <label for="CrMasUserInformationReasons">@localizer["Reason_s"]</label>
+                                            <textarea class=" form-control textarea-inputs" rows="1" maxlength="100" asp-for="CrMasUserInformationReasons" type="text"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<canvas id="myCanvasCard" hidden></canvas>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/PdfJS/WelcomeImgs/WelcomeUserCompany.js"></script>
+    <script src="~/PdfJS/PdfAndImages.js"></script>
+    <script>
+        // السماح فقط بالأحرف الإنجليزية والأرقام
+        function isEnglishAndNumbers(event) {
+            const char = String.fromCharCode(event.which);
+            const regex = /^[A-Za-z0-9]+$/; // يسمح فقط بالأحرف الإنجليزية والأرقام
+            return regex.test(char);
+        }
+
+        // إزالة أي أحرف غير صالحة أثناء الإدخال
+        function removeInvalidChars(input) {
+            input.value = input.value.replace(/[^A-Za-z0-9]/g, '');
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            function Check_onChange_input(existName, dataField) {
+                $.ajax({
+                    type: "GET",
+                    url: "/MAS/UsersForCompanies/CheckChangedField",
+                    data: { existName: existName, dataField: dataField },
+                    success: function (result) {
+                        console.log("feedback", result);
+                        // Hide all previous error messages
+                        $('.invalid-feedback').show();
+
+                        // Show new error messages if they exist
+                        if (result.errors && result.errors.length > 0) {
+                            result.errors.forEach(function (error) {
+                                // Use the ID from the error object to find the correct element
+                                $(`#${error.field}-Error`).text(error.message).show();
+                            });
+                        } else {
+                            // Hide the error message if no errors
+                            $(`#${existName}-Error`).text("");
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+
+            $('#CrMasUserInformationCode').on('change', function () {
+                var newValue = $(this).val();
+                Check_onChange_input('CrMasUserInformationCode', newValue);
+            });
+
+            $('#CrMasUserInformationId').on('change', function () {
+                var newValue = $(this).val();
+                Check_onChange_input('CrMasUserInformationId', newValue);
+            });
+
+            // $('#CrMasUserInformationArName').on('change', function () {
+            //     var newValue = $(this).val();
+            //     console.log("newValue", newValue)
+            //     Check_onChange_input('CrMasUserInformationArName', newValue);
+            // });
+
+            // $('#CrMasUserInformationEnName').on('change', function () {
+            //     var newValue = $(this).val();
+            //     Check_onChange_input('CrMasUserInformationEnName', newValue);
+            // });
+
+
+        });
+
+    </script>
+    <script>
+        const CreateWelcome = async () => {
+            try{
+              const canvas = document.getElementById("myCanvasCard");
+              const dynamicData = {
+                Employee_AR_Name: $("#CrMasUserInformationArName").val(),
+                Employee_EN_Name: $("#CrMasUserInformationEnName").val(),
+                Employee_No: `CAS${$("#CrMasUserInformationCode").val()}`,
+                Password: `CAS${$("#CrMasUserInformationCode").val()}`,
+                images: {
+                    background: "/images/Bnan/Support Image/Regestration Messege.png",
+                    qr: "/images/Bnan/Support Image/QR.png"
+                },
+              };
+              const loadedImages = await loadDynamicImages(dynamicData.images);
+              const dataWithImages = { ...dynamicData, images: loadedImages };
+              console.log("dataWithImages",dataWithImages);
+              await drawWelcomeCard(canvas, dataWithImages);
+
+              const base64Image = canvas.toDataURL("image/png");
+              const inputPdf = document.getElementById("WelcomeCardMessage");
+              inputPdf.value = base64Image;
+              console.log("Base64 Image:", base64Image);
+            }
+            catch (error) {
+              console.error("خطأ في إنشاء بطاقة الترحيب:", error);
+            }
+        };
+       
+        document.getElementById("submitButton").addEventListener("click", async (event) => {
+            event.preventDefault(); 
+            const form = $("#userForm"); 
+            if (form.valid()) {
+                $("#min-loader").removeClass("d-none");
+                const isSuccess = await CreateWelcome();
+                form.submit(); // إرسال الفورم بعد التأكد من نجاح العملية
+            }
+        });
+    </script>
+}
+
+
+

@@ -1,0 +1,127 @@
+﻿
+
+@using Bnan.Core.Extensions
+@using Bnan.Ui.ViewModels.CAS;
+@model RenterLessorInformation_CASVM
+@inject IViewLocalizer localizer
+@inject IOptions<RequestLocalizationOptions> options
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+
+<table class=" tables-style table table-borderless " id="Table">
+    <thead class="sticky-top">
+        <tr>
+            <th scope="col" class="DifferAlign">@localizer["RenterInformationAddress"]</th>
+            <th scope="col" class="DifferAlign"> @localizer["Rates"] </th>
+            <th scope="col"> @localizer["RenterInformationJop"] </th>
+            <th scope="col"> @localizer["RenterInformationNationality"] </th>
+            <th scope="col">@localizer["DateLastContract"]</th>
+            <th scope="col" class="DifferAlign" style="max-width:185px;"> @localizer["RenterInformationName"]</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var no = 1;
+        }
+        @foreach (var single in Model.all_RentersData)
+        {
+            var ColorRow = " ";
+            var address = " ";
+            string? Rate = " ";
+            var job = " ";
+            var nationality = " ";
+            var RenterName = " ";
+            var workPlace = " ";
+            var lastDateContract = " ";
+            if (requestCulture?.RequestCulture.UICulture.Name == "en-US")
+            {
+                @*                               address = single.CrCasRenterLessorNavigation?.CrMasRenterPost?.CrMasRenterPostCityNavigation?.CrMasSupPostCityConcatenateEnName;
+        Rate = Model.all_Rates?.Find(x=>x.CrMasSysEvaluationsCode?.Trim()==single.CrCasRenterLessorDealingMechanism?.Trim()).CrMasSysEvaluationsEnDescription;
+        nationality  = single.CrCasRenterLessorStatisticsNationalitiesNavigation?.CrMasSupRenterNationalitiesEnName;
+        job = single.CrCasRenterLessorStatisticsJobsNavigation?.CrMasSupRenterProfessionsEnName;
+        RenterName = single.CrCasRenterLessorNavigation.CrMasRenterInformationEnName;
+        lastDateContract = single.CrCasRenterLessorDateLastContractual?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);*@
+                address = single.addressEn;
+                Rate = Model.all_Rates?.Find(x => x.CrMasSysEvaluationsCode == single.CrCasRenterLessorDealingMechanism?.Trim())?.CrMasSysEvaluationsEnDescription ?? " ";
+                nationality = single.nationalityEn;
+                job = single.jobEn;
+                RenterName = single.RenterNameEn;
+                workPlace = single.WorkPlaceEn;
+                lastDateContract = single.CrCasRenterLessorDateLastContractual?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                address = single.addressAr;
+                Rate = Model.all_Rates?.Find(x => x.CrMasSysEvaluationsCode == single?.CrCasRenterLessorDealingMechanism?.Trim())?.CrMasSysEvaluationsArDescription ?? " ";
+                nationality = single.nationalityAr;
+                job = single.jobAr;
+                RenterName = single.RenterNameAr;
+                workPlace = single.WorkPlaceAr;
+                lastDateContract = single.CrCasRenterLessorDateLastContractual?.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture);
+            }
+            if (single.CrCasRenterLessorDealingMechanism?.Trim() =="16")
+            {
+                ColorRow = "color:red;";
+            }
+
+            <tr onclick="location.href='@Url.Action("Edit", "RenterLessorInformation", new { id = single.CrCasRenterLessorId })'" >
+                <td style="@ColorRow" class="DifferAlign">
+                    <div class="d-flex gap-2 align-items-center">
+                        <div class="col">
+                            <p class="FirstLineP"> @address    </p>
+                            <p class="secondLineP"> @single.Email </p>
+                        </div>
+                    </div>
+                </td>
+             @* <td style="@ColorRow">
+                    <p class="FirstLineP">@Rate</p>
+                </td>*@
+                <td class="DifferAlign" style="@ColorRow max-width:110px;">
+                    <div class="d-flex gap-2 align-items-center">
+                        <div class="col">
+                            <p class="FirstLineP"> @Rate </p>
+                            <p class="secondLineP"> @workPlace </p>
+                        </div>
+                    </div>
+                </td>
+
+                <td style="@ColorRow">
+                    <p class="FirstLineP">@job</p>
+                </td>
+                <td style="@ColorRow">
+                    <p>@nationality</p>
+                </td>
+                <td style="@ColorRow">
+                    <p>@lastDateContract</p>
+                </td>
+                <td class="DifferAlign" style="@ColorRow max-width:190px;">
+                    <div class="d-flex gap-2 align-items-center">
+                        <div class="col">
+                            <p class="FirstLineP"> @RenterName </p>
+                            <p class="secondLineP"> @single.CrCasRenterLessorId </p>
+                        </div>
+                    </div>
+                </td>
+                <td style="@ColorRow">
+                    <div class="filter-number-td">
+
+                        @{
+                            var filterColor = "";
+                            var styleColor = "";
+                            if (single.CrCasRenterLessorStatus == Status.Active) filterColor = "filter2-div";
+                            else if (single.CrCasRenterLessorStatus == Status.Rented) { filterColor = "filter1-div"; styleColor = "background-color:Green"; }
+                        }
+                        <div class="filters @filterColor" style="@styleColor"></div>
+                        <div>@no</div>
+
+                    </div>
+                </td>
+            </tr>
+            no += 1;
+        }
+    </tbody>
+</table>

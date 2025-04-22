@@ -1,0 +1,59 @@
+﻿@using Bnan.Core.Extensions
+@model IEnumerable<CrMasSupCarDistribution>
+@inject IViewLocalizer localizer
+@inject IOptions<RequestLocalizationOptions> options
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+
+<table class=" tables-style table table-borderless " id="Table">
+    <thead class="sticky-top">
+        <tr>
+            <th>@localizer["DistributionCount"]</th>
+            <th>@localizer["SmallBags"]</th>
+            <th>@localizer["BigBags"]</th>
+            <th>@localizer["Passengers"]</th>
+            <th class="DifferAlign"> @localizer["Doors"]   </th>
+            <th class="DifferAlign"> @localizer["CategoryDistribution"] </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int no = 1;
+        }
+        @foreach (var item in Model)
+        {
+            <tr onclick="location.href='@Url.Action("Edit", "CarDistribution", new { id = item.CrMasSupCarDistributionCode })'">
+                <td><p>@(item.CrMasSupCarDistributionCount != null ? item.CrMasSupCarDistributionCount : 0)</p></td>
+                <td>
+                    <p>@item.CrMasSupCarDistributionSmallBags</p>
+                </td>
+                <td>
+                    <p>@item.CrMasSupCarDistributionBagBags</p>
+                </td>
+                <td>
+                    <p>@item.CrMasSupCarDistributionPassengers</p>
+                </td>
+                <td class="DifferAlign">
+                    <p> @item.CrMasSupCarDistributionDoor</p>
+                </td>
+                <td class="DifferAlign">
+                    <p>@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? item.CrMasSupCarDistributionConcatenateEnName : item.CrMasSupCarDistributionConcatenateArName)</p>
+                </td>
+                <td>
+                    <div class="filter-number-td">
+
+                        <div class="filters filter2-div"></div>
+
+                        <div>@no</div>
+
+                    </div>
+                </td>
+            </tr>
+            no++;
+        }
+    </tbody>
+</table>

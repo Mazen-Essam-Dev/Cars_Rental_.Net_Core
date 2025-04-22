@@ -1,0 +1,368 @@
+﻿@using Bnan.Ui.ViewModels.CAS
+@using Bnan.Core.Extensions
+@model RenterLessorInformation_CASVM
+
+
+@inject IViewLocalizer localizer
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+    ViewData["Page-title"] = localizer["Edit RenterLessorInformation Data"];
+}
+
+    <div class="col my-2 d-flex align-items-center justify-content-center">
+        <div class="container NewUpdate-container">
+            <form class="needs-validation" novalidate asp-area="CAS" asp-controller="RenterLessorInformation" asp-action="Edit">
+            <input type="text" hidden asp-for="CrCasRenterLessorId" />
+            <input type="text" hidden asp-for="CrCasRenterLessorCode" />
+            <input type="text" hidden asp-for="CrCasRenterLessorStatus" />
+            <input type="text" hidden asp-for="CrCasRenterLessorDealingMechanism" />
+            <input type="text" hidden asp-for="RenterNameAr" />
+            <input type="text" hidden asp-for="RenterNameEn" />
+            
+            @{
+                var single = Model.This_RentersData_edit;
+                var IdType = " ";
+                var Workplace = " ";
+                var DriverLicense = " ";
+                var Mempership = " ";
+                var Bank = " ";
+                var Gender = " ";
+
+                var Iban = " ";
+                var DriverLicense_No = " ";
+                var BirthDate = " ";
+                var DriverLicense_Expiry = " ";
+
+                var address = " ";
+                var Rate = " ";
+                var job = " ";
+                var nationality = " ";
+                var RenterName = " ";
+                var lastDateContract = " ";
+                var SignatureImage = single.SignatureImage?.Replace("~", "") ?? "/MasSystem/images/توقيع.svg";
+                //var SignatureImage = "/MasSystem/images/توقيع.svg";
+                if (requestCulture?.RequestCulture.UICulture.Name == "en-US")
+                {
+
+                    address = single.addressEn;
+                    Rate = Model.all_Rates?.Find(x => x.CrMasSysEvaluationsCode == single?.CrCasRenterLessorDealingMechanism?.Trim())?.CrMasSysEvaluationsEnDescription ?? " ";
+                    nationality = single.nationalityEn;
+                    job = single.jobEn;
+                    RenterName = single.RenterNameEn;
+                    lastDateContract = single.CrCasRenterLessorDateLastContractual?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    IdType = single.IdTypeEn;
+                    Workplace = single.WorkPlaceEn;
+                    DriverLicense = single.License_En;
+                    Mempership = single.MempershipEn;
+                    Bank = single.BankEn;
+                    Gender = single.GenderEn;
+                    Iban = single.Bank_Iban;
+                    DriverLicense_No = single.License_No;
+                    BirthDate = single.birthDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    DriverLicense_Expiry = single.License_ExpiryDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                }
+                else
+                {
+                    address = single.addressAr;
+                    Rate = Model.all_Rates?.Find(x => x.CrMasSysEvaluationsCode == single?.CrCasRenterLessorDealingMechanism?.Trim())?.CrMasSysEvaluationsArDescription ?? " ";
+                    nationality = single.nationalityAr;
+                    job = single.jobAr;
+                    RenterName = single.RenterNameAr;
+                    lastDateContract = single.CrCasRenterLessorDateLastContractual?.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture);
+                    IdType = single.IdTypeAr;
+                    Workplace = single.WorkPlaceAr;
+                    DriverLicense = single.License_Ar;
+                    Mempership = single.MempershipAr;
+                    Bank = single.BankAr;
+                    Gender = single.GenderAr;
+                    Iban = single.Bank_Iban;
+                    DriverLicense_No = single.License_No;
+                    BirthDate = single.birthDate?.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture);
+                    DriverLicense_Expiry = single.License_ExpiryDate?.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture);
+
+                }
+            }
+            
+            <div class="row mt-3 g-3">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-10">
+                                    <div class="row g-3 mt-1">
+                                        <div class="col">
+                                <h3>@localizer["RenterInformations_Details"]  </h3>
+                                        </div>
+                                        <div class="col-md-6 save-col">
+                                            <button type="submit" class="custom-img-btn">
+                                                <img src="~/CasSys/images/save.svg" />
+                                            </button>
+                                            <div class="col-auto save-col">
+                                    <button type="button" class="custom-img-btn"> <a asp-area="CAS" asp-controller="RenterLessorInformation" asp-action="Index"><img class="Chevron" src="~/CasSys/images/Chevron_Left.svg" /></a></button>
+                                            </div>
+
+                                        </div>
+                                        <div class="row g-2">
+                                            <div class="col-md-12 mt-3 mb-2">
+                                    <h4 class="subtitle"> @RenterName</h4>
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                        <p class="m-0">@single.CrCasRenterLessorId</p>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="row align-items-center justify-content-end">
+                                                            <div class="col-auto">
+                                                                <div class="signatureee">
+                                                        <img src="@SignatureImage" style="max-height:45px;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["BirthDate"]  </p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">@BirthDate</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["RenterIDType"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                    <p class="Saved-data">@IdType</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["Gender"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                    <p class="Saved-data">@Gender</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["Nationality"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">@nationality</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["Profession"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">@job</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["RenterInformationWorkPlace"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">@Workplace</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["DrivingType"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">@DriverLicense</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">
+                                                        @localizer["hisNum"]
+                                                    </p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">@DriverLicense_No</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["Date_end"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">@DriverLicense_Expiry</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["Bank_name"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">@Bank </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["Account_bank_numper"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">@Iban</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["Rates"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                    <p class="Saved-data">@Rate</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                    <p class="DataTitle">@localizer["Membership"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">@Mempership</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-auto">
+                                            <p class="DataTitle">@localizer["RenterInformationAddress"]</p>
+                                                    </div>
+                                                    <div class="col-auto ">
+                                                        <p class="Saved-data">@address</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row align-items-center mb-3 ">
+                                                    <div class="col-md-10">
+                                                        <div class="d-flex gap-3 align-items-center">
+                                                            <input class="form-check-input checkbox" type="checkbox"
+                                                                   value="checked" id="blockUser"
+                                                                   name="blockUser">
+                                                            <label class="form-check-label" for="blockUser">
+                                                    @localizer["blockUser"]
+                                                            </label>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row align-items-center ">
+                                                    <div class="col-md-10">
+                                            <label>@localizer["Reason_s"]</label>
+                                                        <textarea class=" form-control textarea-inputs" rows="1"
+                                                      maxlength="100" asp-for="CrCasRenterLessorReasons" type="text"></textarea>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+
+
+@section Scripts {
+
+
+    <script>
+        var cultureInfo_ = '@System.Globalization.CultureInfo.CurrentCulture.Name'; // OK Done OK OK
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var mechanism = $('#CrCasRenterLessorDealingMechanism').val();
+            if (mechanism == "16"){
+                $('#blockUser').prop('checked', true); // تعيينه لتحديده
+            }
+            else{
+                $('#blockUser').prop('checked', false); // الغاء لتحديده
+            }
+        });
+
+        $("#blockUser").on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#CrCasRenterLessorDealingMechanism').val("16");
+                //// If checked, do something
+                //alert('تم تفعيل الحظر');
+            } else {
+                $('#CrCasRenterLessorDealingMechanism').val("10");
+                //// If unchecked, do something else
+                //alert('تم إلغاء الحظر');
+            }
+            
+        }); 
+    </script>
+    <script>
+        //@*to Selected item when page loaded automatic
+        //$(function () {
+        //    if ('@Model.CrCasRenterLessorDealingMechanism' !== null && '@Model.CrCasRenterLessorDealingMechanism' !== "  " && '@Model.CrCasRenterLessorDealingMechanism' !== "") {
+        //        document.getElementById("Mechanism_Droplist").value = '@Model.CrCasRenterLessorDealingMechanism';
+        //    }
+        //});*@
+
+    </script>
+
+}
+
+
+

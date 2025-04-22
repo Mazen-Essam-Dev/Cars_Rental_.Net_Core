@@ -1,0 +1,866 @@
+﻿@using Bnan.Core.Extensions
+@model Bnan.Ui.ViewModels.MAS.CrMasLessorInformationVM
+
+@inject IViewLocalizer localizer
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+
+<style>
+    .save-col {
+        align-items: center;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 5px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: green;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px green;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+    .fa-whatsapp.icon {
+        color: green;
+        font-size: 16px;
+        position: absolute;
+        left: 9.5px;
+        transition: transform 0.4s;
+    }
+
+    input:checked + .slider .icon {
+        transform: translateX(26px);
+    }
+</style>
+
+<div class="col my-2 d-flex align-items-center justify-content-center">
+    <div class="container NewUpdate-container">
+        <form asp-area="MAS" asp-controller="LessorsKSA" asp-action="Edit" method="post" class="needs-validation" novalidate>
+            <div class="row">
+                <input hidden id="CrMasLessorInformationStatus" asp-for="CrMasLessorInformationStatus" />
+                <input hidden id="CrMasLessorInformationCode" asp-for="CrMasLessorInformationCode" />
+                <input hidden id="CrMasLessorInformationArLongName" asp-for="CrMasLessorInformationArLongName" />
+                <input hidden id="CrMasLessorInformationArShortName" asp-for="CrMasLessorInformationArShortName" />
+                <input hidden id="CrMasLessorInformationEnLongName" asp-for="CrMasLessorInformationEnLongName" />
+                <input hidden id="CrMasLessorInformationEnShortName" asp-for="CrMasLessorInformationEnShortName" />
+                <input hidden id="CrMasLessorInformationTaxNo" asp-for="CrMasLessorInformationTaxNo" />
+                <input hidden id="CrMasLessorInformationGovernmentNo" asp-for="CrMasLessorInformationGovernmentNo" />
+                <input hidden id="BranchPostVM.CrCasBranchPostCity" asp-for="BranchPostVM.CrCasBranchPostCity" />
+                <div class="row justify-content-center">
+                    <div class="col-lg-9">
+                        <div class="row g-3 my-2">
+                            <div class="col">
+                                <h3> @localizer["LessorUpdateInfo"] </h3>
+                            </div>
+                            <div class="col-md-auto save-col btnsContainer">
+                                <label class="switch" id="Connect">
+                                    <input type="checkbox">
+                                    <span class="slider round">
+                                        <i class="fab fa-whatsapp icon"></i>
+                                    </span>
+                                </label>
+                                <button type="submit" class="custom-img-btn" id="SaveEdit">
+                                    <img src="~/MasSystem/images/save.svg" />
+                                </button>
+                                <button type="button" class="custom-img-btn" id="HoldBtn" data-bs-toggle="modal" data-bs-target="#Stop-Modal">
+                                    <img id="StopModalIcon" src="~/MasSystem/images/stop.svg" />
+                                </button>
+                                <button type="button" class="custom-img-btn" id="DeleteBtn" data-bs-toggle="modal" data-bs-target="#Delete-Modal">
+                                    <img id="modalIcon" src="~/MasSystem/images/delete.svg" />
+                                </button>
+                                <button type="button" class="custom-img-btn"> <a href="/MAS/LessorsKSA/Index"><img class="Chevron" src="~/MasSystem/images/Chevron_Left.svg" /></a></button>
+                            </div>
+                        </div>
+                        <main class="mt-4 g-3">
+                            <h4 class="subtitle mb-3">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.CrMasLessorInformationEnLongName : Model.CrMasLessorInformationArLongName) </h4>
+                            <h6>
+                                @(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? ViewBag.CityDropDownEn : ViewBag.CityDropDownAr)
+                            </h6>
+                            <div class="accordion inputs-accordion">
+                                <div class=" inputs-accordion-item">
+                                    <div class=" inputs-accordion-item-header">
+                                        <span class="accordion-item-header-title">
+                                            @localizer["Data"]
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                             viewBox="0 0 24 24" fill="none" stroke="#666666"
+                                             stroke-width="3" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="lucide lucide-chevron-down accordion-item-header-icon">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div class="accordion-item-description-wrapper">
+                                        <div class="accordion-item-description">
+                                            <hr class="accordion-items-hr">
+                                            <div class="container-fluid Update-data-scroll-container">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <p class="DataTitle">@localizer["TaxNo"]</p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data">
+                                                                    @Model.CrMasLessorInformationTaxNo
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <p class="DataTitle">@localizer["governmentNo"] </p>
+                                                            </div>
+                                                            <div class="col-auto ">
+                                                                <p class="Saved-data"> @Model.CrMasLessorInformationGovernmentNo </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 ">
+                                                        <label for="Category" class="form-label">
+                                                            @localizer["Classification"]
+                                                        </label>
+                                                        <select class="form-select select-style "
+                                                                asp-for="@Model.CrMasLessorInformationClassification" id="Category">
+                                                            @if (requestCulture?.RequestCulture.UICulture.Name == "ar-EG")
+                                                            {
+                                                                @foreach (var classification in (List<SelectListItem>)ViewData["ClassificationDropDownAr"])
+                                                                {
+
+                                                                    <option value="@classification.Value" selected="@(classification.Value.Trim() == "" ? "selected" : null)">@classification.Text</option>
+
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                @foreach (var classification in (List<SelectListItem>)ViewData["ClassificationDropDownEn"])
+                                                                {
+
+                                                                    <option value="@classification.Value" selected="@(classification.Value.Trim() == "" ? "selected" : null)">@classification.Text</option>
+
+                                                                }
+                                                            }
+                                                        </select>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationClassification" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="manager-name-ar"
+                                                               class="form-label">@localizer["DirNameAr"]</label>
+                                                        <input type="text" id="manager-name-ar"
+                                                               class="form-control inputs arabic-input"
+                                                               asp-for="CrMasLessorInformationDirectorArName" oninput="this.value=this.value.replace(/[^\u0600-\u06FF\ufb50-\ufdff\ufe70-\ufeff\s]/g, '')" maxlength="50">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationDirectorArName" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="manager-name-en"
+                                                               class="form-label">
+                                                            @localizer["DirNameEn"]
+                                                        </label>
+                                                        <input type="text" id="manager-name-en"
+                                                               class="form-control inputs english-input"
+                                                               asp-for="CrMasLessorInformationDirectorEnName" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" maxlength="50">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationDirectorEnName" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="phone1" class="form-label">
+                                                            @localizer["TelePhone"]
+                                                        </label>
+                                                        <div class="input-group">
+                                                            <input type="tel"
+                                                                   class="form-control inputs tel-input"
+                                                                   id="phone1" asp-for="CrMasLessorInformationCallFree"
+                                                                   oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="15">
+                                                            <select class="input-group-text select-style counterCode" asp-for="CrMasLessorInformationCallFreeKey">
+                                                                @foreach (var callingKey in (List<SelectListItem>)ViewData["CallingKeys"])
+                                                                {
+                                                                    <option value="@callingKey.Text.Trim()">@callingKey.Text.Trim()</option>
+                                                                }
+
+                                                            </select>
+                                                            <div class="invaild">
+                                                                <div class="invalid-feedback">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="phone2" class="form-label">
+                                                            @localizer["LessorPhone"]
+                                                        </label>
+                                                        <div class="input-group">
+                                                            <input type="tel"
+                                                                   class="form-control inputs tel-input"
+                                                                   id="phone2" asp-for="CrMasLessorInformationCommunicationMobile" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
+                                                            <select class="input-group-text select-style counterCode"
+                                                                    asp-for="CrMasLessorInformationCommunicationMobileKey">
+                                                                @foreach (var callingKey in (List<SelectListItem>)ViewData["CallingKeys"])
+                                                                {
+                                                                    <option value="@callingKey.Text">@callingKey.Text</option>
+                                                                }
+                                                            </select>
+                                                            <div class="invaild">
+                                                                <div class="invalid-feedback">
+                                                                    <span asp-validation-for="@Model.CrMasLessorInformationCommunicationMobile" class="text-danger" id="CommunicationMobileError"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="email"
+                                                               class="form-label">@localizer["LessorEmail"] </label>
+                                                        <input type="email" id="email"
+                                                               class="form-control inputs english-input"
+                                                               asp-for="CrMasLessorInformationEmail" maxlength="100">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationEmail" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="contact-mail"
+                                                               class="form-label">@localizer["LessorContractEmail"]</label>
+                                                        <input type="email" id="contact-mail"
+                                                               class="form-control inputs english-input"
+                                                               asp-for="CrMasLessorInformationContEmail" maxlength="100">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationContEmail" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row align-items-end g-3 ">
+                                                    <div class="col-md-8">
+                                                        <label>@localizer["reasons"]</label>
+                                                        <textarea class=" form-control textarea-inputs" rows="1" maxlength="100" asp-for="CrMasLessorInformationReasons" type="text"></textarea>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="row align-items-center justify-content-end">
+                                                            <div class="col-auto">
+                                                                <button type="button"
+                                                                        class="custom-img-btn">
+                                                                    <img src="~/MasSystem/images/icon.svg"
+                                                                         data-bs-toggle="modal"
+                                                                         href="#signature-modal" />
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <img src="~/MasSystem/images/signature.svg"
+                                                                     id="previewSignature">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="inputs-accordion-item">
+                                    <div class="inputs-accordion-item-header">
+                                        <span class="accordion-item-header-title">
+                                            @localizer["LessorAddress"]
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                             viewBox="0 0 24 24" fill="none" stroke="#666666"
+                                             stroke-width="3" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="lucide lucide-chevron-down accordion-item-header-icon">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div class="accordion-item-description-wrapper">
+                                        <div class="accordion-item-description">
+                                            <hr class="accordion-items-hr">
+                                            <div class="container-fluid Update-data-scroll-container">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="District-name-ar" class="form-label">@localizer["DistrictNameAr"]</label>
+                                                        <input type="text" id="District-name-ar"
+                                                               class="form-control inputs arabic-input"
+                                                               asp-for="BranchPostVM.CrCasBranchPostArDistrict" oninput="this.value=this.value.replace(/[^\u0600-\u06FF\ufb50-\ufdff\ufe70-\ufeff\s]/g, '')" maxlength="50">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="BranchPostVM.CrCasBranchPostArDistrict" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="District-name-en" class="form-label"> @localizer["DistrictNameEn"]</label>
+                                                        <input type="text" id="District-name-en"
+                                                               class="form-control inputs english-input"
+                                                               asp-for="BranchPostVM.CrCasBranchPostEnDistrict" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" maxlength="50">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="BranchPostVM.CrCasBranchPostEnDistrict" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="street-name-ar"
+                                                               class="form-label">@localizer["StreetNameAr"]</label>
+                                                        <input type="text" id="street-name-ar" asp-for="BranchPostVM.CrCasBranchPostArStreet"
+                                                               class="form-control inputs arabic-input" oninput="this.value=this.value.replace(/[^\u0600-\u06FF\ufb50-\ufdff\ufe70-\ufeff\s]/g, '')" maxlength="50">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="BranchPostVM.CrCasBranchPostArStreet" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="street-name-en"
+                                                               class="form-label">
+                                                            @localizer["StreetNameEn"]
+                                                        </label>
+                                                        <input type="text" id="street-name-en"
+                                                               class="form-control inputs english-input"
+                                                               asp-for="BranchPostVM.CrCasBranchPostEnStreet" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" maxlength="50">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="BranchPostVM.CrCasBranchPostEnDistrict" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 ">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label for="Building-number"
+                                                                       class="form-label">
+                                                                    @localizer["BulidingNumber"]
+                                                                </label>
+                                                                <input type="text" id="Building-number" class="form-control inputs text-center"
+                                                                       asp-for="BranchPostVM.CrCasBranchPostBuilding" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="10">
+                                                                <div class="invaild">
+                                                                    <div class="invalid-feedback">
+                                                                        <span asp-validation-for="BranchPostVM.CrCasBranchPostBuilding" class="text-danger"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="Unit-number"
+                                                                       class="form-label">
+                                                                    @localizer["UnitNumber"]
+                                                                </label>
+                                                                <input type="text" id="Unit-number"
+                                                                       class="form-control inputs text-center"
+                                                                       asp-for="BranchPostVM.CrCasBranchPostUnitNo" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="20">
+                                                                <div class="invaild">
+                                                                    <div class="invalid-feedback">
+                                                                        <span asp-validation-for="BranchPostVM.CrCasBranchPostUnitNo" class="text-danger"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 ">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label for="zip-code"
+                                                                       class="form-label">
+                                                                    @localizer["symbolMailAr"]
+                                                                </label>
+                                                                <input type="text" id="zip-code" class="form-control inputs text-center" asp-for="BranchPostVM.CrCasBranchPostZipCode" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="10">
+                                                                <div class="invaild">
+                                                                    <div class="invalid-feedback">
+                                                                        <span asp-validation-for="BranchPostVM.CrCasBranchPostZipCode" class="text-danger"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="Additional-number"
+                                                                       class="form-label">
+                                                                    @localizer["AdditionalNumber"]
+                                                                </label>
+                                                                <input type="text"
+                                                                       id="Additional-number"
+                                                                       class="form-control inputs text-center"
+                                                                       asp-for="BranchPostVM.CrCasBranchPostAdditionalNumbers" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="10">
+                                                                <div class="invaild">
+                                                                    <div class="invalid-feedback">
+                                                                        <span asp-validation-for="BranchPostVM.CrCasBranchPostAdditionalNumbers" class="text-danger"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- delete modal -->
+<div class="modal fade" id="Delete-Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="Delete-ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border: 1px solid var(--main-color);">
+            <div class="content" id="modalContent">
+            </div>
+            <!-- Hidden spinner  -->
+            <div class="modal-body text-center" id="spinner" style="display: none;">
+                <span class="State-Modal-loader"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Stopp  modal -->
+<div class="modal fade" id="Stop-Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="Stop-ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border: 1px solid var(--main-color);">
+            <div class=" content" id="Stop-modal-Content">
+            </div>
+            <!-- Hidden spinner  -->
+            <div class="modal-body text-center" id="spinner2" style="display: none;">
+                <span class="State-Modal-loader"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/toastr.js"></script>
+
+    <script>
+        // To Handle Background
+        $("#wrapper").addClass("Branches-wrapper");
+    </script>
+    <script>
+        var statusInput = $("#CrMasLessorInformationStatus");
+
+        function updateLessorStatus(status) {
+            var code = document.getElementById("CrMasLessorInformationCode").value;
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "POST",
+                    url: "/MAS/LessorsKSA/EditStatus",
+                    data: { status: status, code: code },
+                    success: function (result) {
+                        toastr.options = { "positionClass": "@localizer["toastPostion"]" };
+
+                        if (result == "true") {
+                            //@*toastr.success("@localizer["ToastSave"]");*@
+                            resolve(true);
+                        } else if (result == "false_auth") {
+                            toastr.error("@localizer["AuthEmplpoyee_No_auth"]");
+                            resolve(false);
+                        } else if (result == "udelete") {
+                            toastr.error("@localizer["SureTo_Cannot_delete"]");
+                            resolve(false);
+                        } else {
+                            toastr.error("@localizer["ToastFailed"]");
+                            resolve(false);
+                        }
+                    },
+                    error: function () {
+                        toastr.error("@localizer["ToastFailed"]");
+                        resolve(false);
+                    }
+                });
+            });
+        }
+    </script>
+    <script>
+
+        let isDeleted = false;
+        let isStoped = false
+        if (statusInput.val() == '@Status.Hold') {
+            isDeleted = false;
+            isStoped = true
+        }
+        else if (statusInput.val() == '@Status.Deleted') {
+            isDeleted = true;
+            isStoped = false
+        }
+
+        window.onload = () => {
+            DeleteState(isDeleted);
+            StopState(isStoped);
+        };
+
+        function DeleteState(deleted) {
+            isDeleted = deleted;
+
+            document.getElementById("modalContent").style.display = "block";
+            document.getElementById("modalIcon").src = isDeleted
+                ? "/MasSystem/images/Property 1=recycle.svg"
+                : "/MasSystem/images/delete.svg";
+
+            document.getElementById("modalContent").innerHTML = isDeleted
+                ? `
+                                                                            <div class="modal-header border-0">
+                                                                              <h1 class="modal-title fs-4 m-auto d-flex align-items-start gap-2" id="Delete-ModalLabel">
+                                                                                <img src="/MasSystem/images/Green-recycle.svg" /> @localizer["SureToRetriveDelete"]
+                                                                              </h1>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <p>@localizer["ModalFirstMessage_lessor_UnDelete"]</p>
+                                                                                <p>@localizer["ModalSecondMessage_lessor_UnDelete"]</p>
+                                                                            </div>
+                                                                            <div class="modal-footer border-0">
+                                                                              <div class="container">
+                                                                                <div class="row">
+                                                                                  <div class="col-md-6 text-center">
+                                                                                    <button type="button" class="btn btn-modal-Save" id="RetriveBtn" onclick="DeleteLoad()">@localizer["Okay"]</button>
+                                                                                  </div>
+                                                                                  <div class="col-md-6 text-center">
+                                                                                    <button type="button" class="btn btn-Cancel" data-bs-dismiss="modal">@localizer["Cancel"]</button>
+                                                                                  </div>
+                                                                                </div>
+                                                                              </div>
+                                                                            </div>`
+                : `
+                                                                            <div class="modal-header border-0">
+                                                                              <h1 class="modal-title fs-4 m-auto d-flex align-items-start gap-2" id="Delete-ModalLabel">
+                                                                                <img src="/MasSystem/images/delete (2).svg" /> @localizer["SureTodelete"]
+                                                                              </h1>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                        <p>@localizer["ModalFirstMessage_lessor_Delete"]</p>
+                                                                                        <p>@localizer["ModalSecondMessage_lessor_Delete"]</p>
+                                                                            </div>
+                                                                            <div class="modal-footer border-0">
+                                                                              <div class="container">
+                                                                                <div class="row">
+                                                                                  <div class="col-md-6 text-center">
+                                                                                    <button type="button" class="btn btn-modal-Save" id="DeleteBtn" onclick="DeleteLoad()">@localizer["Okay"]</button>
+                                                                                  </div>
+                                                                                  <div class="col-md-6 text-center">
+                                                                                    <button type="button" class="btn btn-Cancel" data-bs-dismiss="modal">@localizer["Cancel"]</button>
+                                                                                  </div>
+                                                                                </div>
+                                                                              </div>
+                                                                            </div>`;
+        }
+        function DeleteLoad() {
+            const modalContent = document.getElementById("modalContent");
+            const spinner = document.getElementById("spinner");
+            const deleteModal = document.getElementById("Delete-Modal");
+            const modalIcon = document.getElementById("modalIcon");
+
+            modalContent.style.display = "none";
+            spinner.style.display = "flex";
+
+            setTimeout(async () => {
+                spinner.style.display = "none";
+                const modal = bootstrap.Modal.getInstance(deleteModal);
+                modal.hide();
+
+                const newStatus = isDeleted ? '@Status.UnDeleted' : '@Status.Deleted';
+                const success = await updateLessorStatus(newStatus);
+                if (success) {
+                    statusInput.val(isDeleted ? '@Status.Active' : '@Status.Deleted');
+                    isDeleted = !isDeleted;
+
+                    modalIcon.src = isDeleted
+                        ? "/MasSystem/images/Property 1=recycle.svg"
+                        : "/MasSystem/images/delete.svg";
+
+                    DeleteState(isDeleted);
+                    setTimeout(function () {
+                        location.href = '@Url.Action("DisplayToastSuccess_withIndex", "LessorsKSA")';
+                    }, 500); // التأخير لمدة .5 ثوانٍ
+                }
+                else {
+                    modalIcon.src = isDeleted
+                        ? "/MasSystem/images/Property 1=recycle.svg"
+                        : "/MasSystem/images/delete.svg";
+
+                    DeleteState(isDeleted);
+                }
+            }, 500);
+        }
+
+        function StopState(Stoped) {
+            isStoped = Stoped;
+
+            document.getElementById("Stop-modal-Content").style.display = "block";
+            document.getElementById("StopModalIcon").src = isStoped
+                ? "/MasSystem/images/Property 1=active.svg"
+                : "/MasSystem/images/stop.svg";
+
+            document.getElementById("Stop-modal-Content").innerHTML = isStoped
+                ? `
+                                                                            <div class="modal-header border-0">
+                                                                              <h1 class="modal-title fs-4 m-auto d-flex align-items-start gap-2" id="Delete-ModalLabel">
+                                                                                <img src="/MasSystem/images/GreenStop.svg" /> @localizer["SureToRetriveHold"]
+                                                                              </h1>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <p>@localizer["ModalFirstMessage_lessor_UnHold"]</p>
+                                                                                <p>@localizer["ModalSecondMessage_lessor_UnHold"]</p>
+                                                                            </div>
+                                                                            <div class="modal-footer border-0">
+                                                                              <div class="container">
+                                                                                <div class="row">
+                                                                                  <div class="col-md-6 text-center">
+                                                                                    <button type="button" class="btn btn-modal-Save" id="RetriveBtn" onclick="StopLoad()">@localizer["Okay"]</button>
+                                                                                  </div>
+                                                                                  <div class="col-md-6 text-center">
+                                                                                    <button type="button" class="btn btn-Cancel" data-bs-dismiss="modal">@localizer["Cancel"]</button>
+                                                                                  </div>
+                                                                                </div>
+                                                                              </div>
+                                                                            </div>`
+                : `
+                                                                            <div class="modal-header border-0">
+                                                                              <h1 class="modal-title fs-4 m-auto d-flex align-items-start gap-2" id="Delete-ModalLabel">
+                                                                                <img src="/MasSystem/images/RedStop.svg" /> @localizer["SureToHold"]
+                                                                              </h1>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <p>@localizer["ModalFirstMessage_lessor_Hold"]</p>
+                                                                                <p>@localizer["ModalSecondMessage_lessor_Hold"]</p>
+                                                                            </div>
+                                                                            <div class="modal-footer border-0">
+                                                                              <div class="container">
+                                                                                <div class="row">
+                                                                                  <div class="col-md-6 text-center">
+                                                                                    <button type="button" class="btn btn-modal-Save" id="HoldBtn" onclick="StopLoad()">@localizer["Okay"]</button>
+                                                                                  </div>
+                                                                                  <div class="col-md-6 text-center">
+                                                                                    <button type="button" class="btn btn-Cancel" data-bs-dismiss="modal">@localizer["Cancel"]</button>
+                                                                                  </div>
+                                                                                </div>
+                                                                              </div>
+                                                                            </div>`;
+        }
+        function StopLoad() {
+            const stopModalContent = document.getElementById("Stop-modal-Content");
+            const spinner = document.getElementById("spinner2");
+            const modalElement = document.getElementById("Stop-Modal");
+            const stopModalIcon = document.getElementById("StopModalIcon");
+
+            stopModalContent.style.display = "none";
+            spinner.style.display = "flex";
+
+            setTimeout(async () => {
+                spinner.style.display = "none";
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                modal.hide();
+
+                const newStatus = isStoped ? '@Status.UnHold' : '@Status.Hold';
+                const success = await updateLessorStatus(newStatus);
+                if (success) {
+                    statusInput.val(isStoped ? '@Status.Active' : '@Status.Hold');
+                    isStoped = !isStoped;
+
+                    stopModalIcon.src = isStoped
+                        ? "/MasSystem/images/Property 1=active.svg"
+                        : "/MasSystem/images/stop.svg";
+
+                    StopState(isStoped);
+                    setTimeout(function () {
+                        location.href = '@Url.Action("DisplayToastSuccess_withIndex", "LessorsKSA")';
+                    }, 500); // التأخير لمدة .5 ثوانٍ
+                }
+            }, 500);
+        }
+
+    </script>
+
+    <script>
+
+
+        $('#Connect input[type="checkbox"]').on('click', async function () {
+            // تعطيل الـ checkbox مؤقتًا أثناء الانتظار
+            event.preventDefault();
+
+            toastr.options = { "positionClass": "@localizer["toastPostion"]" };
+
+            var companyId = $('#CrMasLessorInformationCode').val();
+            console.log("companyId", companyId);
+            try {
+                const status = await connectLessorAsync(companyId);
+                console.log("status:", status);  // تحقق من القيم القادمة من الخادم
+
+                if (status == '@ApiResponseStatus.Success') {
+                    // تفعيل الـ checkbox بعد نجاح الرد
+                    $('#Connect input[type="checkbox"]').prop('checked', true);
+                    toastr.success("Device successfully added!");
+                } else if (status == '@ApiResponseStatus.AlreadyExists') {
+                    // إلغاء تفعيل الـ checkbox إذا كان الجهاز موجود بالفعل
+                    $('#Connect input[type="checkbox"]').prop('checked', false);
+                    toastr.error("Device already exists!");
+                } else if (status == '@ApiResponseStatus.ValidationError') {
+                    // إلغاء تفعيل الـ checkbox إذا كانت هناك مشكلة في التحقق
+                    $('#Connect input[type="checkbox"]').prop('checked', false);
+                    toastr.error("Validation error! Please check the inputs.");
+                } else {
+                    // في حالة حدوث خطأ غير متوقع
+                    $('#Connect input[type="checkbox"]').prop('checked', false);
+                    toastr.error("An error occurred. Please try again later.");
+                }
+
+            } catch (error) {
+                console.error("Error:", error);
+                // إلغاء تفعيل الـ checkbox إذا حدث خطأ أثناء الـ AJAX
+                $('#Connect input[type="checkbox"]').prop('checked', false);
+                toastr.error("Failed to connect to the server.");
+            } finally {
+                // إعادة تمكين الـ checkbox بعد استلام الرد
+                $('#Connect input[type="checkbox"]').prop('disabled', false);
+            }
+        });
+
+        async function connectLessorAsync(companyId) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "GET",
+                    url: "/MAS/LessorsKSA/Connect",
+                    data: { companyId: companyId },
+                    success: function (result) {
+                        console.log("result", result.status);
+                        resolve(result.status);  // إرجاع status في حالة النجاح
+                    },
+                    error: function () {
+                        console.log("AJAX error");
+                        reject("Failed to connect to the server");  // إرجاع رسالة خطأ في حالة الفشل
+                    }
+                });
+            });
+        }
+
+
+
+
+        $(document).ready(async function () {
+            var companyId = $('#CrMasLessorInformationCode').val(); // افترض وجود الـ ID للشركة
+            console.log("Initializing checkbox for Company ID: ", companyId);
+
+            // التحقق من حالة التهيئة عند تحميل الصفحة
+            const status = await checkClientInitialized(companyId);
+
+            if (status === '@ApiResponseStatus.AlreadyExists') {
+                // إذا كانت مهيأة بالفعل، يتم تفعيل checkbox
+                $('#Connect input[type="checkbox"]').prop('checked', true);
+                $('#Connect input[type="checkbox"]').prop('disabled', true);
+                console.log("Client is already initialized. Checkbox set to true.");
+            } else if (status === '@ApiResponseStatus.NotFound') {
+                // إذا لم تكن مهيأة، يتم إلغاء تحديد checkbox
+                $('#Connect input[type="checkbox"]').prop('checked', false);
+                $('#Connect input[type="checkbox"]').prop('disabled', false);
+                console.log("Client is not initialized. Checkbox set to false.");
+            } else {
+                console.error("An error occurred while checking client initialization.");
+            }
+        });
+
+        async function checkClientInitialized(companyId) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "GET",
+                    url: "/MAS/LessorsKSA/CheckClientInitialized",
+                    data: { companyId: companyId },
+                    success: function (result) {
+                        console.log("result", result.status);
+                        resolve(result.status);  // إرجاع status في حالة النجاح
+                    },
+                    error: function () {
+                        console.log("AJAX error");
+                        reject("Failed to connect to the server");  // إرجاع رسالة خطأ في حالة الفشل
+                    }
+                });
+            });
+        }
+
+
+
+    </script>
+
+}

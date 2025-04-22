@@ -1,0 +1,1595 @@
+﻿@using Bnan.Core.Extensions;
+@using Bnan.Ui.ViewModels.BS;
+@using Microsoft.AspNetCore.Identity;
+@using Microsoft.EntityFrameworkCore;
+@using Newtonsoft.Json;
+@using System.Globalization;
+@model BSLayoutVM
+@inject UserManager<CrMasUserInformation> userManager
+@inject SignInManager<CrMasUserInformation> signinManager
+@inject IViewLocalizer localizer
+@{
+    var user = await userManager.GetUserAsync(User);
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+    var userInfo = await userManager.Users
+          .Include(l => l.CrMasUserMainValidations)
+          .Include(l => l.CrMasUserSubValidations)
+          .Include(l => l.CrMasUserInformationLessorNavigation)
+          .Include(l => l.CrMasUserContractValidity)
+          .FirstOrDefaultAsync(l => l.UserName == user.UserName);
+    var lessorInfo = await userManager.Users.Include(l => l.CrMasUserInformationLessorNavigation).ThenInclude(l => l.CrMasLessorImage).FirstOrDefaultAsync(x => x.UserName == user.UserName);
+}
+
+
+<link rel="stylesheet" href="~/css/toastr.css" />
+<link href="~/BranchSys/css/loader.css" rel="styleSheet">
+<link href="~/BranchSys/Pages/css/style.css" rel="styleSheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+@if (requestCulture?.RequestCulture.UICulture.Name != "ar-EG")
+{
+    <link href="~/BranchSys/Pages/css/English_style.css" rel="styleSheet">
+}
+<!--Pdf-->
+<link rel="stylesheet" href="~/PdfJS/style/style/style.css">
+<!--Pdf-->
+<style>
+    .form-control[readonly], .form-select[disabled] {
+        background-color: white;
+    }
+</style>
+<div class="container-fluid ">
+    <section class="section-mainCard">
+        <div class="row justify-content-center w-100 h-100">
+            <div class="col-11 col-sm-10 col-md-11 col-lg-11 col-xl-10 text-center p-0 ">
+                <div class="card main-card ">
+                    <div class="row p-2 align-items-center">
+                        <a asp-action="Index" asp-area="BS" asp-controller="Home" style="width: fit-content;">
+                            <div>
+                                <img src="~/BranchSys/Pages/img/Close.svg" alt="close_icon" class="close-icon">
+                            </div>
+                        </a>
+                        <a asp-action="Index" asp-area="BS" asp-controller="ContractExtension" style="width: fit-content;">
+                            <div>
+                                <img src="~/BranchSys/Pages/img/Arrow_Left.svg" alt="back_icon" class="back-icon">
+                            </div>
+                        </a>
+                    </div>
+                    <div class="row layout-row">
+
+                        <div class="row" style="flex-direction: row-reverse;">
+                            <div class="col justify-content-center d-flex title-row">
+                                <h1 class="card-title">
+                                    @localizer["ContractExtension"]
+                                </h1>
+                            </div>
+
+                        </div>
+                        <div class="row justify-content-center h-100 content-row">
+
+                            <div class="col-md-11 mx-0 h-100">
+
+                                <form id="contract-extension2-form" class="needs-validation" asp-area="BS" asp-action="Create" asp-controller="ContractExtension" novalidate>
+                                    <input hidden asp-for="SelectedBranch" />
+                                    <input hidden asp-for="ExtensionContract.CrCasRenterContractBasicNo" />
+                                    <!-- i send values here to input -->
+                                    <input hidden asp-for="ExtensionContract.TotalAmount" />
+                                    <input hidden asp-for="ExtensionContract.TotalContract" />
+                                    <input hidden asp-for="ExtensionContract.TaxValue" />
+                                    <input hidden asp-for="ExtensionContract.DiscountValue" />
+                                    <input hidden asp-for="ExtensionContract.RentValue" />
+                                    <input hidden asp-for="ExtensionContract.DaysNo" />
+                                    <input hidden id="StaticContractCardImg" name="StaticContractCardImg" />
+                                    <input hidden id="ExtensionValue" name="ExtensionValue" />
+                                    <input hidden id="SavePdfInvoice" name="SavePdfInvoice" />
+                                    <input hidden id="SavePdfReceipt" name="SavePdfReceipt" />
+                                    <input hidden asp-for="ExtensionContract.AccountReceiptNo" />
+                                    <input hidden asp-for="ExtensionContract.InitialInvoiceNo" />
+                                    <input hidden id="language" name="language" />
+                                    <fieldset>
+                                        <div class="form-card extension2-card">
+                                            <div class="d-flex mb-3 gap-3">
+
+                                                <a href="@Url.Content(Model.ExtensionContract.CrCasRenterContractBasicPdfFile.ToString())" target="_blank" class="pdf-anchor"><img src="~/BranchSys/Pages/img/contract.svg" alt="pdf for contract details" class="pdf_img"></a>
+
+
+
+
+                                                <a href="@Url.Content(Model.ExtensionContract.InvoicePdf.ToString())" target="_blank" class="pdf-anchor2"><img src="~/BranchSys/Pages/img/Invoice.svg" alt="pdf for contract details" class="pdf_img2"></a>
+
+
+                                                @if (requestCulture?.RequestCulture.UICulture.Name != "ar-EG")
+                                                {
+                                                    <a href="" target="_blank" class="pdf-anchor3"><img src="~/BranchSys/Pages/img/naql.svg" alt="pdf for contract details" class="pdf_img3"></a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="" target="_blank" class="pdf-anchor3"><img src="~/BranchSys/Pages/img/naql.svg" alt="pdf for contract details" class="pdf_img3"></a>
+                                                }
+                                            </div>
+
+                                            <div class="row" style="flex-direction: row-reverse;align-items: flex-start;">
+                                                <div class=" col-md-7 col-lg-7 d-flex " style="flex-direction:row-reverse;flex-wrap:wrap">
+                                                    <div class="col-auto ">
+                                                        <P>@localizer["ContractNo"]</P>
+                                                    </div>
+                                                    <div class="col-auto personal-data">
+                                                        <P>@Model.ExtensionContract.CrCasRenterContractBasicNo</P>
+                                                    </div>
+
+
+                                                    <div class="col-md-auto  seacrh-icon-col">
+                                                        <div class="col-sm-12  d-flex justify-content-end">
+
+                                                            <img src="~/BranchSys/Pages/img/Rectangle 129.svg"
+                                                                 alt="seacrh-icon Image" id="hover-image-extension2">
+                                                        </div>
+                                                        <div class="dropdown-content  dropdown-content-extension" id="dropdown-content-extension2">
+
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-12 col-md-auto ">
+                                                                    <p>@localizer["Renterr"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    @if (requestCulture?.RequestCulture.UICulture.Name != "ar-EG")
+                                                                    {
+                                                                        <p>@Model.ExtensionContract.CrCasRenterContractBasic5?.CrCasRenterLessorNavigation.CrMasRenterInformationEnName</p>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <p>@Model.ExtensionContract.CrCasRenterContractBasic5?.CrCasRenterLessorNavigation.CrMasRenterInformationArName</p>
+                                                                    }
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-12 col-md-auto ">
+                                                                    <p> @localizer["Car"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    @if (requestCulture?.RequestCulture.UICulture.Name != "ar-EG")
+                                                                    {
+                                                                        <p>@Model.ExtensionContract.CrCasRenterContractBasicCarSerailNoNavigation?.CrCasCarInformationConcatenateEnName</p>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <p>@Model.ExtensionContract.CrCasRenterContractBasicCarSerailNoNavigation?.CrCasCarInformationConcatenateArName</p>
+                                                                    }
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-12 col-md-auto ">
+                                                                    <p>@localizer["StartContract"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@Model.ExtensionContract.CrCasRenterContractBasicExpectedStartDate?.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-12 col-md-auto ">
+                                                                    <p>@localizer["ExpectedEndDate"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@Model.ExtensionContract.CrCasRenterContractBasicExpectedEndDate?.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-12 col-md-auto ">
+                                                                    <p>@localizer["DaysRemaining"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@((Model.ExtensionContract.CrCasRenterContractBasicExpectedEndDate - DateTime.Now)?.Days)</p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-12 col-md-auto ">
+                                                                    <p>@localizer["AuthType"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>
+                                                                        @if (Model.ExtensionContract.AuthType == true)
+                                                                        {
+                                                                            @localizer["OutFees"]
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @localizer["InFees"]
+                                                                        }
+                                                                    </p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-12 col-md-auto ">
+                                                                    <p>@localizer["DiscountRate"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@Model.ExtensionContract.CrCasRenterContractBasicUserDiscountRate %</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-12 col-md-auto ">
+                                                                    <p>@localizer["TaxValue"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@Model.ExtensionContract.CrCasRenterContractBasicExpectedTaxValue</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row " style="flex-direction: row-reverse;">
+                                                <div class="col-md-12  col-lg-6 col-xl-4 d-flex " style="flex-direction:row-reverse;flex-wrap: wrap;">
+                                                    <div class="col-auto">
+                                                        <P> @localizer["Netcontract"]</P>
+                                                    </div>
+                                                    <div class="col-auto personal-data">
+                                                        <P>@Model.ExtensionContract.CrCasRenterContractBasicExpectedTotal?.ToString("N2", CultureInfo.InvariantCulture)</P>
+                                                    </div>
+                                                    <div class="col-md-5 col-lg-5 col-xl-4  seacrh-icon-col">
+                                                        <div class="col-sm-12  d-flex justify-content-end">
+                                                            <img src="~/BranchSys/Pages/img/Rectangle 129.svg" alt="seacrh-icon Image" id="net_contract_Icon">
+                                                        </div>
+                                                        <div class="dropdown-content  dropdown-content-extension" id="net_contract_dropdown">
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-7 ">
+                                                                    <p>@localizer["Rent"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@Model.ExtensionContract.CrCasRenterContractBasicExpectedRentValue?.ToString("N2", CultureInfo.InvariantCulture)</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-7 ">
+                                                                    <p> @localizer["Delegationn"] </p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@Model.ExtensionContract.CrCasRenterContractBasicAuthorizationValue?.ToString("N2", CultureInfo.InvariantCulture)</p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-7 ">
+                                                                    <p>@localizer["Features"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@Model.ExtensionContract.AdvatagesValue</p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-7 ">
+                                                                    <p>@localizer["AdditionalDriverr"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@Model.ExtensionContract.CrCasRenterContractBasicAdditionalDriverValue?.ToString("N2", CultureInfo.InvariantCulture)</p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-7 ">
+                                                                    <p>@localizer["PrivateDriver"] </p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@Model.ExtensionContract.CrCasRenterContractBasicExpectedPrivateDriverValue?.ToString("N2", CultureInfo.InvariantCulture)</p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-7 ">
+                                                                    <p>@localizer["Choicess"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p>@Model.ExtensionContract.CrCasRenterContractBasicExpectedOptionsValue?.ToString("N2", CultureInfo.InvariantCulture)</p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-7 ">
+                                                                    <p>@localizer["Additionalss"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p> @Model.ExtensionContract.CrCasRenterContractBasicAdditionalValue?.ToString("N2", CultureInfo.InvariantCulture) </p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-7 ">
+                                                                    <p>@localizer["Discount"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p> @Model.ExtensionContract.CrCasRenterContractBasicExpectedDiscountValue?.ToString("N2", CultureInfo.InvariantCulture) </p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-7 ">
+                                                                    <p>@localizer["Tax"]</p>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <p> @Model.ExtensionContract.CrCasRenterContractBasicExpectedTaxValue?.ToString("N2", CultureInfo.InvariantCulture) </p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row dropdown-content-row">
+                                                                <div class="col-7 ">
+                                                                    <P>
+                                                                        @localizer["AmountPaid"]
+                                                                    </P>
+                                                                </div>
+                                                                <div class="col personal-data">
+                                                                    <P>@Model.ExtensionContract.CrCasRenterContractBasicAmountPaidAdvance?.ToString("N2", CultureInfo.InvariantCulture)</P>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="row flex-row-reverse">
+                                                <div class=" col-lg-6 col-xl-4 d-flex flex-wrap flex-md-nowrap" style="flex-direction:row-reverse;">
+                                                    <div class="col-auto">
+                                                        <label id="days-number" for="dayNo">
+                                                            @localizer["ExtensionDays"]
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-auto ps-0">
+                                                        <input type="text" class="form-control form-control1"
+                                                               id="dayNo" asp-for="ExtensionContract.DaysNo" aria-describedby="inputGroupPrepend" autocomplete="off"
+                                                               oninput="this.value=this.value.replace(/[^0-9]/g,'');if(parseInt(this.value)> 365) this.value = '365';" onfocusout="CalculateContract()" maxlength="3" autofocus required>
+                                                        <div class="row requird-field-row-last">
+                                                            <div class="invalid-feedback">
+                                                                <span class="requird-field" id="requird_field_PaymentMethod" asp-validation-for="@Model.ExtensionContract.DaysNo"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-xl-4 d-flex " style="flex-direction:row-reverse;align-items: center;">
+                                                    <div class="col-auto">
+                                                        <P>@localizer["EndDate"]</P>
+                                                    </div>
+                                                    <div class="col-auto personal-data">
+                                                        <P id="EndDate"></P>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-xl-4 d-flex " style="flex-direction:row-reverse;align-items: center;">
+                                                    <div class="col-auto">
+                                                        <P>@localizer["TotalContractDays"]</P>
+                                                    </div>
+                                                    <div class="col-auto personal-data">
+                                                        <P id="ExpectedDaysNo"></P>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row " style="flex-direction: row-reverse;">
+                                                <div class="col-lg-6 col-xl-4 d-flex " style="flex-direction:row-reverse;align-items: center;">
+                                                    <div class="col-auto">
+                                                        <P>@localizer["TotalContract"]</P>
+                                                    </div>
+                                                    <div class="col-auto personal-data">
+                                                        <P id="RentValue">0.00</P>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-6 col-xl-4 d-flex " style="flex-direction:row-reverse;align-items: center;">
+                                                    <div class="col-auto">
+                                                        <P>@localizer["DiscountValue"]</P>
+                                                    </div>
+                                                    <div class="col-auto personal-data">
+                                                        <P id="DiscountValue">0.00</P>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-xl-4 d-flex " style="flex-direction:row-reverse;align-items: center;">
+                                                    <div class="col-auto">
+                                                        <P>@localizer["TaxValue"]</P>
+                                                    </div>
+                                                    <div class="col-auto personal-data">
+                                                        <P id="TaxValue">0.00</P>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="flex-direction: row-reverse;">
+                                                <div class="col-lg-6 col-xl-4 d-flex " style="flex-direction:row-reverse;align-items: center;">
+                                                    <div class="col-auto">
+                                                        <P>@localizer["NetContract"]</P>
+                                                    </div>
+                                                    <div class="col-auto personal-data">
+                                                        <P id="TotalContract">0.00</P>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-6 col-xl-4 d-flex " style="flex-direction:row-reverse;align-items: center;">
+                                                    <div class="col-auto">
+                                                        <P>@localizer["AvailableBalance"]</P>
+                                                    </div>
+                                                    <div class="col-auto personal-data">
+                                                        <P>@Model.ExtensionContract.CasRenterPreviousBalance?.ToString("N2", CultureInfo.InvariantCulture)</P>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-xl-4 d-flex " style="flex-direction:row-reverse;align-items: center;">
+                                                    <div class="col-auto">
+                                                        <P>@localizer["AmountRequired"]</P>
+                                                    </div>
+                                                    <div class="col-auto personal-data">
+                                                        <P id="TotalAmount">0.00</P>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="flex-direction: row-reverse;">
+                                                <div class="col-lg-6 col-xl-4 d-flex flex-row-reverse  flex-wrap flex-md-nowrap ">
+                                                    <div class="col-auto">
+                                                        <label id="amount-paid" for="amount-paid-input">
+                                                            @localizer["AmountPaid"]
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <input type="text" class="form-control form-control2" asp-for="ExtensionContract.AmountPayed" autocomplete="off" oninput="handleAmountPayed(this)" autocomplete="off" readonly>
+                                                        <div class="row requird-field-row-last">
+                                                            <p class="requird_field_AmountPayed"></p>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                @{
+                                                    if (Model?.AccountBanks?.FindAll(x => x.CrCasAccountBankNo != "00").Count() == 0)
+                                                    {
+                                                        Model.PaymentMethods = Model?.PaymentMethods?.FindAll(x => x.CrMasSupAccountPaymentMethodClassification == "1");
+                                                    }
+                                                    else if (Model?.AccountBanks?.FindAll(x => x.CrCasAccountBankNo != "00").Count() > 0 && Model?.SalesPoint?.FindAll(x => x.CrCasAccountSalesPointBank != "00").Count() == 0)
+                                                    {
+                                                        Model.PaymentMethods = Model?.PaymentMethods?.FindAll(x => x.CrMasSupAccountPaymentMethodClassification == "3" || x.CrMasSupAccountPaymentMethodClassification == "1");
+                                                    }
+                                                    else if (Model?.AccountBanks?.FindAll(x => x.CrCasAccountBankNo != "00").Count() > 0 && Model?.SalesPoint?.FindAll(x => x.CrCasAccountSalesPointBank != "00").Count() > 0)
+                                                    {
+                                                        Model.PaymentMethods = Model?.PaymentMethods?.FindAll(x => x.CrMasSupAccountPaymentMethodClassification == "2" || x.CrMasSupAccountPaymentMethodClassification == "3" || x.CrMasSupAccountPaymentMethodClassification == "1");
+                                                    }
+                                                }
+                                                <div class="col-lg-6 col-xl-4 d-flex flex-row-reverse  flex-wrap flex-md-nowrap ">
+                                                    <div class="col-auto d-flex" style="justify-content: flex-end;">
+                                                        <label id="payment-method" for="payment-method-select">@localizer["PaymentMethod"]</label>
+                                                    </div>
+                                                    <div class="col-12 col-md-8 ">
+                                                        <div class="offset">
+                                                            <select class="form-select form-select-last" asp-for="ExtensionContract.PaymentMethod" disabled>
+                                                                <option selected disabled></option>
+                                                                @foreach (var payment in Model.PaymentMethods)
+                                                                {
+                                                                    if (requestCulture?.RequestCulture.UICulture.Name == "ar-EG")
+                                                                    {
+                                                                        <option value="@payment.CrMasSupAccountPaymentMethodCode" data-ar="@payment.CrMasSupAccountPaymentMethodArName" data-en="@payment.CrMasSupAccountPaymentMethodEnName" class="text-right">@payment.CrMasSupAccountPaymentMethodArName</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@payment.CrMasSupAccountPaymentMethodCode" data-ar="@payment.CrMasSupAccountPaymentMethodArName" data-en="@payment.CrMasSupAccountPaymentMethodEnName" class="text-left">@payment.CrMasSupAccountPaymentMethodEnName</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                        <span class="requird-field" id="requird_field_PaymentMethod" asp-validation-for="@Model.Contract.PaymentMethod"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-xl-4 d-flex flex-row-reverse  flex-wrap flex-md-nowrap ">
+                                                    <div class="col-auto d-flex" style="justify-content: flex-end;">
+                                                        <label id="selling-point" for="selling-point-dropdown">@localizer["SalesPoint"]</label>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-8">
+                                                        <div class="offset">
+                                                            <select class="form-select form-select-last" asp-for="ExtensionContract.SalesPoint" disabled>
+                                                            </select>
+                                                        </div>
+                                                        <span class="requird-field" id="requird_field_SalesPoint" asp-validation-for="@Model.ExtensionContract.SalesPoint"></span>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="row p-2" style="flex-direction:row-reverse">
+                                                <div class="col-auto">
+                                                    <label id="notes" for="FormControl-last-Textarea">@localizer["reasons"]</label>
+                                                </div>
+                                                <div class="col-sm-10 col-md-7 col-lg-7">
+                                                    <input class="form-control textarea-inputs" maxlength="100" id="reasons" name="reasons">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row button-row align-items-center" style="padding: 6px 7px 10px 20px;">
+                                            <div class="payment-button-card button-card   gap-2">
+                                                <a class="btn check-btn payment-button" id="submitForm">@localizer["Save"]</a>
+                                                <button type="button" class="btn check-btn payment-button signature-button" id="check_btn_load_Signture" data-bs-toggle="modal" href="#PicsignatureModal">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-auto">
+                                                            <div class="systems-check">
+                                                                <i class="fa-solid fa-check text-white"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">@localizer["SignatureTenant"]</div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Signture-->
+                <div class="modal fade" id="PicsignatureModal" tabindex="-1" aria-labelledby="PicignaturPopupModalLabel" aria-hidden="true" data-bs-backdrop="true">
+                    <div class="modal-dialog modal-dialog-centered d-flex justify-content-center">
+                        <div class="modal-content signature-modal-content p-3">
+                            <div class="modal-body Signature-modal-body">
+                                <div class="SignatureCard">
+                                    <div class="main-container" id="removeSignatureImg"></div>
+                                    <div class="upload-container">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="sinature-Btn-Card p-2" id="UploadSigntaurePic">
+                                            <img src="~/BranchSys/img/Pic.svg" class="w-100">
+                                            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                                        </div>
+                                    </div>
+                                    <div class="col-4" id="WriteSignature">
+                                        <div class="sinature-Btn-Card p-2">
+                                            <img src="~/BranchSys/img/file-signature_9795523 1.svg" class="w-100">
+                                        </div>
+                                    </div>
+                                    @* <div class="col-3" id="clear">
+                                    <div class="sinature-Btn-Card p-2">
+                                    <img src="~/BranchSys/img/Frame.svg" class="w-100">
+                                    </div>
+                                    </div> *@
+                                    <div class="col-4" id="Save_Btn">
+                                        <div class="sinature-Btn-Card p-2">
+                                            <img src="~/BranchSys/img/save.svg" class="w-100" id="save">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Signture-->
+            </div>
+        </div>
+    </section>
+</div>
+<canvas id="myCanvas" hidden></canvas>
+<footer class="fixed-bottom-xl">
+    <div class="before-footer-widget">
+        <svg width: 100%; height:auto viewbox="0 0 2444 132">
+            <path fill="rgba(254, 248, 232, 1)" fill-rule="evenodd"
+                  d="M1222 0h1222c-444.13 88-852.127 132-1223.993 132C849.253 132 442.585 88.263 0 .789V0h1222z">
+            </path>
+        </svg>
+    </div>
+
+</footer>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <!--makes bootsrab animation works-->
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.9.2/dist/umd/popper.min.js"
+            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!--Pdf-->
+    <script src="~/PdfJS/Receipts/Receipt.js"></script>
+    <script src="~/PdfJS/Invoices/ProformaInvoice.js"></script>
+    <script src="~/PdfJS/Card/Card.js"></script>
+    <script src="~/PdfJS/PdfAndImages.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <!--Pdf-->
+    <!--Upload Signture-->
+    <script>
+        //variables//
+        let saveSignatureBtn = null;
+        var imgeURL;
+        document.getElementById("UploadSigntaurePic").addEventListener("click", function () { saveSignatureBtn = "UploadSigntaurePic"; });
+        document.getElementById("WriteSignature").addEventListener("click", function () { saveSignatureBtn = "WriteSignature"; });
+        var renterSignture = "@Model.ExtensionContract?.CrCasRenterContractBasic5?.CrCasRenterLessorNavigation?.CrMasRenterInformationSignature";
+        const uploadContainer = document.querySelector(".upload-container");
+        const mainContainer = document.querySelector(".main-container");
+        const UploadSigntaurePic = document.getElementById("UploadSigntaurePic");
+        const imageUpload = document.getElementById("imageUpload");
+        var btnSignture = document.getElementById('check_btn_load_Signture');
+        var imgeURL;
+        const uploadedImg = null;
+        //
+
+        UploadSigntaurePic.addEventListener("click", function () {
+            imageUpload.click();
+        });
+
+        imageUpload.addEventListener("change", function () {
+            const file = imageUpload.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imageURL = e.target.result;
+                    const previewImage = document.createElement("img");
+                    previewImage.classList.add("preview-image");
+                    previewImage.src = imageURL;
+                    previewImage.id = "signatureImage";
+                    imgeURL = imageURL;
+                    mainContainer.innerHTML =
+                        '<i class="fa-regular fa-circle-xmark"  style="cursor: pointer;"></i>';
+                    uploadContainer.innerHTML = "";
+                    uploadContainer.appendChild(previewImage);
+                    uploadContainer.classList.add("previewing");
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeSignatureImg.addEventListener("click", function (event) {
+            event.preventDefault();
+            if (uploadContainer.firstChild) {
+                uploadContainer.innerHTML = "";
+                mainContainer.innerHTML = "";
+                uploadContainer.classList.remove("previewing");
+                uploadContainer.innerHTML =
+                    '<img class="upload-icon" src="/BranchSys/CreateContract/img/Rectangle 144.png" alt="Upload Icon"><p>' + '@localizer["UploadSignture"]' + '</p>';
+            }
+        });
+
+        function CheckSigntureImgForRenter() {
+            if (renterSignture) {
+                const checkDiv = document.querySelector('.row .col-auto .systems-check');
+                if (checkDiv) {
+                    checkDiv.style.backgroundColor = 'green';
+                }
+                renterSignture = renterSignture.replace("~", "");
+                uploadContainer.innerHTML = ''; // Clear existing content
+                uploadContainer.innerHTML = '<img class="preview-image" src="' + renterSignture + '">';
+                uploadContainer.classList.add('previewing');
+            } else {
+                uploadContainer.innerHTML = '<img class="upload-icon" src="/BranchSys/CreateContract/img/Rectangle 144.png" alt="Upload Icon"><p>' + '@localizer["UploadSignture"]' + '</p>';
+                uploadContainer.classList.remove('previewing');
+            }
+        }
+        btnSignture.addEventListener('click', function (event) {
+            event.preventDefault();
+            CheckSigntureImgForRenter();
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            CheckSigntureImgForRenter();
+        });
+    </script>
+    <!--Write Signture-->
+    <script>
+        const WriteSignature = document.getElementById("WriteSignature");
+        WriteSignature.addEventListener("click", function () {
+            uploadContainer.innerHTML = "";
+            mainContainer.innerHTML = "";
+            uploadContainer.innerHTML =
+                '<canvas id="canvas" width="200" height="200" class="mb-2"></canvas>';
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+            ctx.lineWidth = 4;
+
+            var drawing = false;
+            var prevX = 0;
+            var prevY = 0;
+            var currX = 0;
+            var currY = 0;
+
+            function drawLine(x0, y0, x1, y1) {
+                ctx.beginPath();
+                ctx.moveTo(x0, y0);
+                ctx.lineTo(x1, y1);
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            canvas.addEventListener("mousedown", handleMouseDown, false);
+            canvas.addEventListener("mousemove", handleMouseMove, false);
+            canvas.addEventListener("mouseup", handleMouseUp, false);
+
+            canvas.addEventListener("touchstart", handleTouchStart, false);
+            canvas.addEventListener("touchmove", handleTouchMove, false);
+            canvas.addEventListener("touchend", handleTouchEnd, false);
+
+            function handleMouseDown(e) {
+                drawing = true;
+                prevX = e.clientX - canvas.getBoundingClientRect().left;
+                prevY = e.clientY - canvas.getBoundingClientRect().top;
+            }
+
+            function handleMouseMove(e) {
+                if (!drawing) return;
+                currX = e.clientX - canvas.getBoundingClientRect().left;
+                currY = e.clientY - canvas.getBoundingClientRect().top;
+
+                drawLine(prevX, prevY, currX, currY);
+                prevX = currX;
+                prevY = currY;
+            }
+
+            function handleMouseUp() {
+                drawing = false;
+            }
+
+            function handleTouchStart(e) {
+                drawing = true;
+                prevX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+                prevY = e.touches[0].clientY - canvas.getBoundingClientRect().top;
+            }
+
+            function handleTouchMove(e) {
+                if (!drawing) return;
+                currX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+                currY = e.touches[0].clientY - canvas.getBoundingClientRect().top;
+
+                drawLine(prevX, prevY, currX, currY);
+                prevX = currX;
+                prevY = currY;
+            }
+
+            function handleTouchEnd() {
+                drawing = false;
+            }
+        });
+        // Save the written signature as an image
+        function SaveWrittenSignature() {
+            var canvas = document.getElementById("canvas");
+            if (canvas) {
+                var dataURL = canvas.toDataURL();
+                var link = document.createElement("a");
+                link.href = dataURL;
+                var imgeURL = dataURL;
+                $("#PicsignatureModal").modal("hide");
+                return imgeURL;
+            } else {
+                return null;
+            }
+        }
+
+        // Save the uploaded signature image
+        function SaveUploadedSignature() {
+            const img = document.getElementById("signatureImage");
+            if (img) {
+                const canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const context = canvas.getContext("2d");
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const base64 = canvas.toDataURL("image/jpeg");
+                $("#PicsignatureModal").modal("hide");
+                return base64;
+            } else {
+                return null;
+            }
+        }
+    </script>
+    <script>
+        const imageSubmitBtn = document.getElementById('Save_Btn');
+        imageSubmitBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            var renterId = decodeHTMLEntities("@Model.ExtensionContract.CrCasRenterContractBasicRenterId");
+            imgeURL = null;
+            if (saveSignatureBtn === "UploadSigntaurePic") {
+                imgeURL = SaveUploadedSignature();
+            } else if (saveSignatureBtn === "WriteSignature") {
+                imgeURL = SaveWrittenSignature();
+            }
+            if (!imgeURL) {
+                // toastr.options = { "positionClass": '@localizer["toastPostion"]', };
+                // toastr.error('@localizer["PleaseEnterPictureToast"]');
+                $('#PicsignatureModal').modal('hide');
+                return;
+            }
+            if (uploadContainer.firstChild) {
+                uploadContainer.innerHTML = '';
+                uploadContainer.classList.remove('previewing');
+                uploadContainer.innerHTML = '<img class="upload-icon" src="/BranchSys/CreateContract/img/Rectangle 144.png" alt="Upload Icon"><p>' + '@localizer["UploadSignture"]' + '</p>';
+            }
+
+            $('#PicsignatureModal').modal('hide');
+            // Show the spinner
+            showSpinner(btnSignture);
+            var CheckUpdateSigntureForRenter = updateRenterSignture(imgeURL, renterId);
+            setTimeout(function () {
+                $('#thirdPopupModal').modal('hide');
+                if (CheckUpdateSigntureForRenter) {
+                    removeSpinnerAndChangeColor(btnSignture); // Remove spinner and change color
+                }
+                else {
+                    toastr.options = { "positionClass": '@localizer["toastPostion"]', };
+                    toastr.error('@localizer["SomethingWrongPleaseCallAdmin"]');
+                }
+            }, 2000);
+        });
+        async function updateRenterSignture(img, renterId) {
+            try {
+                var data = await $.ajax({
+                    url: "/BS/Contract/UpdateSigntureForRenter",
+                    type: "POST",
+                    data: { img: img, renterId: renterId },
+                });
+                if (data) {
+                    renterSignture = data;
+                    return true; // Renter Updated Successfully
+                }
+            } catch (error) {
+                return false; // Error occurred or Renter doesn't exist
+            }
+            return false; // Renter doesn't exist
+        }
+    </script>
+
+
+    <script>
+        // Search icon to show more details
+        const image = document.getElementById('hover-image-extension2');
+        const dropdown = document.getElementById('dropdown-content-extension2');
+
+        image.addEventListener('click', function () {
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            } else {
+                dropdown.style.display = 'block';
+            }
+        });
+
+        const net_contract_Icon = document.getElementById("net_contract_Icon");
+        const net_contract_dropdown = document.getElementById("net_contract_dropdown");
+
+        net_contract_Icon.addEventListener("click", function () {
+            if (net_contract_dropdown.style.display === "block") {
+                net_contract_dropdown.style.display = "none";
+            } else {
+                net_contract_dropdown.style.display = "block";
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var formElements = document.querySelectorAll(
+                "#contract-extension2-form input, #contract-extension2-form select, #contract-extension2-form textarea"
+            );
+            var firstInput = document.getElementById("dayNo");
+
+            firstInput.focus();
+
+            formElements.forEach((element, index) => {
+                element.addEventListener("keydown", function (event) {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        var nextElement = formElements[index + 1];
+                        if (nextElement) {
+                            nextElement.focus();
+                        } else {
+                            document.getElementById("contract-extension2-form").submit();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        var rentValue = 0;
+        var choicesValue = 0;
+        var additionalValue = 0;
+        var advantagesValueTotal = 0;
+        var additionalDriverValue = 0;
+        var privateDriverValue = 0;
+        var FeesTammValue = 0;
+        var contractValue = 0;
+        var totalContract = 0;
+        var discountValue = 0;
+        var taxValue = 0;
+        var TotalAmount = 0;
+        var somethingIsNotOkay = true;
+        function CalculateContract() {
+            var price = 0;
+            var daysNo = document.getElementById('dayNo').value;
+            var oldDaysNo = '@Model.ExtensionContract.CrCasRenterContractBasicExpectedRentalDays';
+            var ExpectedDaysNo = parseInt(daysNo) + parseInt(oldDaysNo);
+            var RentalDayPrice = "@Model.ExtensionContract.CrCasRenterContractBasicDailyRent";
+            if (parseInt(daysNo) > 0) {
+                $("#ExtensionContract_DaysNo").val(ExpectedDaysNo);
+                var options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+                var formattedstartDate = "@Model.ExtensionContract.CrCasRenterContractBasicExpectedStartDate?.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)";
+                var StartDate = new Date(formattedstartDate);
+                StartDate.setDate(StartDate.getDate() + parseInt(ExpectedDaysNo));
+                var formattedEndDate = StartDate.toLocaleDateString('ja-JP', options);
+                document.getElementById('EndDate').textContent = formattedEndDate;
+                document.getElementById('ExpectedDaysNo').textContent = ExpectedDaysNo.toString();
+                var choicesPerDay = "@Model.ExtensionContract.ChoicesValue"
+                choicesValue = parseFloat(choicesPerDay) * parseInt(ExpectedDaysNo);
+                additionalValue = parseFloat("@Model.ExtensionContract.CrCasRenterContractBasicAdditionalValue");
+                var privateDriverValueForDay = '@Model.ExtensionContract.CrCasRenterContractBasicPrivateDriverValue';
+                privateDriverValue = parseFloat(privateDriverValueForDay) * parseInt(ExpectedDaysNo);
+                additionalDriverValue = parseFloat('@Model.ExtensionContract.CrCasRenterContractBasicAdditionalDriverValue');
+                FeesTammValue = parseFloat('@Model.ExtensionContract.CrCasRenterContractBasicAuthorizationValue');
+                var advantages = parseFloat('@Model.ExtensionContract.AdvatagesValue');
+                advantagesValueTotal = advantages * parseInt(ExpectedDaysNo);
+                var totalRental = parseInt(ExpectedDaysNo) * parseFloat(RentalDayPrice);
+                rentValue = parseFloat(totalRental) + parseFloat(choicesValue) + parseFloat(privateDriverValue) + parseFloat(advantagesValueTotal) + parseFloat(additionalDriverValue) + parseFloat(FeesTammValue) + parseFloat(additionalValue);
+                document.getElementById('RentValue').textContent = rentValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+
+                // // Contract Value Total
+                // // get discount and totalContract Value
+                CalculateDiscount();
+                // // Get Tax value from TotalActualContract and get value of TotalActualContract
+                CalculateTax();
+                CalculateTotalAmount();
+                $('#ExtensionContract_AmountPayed').prop('readonly', false);
+            }
+            else {
+                clearPaymentData();
+            }
+
+        }
+
+        function clearPaymentData() {
+            document.getElementById('EndDate').textContent = "";
+            document.getElementById('ExpectedDaysNo').textContent = "";
+            document.getElementById('TotalAmount').textContent = "0.00";
+            document.getElementById('TotalContract').textContent = "0.00";
+            document.getElementById('TaxValue').textContent = "0.00";
+            document.getElementById('DiscountValue').textContent = "0.00";
+            document.getElementById('RentValue').textContent = "0.00";
+            document.getElementById("dayNo").textContent = "";
+            $('#ExtensionContract_AmountPayed').prop('readonly', true);
+            $('#ExtensionContract_AmountPayed').val("");
+            document.getElementById('ExtensionContract_PaymentMethod').disabled = true;
+            document.getElementById('ExtensionContract_PaymentMethod').selectedIndex = 0;
+            document.getElementById('ExtensionContract_SalesPoint').disabled = true;
+            document.getElementById('ExtensionContract_SalesPoint').selectedIndex = 0;
+            $("#ExtensionContract_SalesPoint").empty();
+            rentValue = 0;
+            choicesValue = 0;
+            additionalValue = 0;
+            advantagesValueTotal = 0;
+            additionalDriverValue = 0;
+            privateDriverValue = 0;
+            FeesTammValue = 0;
+            contractValue = 0;
+            totalContract = 0;
+            discountValue = 0;
+            taxValue = 0;
+            TotalAmount = 0;
+            $("#ExtensionContract_AmountPayed").css({ "border": "2px solid #faa64d" }); //This For last Check When i submit Form
+            somethingIsNotOkay = true;
+        }
+
+        function CalculateDiscount() {
+            var DiscountInput = "@Model.ExtensionContract.CrCasRenterContractBasicUserDiscountRate";
+            if (parseFloat(DiscountInput) != null && parseFloat(DiscountInput) != "" && parseFloat(DiscountInput) != 0 && parseFloat(DiscountInput) != undefined) {
+                discountValue = rentValue * (parseFloat(DiscountInput) / 100);
+            }
+            else {
+                discountValue = 0;
+            }
+            document.getElementById('DiscountValue').textContent = discountValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            $("#ExtensionContract_DiscountValue").val(discountValue);
+            CalculateTax();
+            CalculateTotalAmount();
+        };
+        function CalculateTax() {
+            var TaxPercent = parseFloat("@Model.ExtensionContract.CrCasRenterContractBasicTaxRate");
+            if (TaxPercent != null && TaxPercent != "" && TaxPercent != undefined && TaxPercent != 0) {
+                taxValue = (rentValue - discountValue) * (TaxPercent / 100);
+            }
+            else {
+                taxValue = 0;
+            }
+            document.getElementById('TaxValue').textContent = taxValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            $("#ExtensionContract_TaxValue").val(taxValue);
+
+        }
+        function CalculateTotalAmount() {
+            // Get Total Of amount Required
+            var RenterBalance = '@Model.ExtensionContract.CasRenterPreviousBalance?.ToString("N2", CultureInfo.InvariantCulture)'
+            var PreviousTotalContract = '@Model.ExtensionContract.CrCasRenterContractBasicExpectedTotal?.ToString("N2", CultureInfo.InvariantCulture)'
+            RenterBalance = RenterBalance.replace(/,/g, '');
+            PreviousTotalContract = PreviousTotalContract.replace(/,/g, '');
+            totalContract = parseFloat(rentValue) - parseFloat(discountValue) + parseFloat(taxValue);
+            document.getElementById('TotalContract').textContent = totalContract.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            TotalAmount = (parseFloat(totalContract) - parseFloat(PreviousTotalContract)) - parseFloat(RenterBalance);
+            $("#ExtensionValue").val(parseFloat(totalContract) - parseFloat(PreviousTotalContract));
+            if (TotalAmount < 0) {
+                TotalAmount = 0;
+            }
+            document.getElementById("TotalAmount").textContent = TotalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            $("#ExtensionContract_TotalAmount").val(TotalAmount);
+            $("#ExtensionContract_TotalContract").val(totalContract);
+
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#ExtensionContract_AmountPayed").focusout(function () {
+                var payed = document.getElementById('ExtensionContract_AmountPayed').value;
+                CheckIfCanPayLessThanTotalAmount();
+                if (parseFloat(payed) > 0 && somethingIsNotOkay) {
+                    document.getElementById('ExtensionContract_PaymentMethod').disabled = false;
+                    // document.getElementById('ExtensionContract_PaymentMethod').selectedIndex = 0;
+                    document.getElementById('ExtensionContract_SalesPoint').disabled = false;
+                    document.getElementById('ExtensionContract_SalesPoint').selectedIndex = 0;
+                } else {
+                    document.getElementById('ExtensionContract_PaymentMethod').disabled = true;
+                    document.getElementById('ExtensionContract_PaymentMethod').selectedIndex = 0;
+                    document.getElementById('ExtensionContract_SalesPoint').disabled = true;
+                    document.getElementById('ExtensionContract_SalesPoint').selectedIndex = 0;
+                    $("#ExtensionContract_SalesPoint").empty();
+                }
+            })
+        });
+
+        function handleAmountPayed(input) {
+            // Remove non-digit characters and additional decimal points
+            input.value = input.value.replace(/[^0-9\.]/g, '');
+            const decimalIndex = input.value.indexOf('.');
+            // Limit to 9 digits before and after the decimal point
+            if (decimalIndex !== -1) {
+                const digitsBeforeDecimal = input.value.substring(0, decimalIndex);
+                const digitsAfterDecimal = input.value.substring(decimalIndex + 1);
+
+                // Limit to 2 digits after the decimal point
+                input.value = digitsBeforeDecimal.substr(0, 7) + '.' + digitsAfterDecimal.substr(0, 2);
+
+                // Remove additional decimal points
+                if (input.value.indexOf('.', decimalIndex + 1) !== -1) {
+                    const lastValidIndex = input.value.lastIndexOf('.');
+                    input.value = input.value.substring(0, lastValidIndex) + input.value.substring(lastValidIndex + 1);
+                }
+            } else {
+                // Limit to 7 digits before the decimal point
+                input.value = input.value.substr(0, 7);
+            }
+        }
+        function CheckIfCanPayLessThanTotalAmount() {
+            var userAuthAmount = @Html.Raw(Json.Serialize(userInfo?.CrMasUserContractValidity?.CrMasUserContractValidityLessContractValue));
+            var AmountPayed = document.getElementById("ExtensionContract_AmountPayed").value;
+            if (userAuthAmount == false && TotalAmount > AmountPayed) {
+                toastr.options = { "positionClass": '@localizer["toastPostion"]', };
+                toastr.error('@localizer["DontHaveAuthPayLessThanTotalAmount"]');
+                $("#ExtensionContract_AmountPayed").css({ "border": "2px solid red" });    //This For last Check When i submit Form
+                somethingIsNotOkay = false;
+            }
+            else {
+                $("#ExtensionContract_AmountPayed").css({ "border": "2px solid #faa64d" }); //This For last Check When i submit Form
+                somethingIsNotOkay = true;
+            }
+        }
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#ExtensionContract_PaymentMethod").change(function () {
+                var PaymentMethod = $("#ExtensionContract_PaymentMethod").val();
+                var BranchCode = $("#SelectedBranch").val();
+                $.get("/BS/ContractExtension/GetSalesPoint", { PaymentMethod: PaymentMethod, BranchCode: BranchCode }, function (data) {
+                    $("#ExtensionContract_SalesPoint").empty();
+                    if (data.type == "1" && data.salesPoints != null) {
+                        $.each(data.salesPoints, function (index, row) {
+                            if ("@requestCulture?.RequestCulture.UICulture.Name" == "en-US") {
+                                $("#ExtensionContract_SalesPoint").append("<option  value= '" + row.crCasAccountSalesPointCode + "'>" + row.crCasAccountSalesPointEnName + "</option>")
+                            }
+                            else {
+                                $("#ExtensionContract_SalesPoint").append("<option class='text-right' value= '" + row.crCasAccountSalesPointCode + "'>" + row.crCasAccountSalesPointArName + "</option>")
+                            }
+                        });
+                    }
+                    else if (data.type == "2" && data.accountBank != null) {
+                        $.each(data.accountBank, function (index, row) {
+                            if ("@requestCulture?.RequestCulture.UICulture.Name" == "en-US") {
+
+                                $("#ExtensionContract_SalesPoint").append("<option class='text-left' value= '" + row.crCasAccountBankCode + "'>" + row.crCasAccountBankEnName + "</option>")
+                            }
+                            else {
+                                $("#ExtensionContract_SalesPoint").append("<option class='text-right' value= '" + row.crCasAccountBankCode + "'>" + row.crCasAccountBankArName + "</option>")
+                            }
+                        });
+                    }
+
+                });
+            })
+        });
+    </script>
+    <!--Create Card Contract PDf-->
+    <script>
+       const CreateCardContract = async () => {
+        try {
+          const contractNo ='@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasicNo)';
+          const canvas = document.getElementById("myCanvas");
+          var dates = getDates();
+          const dynamicData = {
+             CARD_TITLE_AR: "عقد إيجار سيارة",
+             CARD_TITLE_EN: "Car Rental Contract",
+             RENTAR_NAME_AR: '@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasic5?.CrCasRenterLessorNavigation?.CrMasRenterInformationArName)',
+             RENTAR_NAME_EN: '@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasic5?.CrCasRenterLessorNavigation?.CrMasRenterInformationEnName)',
+             CAR_NAME_AR: '@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasicCarSerailNoNavigation?.CrCasCarInformationDistributionNavigation?.CrMasSupCarDistributionConcatenateArName)',
+             CAR_NAME_EN: '@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasicCarSerailNoNavigation?.CrCasCarInformationDistributionNavigation?.CrMasSupCarDistributionConcatenateEnName)',
+             CONTRACT_DATE_AR: dates.start.startHijri,
+             CONTRACT_DATE_EN: dates.start.startMiladi,
+             CONTRACT_END_DATE_AR: dates.end.endHijri,
+             CONTRACT_END_DATE_EN: dates.end.endMiladi,
+             ADDRESS: '@Html.Raw(Model.CrCasBranchInformation?.CrCasBranchPost?.CrCasBranchPostCityNavigation?.CrMasSupPostCityConcatenateArName)' + ' - ' + '@Html.Raw(Model.CrCasBranchInformation?.CrCasBranchInformationArShortName)',
+             CONTRACT_NUMBER: contractNo,
+              images: {
+                  background: "@Url.Content(userInfo?.CrMasUserInformationLessorNavigation?.CrMasLessorImage.CrMasLessorImageContractCard)",
+                  QR: "@Url.Content(userInfo?.CrMasUserInformationLessorNavigation?.CrMasLessorImage.CrMasLessorImageQrCodeSite)",
+              },
+          };
+
+          const loadedImages = await loadDynamicImages(dynamicData.images);
+          const dataWithImages = { ...dynamicData, images: loadedImages };
+          console.log("dataWithImages", dataWithImages);
+
+          await drawCard(canvas, dataWithImages);
+          // حفظ الصورة كـ Base64
+          const base64Image = canvas.toDataURL("image/png");
+
+          // تخزين Base64 في input
+          const inputPdf = document.getElementById("StaticContractCardImg");
+          inputPdf.value = base64Image;
+          console.log("Base64 Image:", base64Image);
+         }
+             catch (error) {
+                 console.error("خطأ في إنشاء الفاتورة:", error);
+             }
+         }
+          function getDates() {
+              // تحديد خيارات التنسيق
+              var options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+
+              // تنسيق التاريخ الميلادي باستخدام البيانات من الـ Model (تأكد من مرور التاريخ من الـ Razor بشكل صحيح)
+              var formattedStartDate = "@Model.ExtensionContract?.CrCasRenterContractBasicExpectedStartDate?.ToString("yyyy/MM/dd HH:mm", CultureInfo.InvariantCulture)";
+              var startDate = new Date(formattedStartDate);  // تحويل النص إلى كائن Date
+
+              // التحقق إذا كانت القيمة صالحة
+              if (isNaN(startDate)) {
+                console.error('تاريخ البدء غير صالح');
+                startDate = new Date();  // تعيين تاريخ افتراضي في حال حدوث خطأ
+              }
+
+              // تحويل التاريخ الهجري باستخدام دالة formatHijriDate
+               const startHijriDate = formatHijriDate(startDate,"ar");
+
+              // الحصول على تاريخ النهاية من الـ DOM (افترض أن #EndDate هو عنصر يحتوي على التاريخ)
+              var endDateInput = $("#EndDate").text();
+              var endDate = new Date(endDateInput);  // تحويل النص إلى كائن Date
+
+              // التحقق إذا كانت القيمة صالحة
+              if (isNaN(endDate)) {
+                console.error('تاريخ الانتهاء غير صالح');
+                endDate = new Date();  // تعيين تاريخ افتراضي في حال حدوث خطأ
+              }
+
+              // تنسيق التاريخ الميلادي لآخر تاريخ
+              var formattedEndDate = endDate.toLocaleDateString('ja-JP', options);
+
+              // تحويل التاريخ الهجري باستخدام دالة formatHijriDate
+              const endHijriDate = formatHijriDate(endDate,"ar");
+
+              // إرجاع التواريخ بالميلادي والهجري
+              return {
+                start: {
+                  startMiladi: formattedStartDate,
+                  startHijri: startHijriDate,
+                },
+                end: {
+                  endMiladi: formattedEndDate,
+                  endHijri: endHijriDate,
+                },
+              };
+        }
+    </script>
+    <!--Create Receipt PDf-->
+    <script>
+        const CreateReceiptPdf = async () => {
+            try {
+                    const contractNo = "@Model.ExtensionContract.CrCasRenterContractBasicNo";
+                    const accountReceiptNo = "@ViewBag.AccountReceiptNo";
+                    const canvas = document.getElementById("myCanvas");
+                    const dates = getFormattedDatesMiliadiAndHijri();
+                    var namesOfPaymentMethod = getSelectedOptionDataPaymentMethod();
+                    var getAfterAndBeforeDecimalAmountPayed =await getFormattedAmount();
+                    console.log("getAfterAndBeforeDecimalAmountPayed",getAfterAndBeforeDecimalAmountPayed);
+                    const dynamicData = {
+                        DATE_AR:dates.hijriDate.ar,
+                        DATE_EN: dates.miladiDate.en,
+                        HIJRI_DATE_AR: dates.hijriDate.en,
+                        HIJRI_DATE_EN: dates.miladiDate.ar ,
+                        CONTRACT_NUMBER: accountReceiptNo,
+                        AMOUNT: getAfterAndBeforeDecimalAmountPayed.beforeDecimal,
+                        HALALAS: getAfterAndBeforeDecimalAmountPayed.afterDecimal,
+                        TENANT_NAME_AR: '@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasic5?.CrCasRenterLessorNavigation?.CrMasRenterInformationArName)',
+                        TENANT_NAME_EN: '@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasic5?.CrCasRenterLessorNavigation?.CrMasRenterInformationEnName)',
+                        AMOUNT_AR: getAfterAndBeforeDecimalAmountPayed.arabicText,
+                        AMOUNT_EN: getAfterAndBeforeDecimalAmountPayed.englishText,
+                        PAYMENT_METHOD_AR: namesOfPaymentMethod.ar,
+                        PAYMENT_METHOD_EN: namesOfPaymentMethod.en,
+                        PAYMENT_DESC_AR: `${contractNo}  دفعة تحت الحساب لعقد ايجار السيارة لعقد`,
+                        PAYMENT_DESC_EN: `Payment to extend the car rental contract ${contractNo}`,
+                        NOTES_AR: document.getElementById("reasons").value,
+                        APPROVER_NAME_AR: decodeHTMLEntities("@user.CrMasUserInformationArName"),
+                        APPROVER_NAME_EN: decodeHTMLEntities("@user.CrMasUserInformationEnName"),
+                        images: {
+                            background: "@Url.Content(userInfo?.CrMasUserInformationLessorNavigation?.CrMasLessorImage.CrMasLessorImageReceipt)",
+                            signature: "@Url.Content(user?.CrMasUserInformationSignature)",
+                            qr: "@Url.Content(userInfo?.CrMasUserInformationLessorNavigation?.CrMasLessorImage.CrMasLessorImageQrCodeSite)",
+                            stamp: "@Url.Content(userInfo?.CrMasUserInformationLessorNavigation?.CrMasLessorImage.CrMasLessorImageStamp)",
+                        },
+                    };
+                    const loadedImages = await loadDynamicImages(dynamicData.images);
+                    const dataWithImages = { ...dynamicData, images: loadedImages };
+                    console.log("dataWithImages",dataWithImages);
+                    await drawReceipt(canvas, dataWithImages);
+                    await createPdf(accountReceiptNo, canvas, "SavePdfReceipt", "ExtensionContract_AccountReceiptNo");
+            }
+            catch (error) {
+                console.error("خطأ في إنشاء الكارت:", error);
+            }
+        }
+        function getSelectedOptionDataPaymentMethod() {
+                var selectElement = document.getElementById("ExtensionContract_PaymentMethod");
+                var selectedOption = selectElement.options[selectElement.selectedIndex];
+                // Get the text of the selected option
+                const selectedText = selectedOption.textContent || selectedOption.innerText;
+                var selectedArabicName = selectedOption.dataset.ar;
+                var selectedEnglishName = selectedOption.dataset.en;
+
+                // Return the data as an object
+                return {
+                    ar: selectedArabicName,
+                    en: selectedEnglishName,
+                };
+        }
+        async function getFormattedAmount() {
+                        // الحصول على قيمة الإدخال من العنصر
+            var AmountPayedInput = document.getElementById("ExtensionContract_AmountPayed").value;
+
+            // تحويل القيمة إلى رقم والتأكد من وجود خانتين عشريتين
+            const rawAmountPayed = parseFloat(AmountPayedInput).toFixed(2);
+
+            // تقسيم الرقم إلى جزأين: الجزء الصحيح والجزء العشري
+            const [beforeDecimalll, afterDecimal] = rawAmountPayed.split(".");
+
+            // تنسيق الجزء الصحيح ليشمل فاصلة الآلاف
+                const beforeDecimal = parseInt(beforeDecimalll).toLocaleString('en-US');
+
+                    // استدعاء البيانات لتغيير الرقم إلى نص
+                        const numberToText = await dataChanged(rawAmountPayed);
+
+                    // النص بالعربية والإنجليزية
+                    const arabicText = numberToText.ar_concatenate;
+                    const englishText = numberToText.en_concatenate;
+
+                    // إرجاع النتيجة
+                    return {
+                        beforeDecimal,
+                        afterDecimal,
+                        arabicText,
+                        englishText
+                    };
+            }
+    </script>
+    <!--Create invoice -->
+    <script>
+        const CreateInvoicePdf = async () => {
+            try {
+                const accountInvoiceNo = "@ViewBag.InvoiceAccount";
+                var exitingInvoicePdf = decodeHTMLEntities("@Model.ExtensionContract.InvoicePdf.Replace("~", "")")
+                const canvas = document.getElementById("myCanvas");
+                const dates = getFormattedDatesMiliadiAndHijri();
+
+                var rentDailyValue= GetRentDailyValue();
+                var privateDriverValue = GetPrivateDriverValue();
+                var choicesValue = GetChoicesValue();
+                var advantagesValue = parseFloat('@Html.Raw(Model.ExtensionContract.AdvatagesValue)') || 0;
+
+                var discountInput =parseFloat('@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasicUserDiscountRate)') || 0;
+                var daysNo = parseInt(document.getElementById('dayNo').value) || 0;
+                var taxPercent = parseFloat('@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasicTaxRate)') || 0;
+
+                const itemsData = [
+                    {
+                        arabic: "الإيجار",
+                        english: "Rent",
+                        value: rentDailyValue,
+                        number: daysNo,
+                        discount: discountInput,
+                        vat: taxPercent,
+                    },
+                    {
+                        arabic: "المميزات",
+                        english: "Features",
+                        value: advantagesValue,
+                        number: daysNo,
+                        discount: discountInput,
+                        vat: taxPercent,
+                    },
+
+                    {
+                        arabic: "السائق الخاص",
+                        english: "Private Driver",
+                        value: privateDriverValue,
+                        number: daysNo,
+                        discount: discountInput,
+                        vat: taxPercent,
+                    },
+                    {
+                        arabic: "الخيارات",
+                        english: "Choices",
+                        value: choicesValue,
+                        number: daysNo,
+                        discount: discountInput,
+                        vat: taxPercent,
+                    }
+                ];
+
+                const processedData = generateInvoiceItems(itemsData);
+
+                const dynamicData = {
+                    CONTRACT_NUMBER: accountInvoiceNo,
+                    DATE_AR:dates.hijriDate.ar,
+                    DATE_EN: dates.miladiDate.en,
+                    DATE_EN_LONG: dates.hijriDate.en,
+                    CONTRACT_CREATE_AR: "تمديد عقد",
+                    CONTRACT_CREATE_EN: "Extension  Contract",
+                    TENANT_NAME_AR: '@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasic5?.CrCasRenterLessorNavigation?.CrMasRenterInformationArName)',
+                    TENANT_NAME_EN: '@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasic5?.CrCasRenterLessorNavigation?.CrMasRenterInformationEnName)',
+                    CAR_DESCRIPTION_AR: '@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasicCarSerailNoNavigation?.CrCasCarInformationConcatenateArName)',
+                    CAR_DESCRIPTION_EN: '@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasicCarSerailNoNavigation?.CrCasCarInformationConcatenateEnName)',
+                    EMPLOYEE_AR: decodeHTMLEntities("@user.CrMasUserInformationArName"),
+                    EMPLOYEE_EN:decodeHTMLEntities("@user.CrMasUserInformationEnName"),
+                    images: {
+                        background: "@Url.Content(userInfo?.CrMasUserInformationLessorNavigation?.CrMasLessorImage.CrMasLessorImageTaxInvoice)",
+                        signature: "@Url.Content(user?.CrMasUserInformationSignature)",
+                        qr: "@Url.Content(userInfo?.CrMasUserInformationLessorNavigation?.CrMasLessorImage.CrMasLessorImageQrCodeSite)",
+                        stamp: "@Url.Content(userInfo?.CrMasUserInformationLessorNavigation?.CrMasLessorImage.CrMasLessorImageStamp)",
+                    },
+                    Serviceitems: processedData.Serviceitems,
+                    Valueitems: processedData.Valueitems,
+                    Numberitems: processedData.Numberitems,
+                    Amountitems: processedData.Amountitems,
+                    Discountitems: processedData.Discountitems,
+                    AfterDiscountitems: processedData.AfterDiscountitems,
+                    VATitems: processedData.VATitems,
+                    Totalitems: processedData.Totalitems,
+                };
+
+                const loadedImages = await loadDynamicImages(dynamicData.images);
+                const dataWithImages = { ...dynamicData, images: loadedImages };
+                console.log("dataWithImages", dataWithImages);
+                await drawInvoice(canvas, dataWithImages);
+                await createMergedPdfs(accountInvoiceNo, canvas, "SavePdfInvoice", "ExtensionContract_InitialInvoiceNo",exitingInvoicePdf);
+                }
+            catch (error) {
+                    console.error("خطأ في إنشاء الفاتورة:", error);
+                }
+        }
+        function generateInvoiceItems(itemsData) {
+             const processedItems = itemsData
+                 .filter(item => item.value > 0 && item.number > 0) // تصفية القيم الصفرية
+                 .map(item => {
+                     const totalBeforeDiscount = item.value * item.number; // إجمالي السعر قبل الخصم
+                     const discountAmount = (item.discount / 100) * totalBeforeDiscount; // قيمة الخصم
+                     const afterDiscount = totalBeforeDiscount - discountAmount; // القيمة بعد الخصم
+                     const vatAmount = (item.vat / 100) * afterDiscount; // الضريبة
+                     const totalAfterVAT = afterDiscount + vatAmount; // الإجمالي بعد الضريبة
+
+                     return {
+                         arabic: item.arabic,
+                         english: item.english,
+                         value: item.value, // تخزين القيمة الأصلية كرقم
+                         number: item.number, // العدد
+                         amount: totalBeforeDiscount, // إجمالي السعر قبل الخصم
+                         discount: discountAmount, // قيمة الخصم
+                         afterDiscount: afterDiscount, // القيمة بعد الخصم
+                         vat: vatAmount, // الضريبة
+                         total: totalAfterVAT, // الإجمالي بعد الضريبة
+                     };
+                 });
+
+             // حساب المجموع لكل عمود
+             const sumColumn = (key) =>
+                 processedItems.reduce((sum, item) => sum + item[key], 0).toFixed(2);
+
+             return {
+                 Serviceitems: [
+                     ...processedItems.map(item => ({
+                         arabic: item.arabic,
+                         english: item.english,
+                         textAlign: "center",
+                     }))
+                 ],
+                 Valueitems: [
+                     ...processedItems.map(item => ({ content: item.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })),
+                     { sum: sumColumn("value").toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }
+                 ],
+                 Numberitems: [
+                     ...processedItems.map(item => ({ content: item.number })),
+                     { sum: "-" }
+                 ],
+                 Amountitems: [
+                     ...processedItems.map(item => ({ content: item.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })),
+                     { sum: sumColumn("amount").toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }
+                 ],
+                 Discountitems: [
+                     ...processedItems.map(item => ({ content: item.discount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })),
+                     { sum: sumColumn("discount").toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }
+                 ],
+                 AfterDiscountitems: [
+                     ...processedItems.map(item => ({ content: item.afterDiscount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })),
+                     { sum: sumColumn("afterDiscount").toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }
+                 ],
+                 VATitems: [
+                     ...processedItems.map(item => ({ content: item.vat.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })),
+                     { sum: sumColumn("vat").toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }
+                 ],
+                 Totalitems: [
+                     ...processedItems.map(item => ({ content: item.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })),
+                     { sum: sumColumn("total").toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }
+                 ],
+             };
+         }
+        function GetRentDailyValue(){
+            return parseFloat('@Html.Raw(Model.ExtensionContract?.CrCasRenterContractBasicDailyRent)') ||0;
+        }
+        function GetPrivateDriverValue(){
+            return parseFloat('@Html.Raw(Model.ExtensionContract.CrCasRenterContractBasicPrivateDriverValue)') ||0;
+        }
+        function GetChoicesValue(){
+            return parseFloat('@Html.Raw(Model.ExtensionContract.ChoicesValue)') || 0;
+        }
+    </script>
+
+
+
+
+    <script>
+        // submit Form
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the form element
+            var form = document.getElementById('contract-extension2-form');
+            // Get the submit button
+            var submitButton = document.getElementById('submitForm');
+            // Add a click event listener to the submit button
+            submitButton.addEventListener('click', async function (event) {
+                // Prevent the default form submission
+                var AmountPayed = document.getElementById("ExtensionContract_AmountPayed").value;
+
+                event.preventDefault();
+
+                // Check if the form is valid and something is not okay
+                if ($("#contract-extension2-form").valid()) {
+                    // Submit the form
+                    CheckIfCanPayLessThanTotalAmount();
+                    if (somethingIsNotOkay) {
+                        $("#ContainerLoader").show();
+                            console.log("⏳ بدء إنشاء صورة البطاقة...");
+                            await CreateCardContract();
+                            console.log("✅ البطاقة تم إنشاؤها بنجاح.");
+
+                            console.log("⏳ بدء إنشاء الفاتورة...");
+                            await CreateInvoicePdf();
+                            console.log("✅ الفاتورة تم إنشاؤها بنجاح.");
+
+                            if (AmountPayed > 0) {
+                                console.log("⏳ بدء إنشاء الإيصال...");
+                                await CreateReceiptPdf();
+                                console.log("✅ الإيصال تم إنشاؤه بنجاح.");
+                            }
+
+                            console.log("كل العمليات انتهت، يتم الآن إرسال النموذج.");
+                            console.log("🚀 يتم الآن إرسال النموذج فعليًا...");
+                            form.submit();
+                    }
+                    else {
+                        CheckIfCanPayLessThanTotalAmount();
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        async function dataChanged(number) {
+            try {
+                const response = await $.ajax({
+                    url: "/BS/ContractExtension/Get_ConvertedNumber_Action",
+                    type: "GET",
+                    data: { our_No: number },
+                });
+                return response;
+            } catch (error) {
+                console.error("Error occurred: ", error);
+            }
+        }
+    </script>
+    <script>
+        // To decode some string
+        function decodeHTMLEntities(text) {
+            var textArea = document.createElement("textarea");
+            textArea.innerHTML = text;
+            return textArea.value;
+        }
+        function formatHijriDate(date, language) {
+            const parsedDate = new Date(date);
+            const options = { weekday: 'long', day: 'numeric', year: 'numeric', month: 'long', calendar: 'islamic-umalqura' };
+            if (language === 'ar') {
+                return parsedDate.toLocaleDateString('ar-SA', options).replace(/هـ/g, ''); // إزالة "هـ" من التاريخ العربي
+            } else {
+                return parsedDate.toLocaleDateString('en-US-u-ca-islamic-umalqura', options).replace(/AH/g, ''); // إزالة "AH" من التاريخ الإنجليزي
+            }
+        }
+        function splitNumberbeforeAndafterDecimal(number) {
+            let cleanedValueString = number.replace(/,/g, "");
+            let parts = cleanedValueString.split('.');
+            let beforeDecimal = parts[0];
+            let afterDecimal = parts.length > 1 ? parts[1] : "00";
+            afterDecimal = afterDecimal.padEnd(2, '0');
+            // Add thousands separators to the before decimal part
+            beforeDecimal = beforeDecimal.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return [beforeDecimal, afterDecimal];
+        }
+        function getFormattedDatesMiliadiAndHijri() {
+            // الحصول على التاريخ الميلادي الحالي من الخادم
+            var dateTimeNow = decodeHTMLEntities('@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffK")');
+            const miladiDate = new Date(dateTimeNow);
+
+            // تنسيق التاريخ الميلادي
+            const miladiOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            const miladiDateString = miladiDate.toLocaleDateString('en-US', miladiOptions).split('/').join('/');
+
+            // تنسيق التاريخ الهجري
+            const hijriDateStringAr = formatHijriDate(miladiDate, 'ar');
+            const hijriDateStringEn = formatHijriDate(miladiDate, 'en');
+
+            return {
+                miladiDate: {
+                    en: miladiDateString,
+                    ar: miladiDateString // يمكن تنسيق التاريخ الميلادي بالعربية إذا أردت
+                },
+                hijriDate: {
+                    ar: hijriDateStringAr,
+                    en: hijriDateStringEn
+                }
+            };
+        }
+    </script>
+    <script>
+        function showSpinner(button) {
+            button.dataset.originalContent = button.innerHTML;
+
+            const spinner = document.createElement('div');
+            spinner.classList.add('spinner-border', 'spinner-border-sm', 'text-warning');
+            spinner.setAttribute('role', 'status');
+            const checkIcon = document.createElement('i');
+            checkIcon.classList.add('fa-solid', 'fa-check');
+            button.innerHTML = '';
+            button.appendChild(spinner);
+            button.classList.add('spinner-payment-check');
+        }
+        function removeSpinnerAndChangeColor(button) {
+            button.innerHTML = button.dataset.originalContent;
+            const checkDiv = document.querySelector('.row .col-auto .systems-check');
+            if (checkDiv) {
+                checkDiv.style.backgroundColor = 'green';
+            }
+            button.classList.remove('spinner-payment-check');
+        }
+    </script>
+}

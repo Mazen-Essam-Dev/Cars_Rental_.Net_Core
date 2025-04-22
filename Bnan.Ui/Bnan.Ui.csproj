@@ -1,0 +1,423 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Areas\MAS\Controllers\ViewComponents\**" />
+	<Compile Remove="Areas\CAS\Views\RenterStatistics22\**" />
+
+	<Compile Remove="FollowUpContract\**" />
+    <Compile Remove="wwwroot\BranchSys\Renters\**" />
+    <Compile Remove="wwwroot\BranchSys\ٌRenters\**" />
+    <Compile Remove="wwwroot\pages\**" />
+    <Content Remove="Areas\MAS\Controllers\ViewComponents\**" />
+	<Content Remove="Areas\CAS\Views\RenterStatistics22\**" />
+
+	<Content Remove="FollowUpContract\**" />
+    <Content Remove="wwwroot\BranchSys\Renters\**" />
+    <Content Remove="wwwroot\BranchSys\ٌRenters\**" />
+    <Content Remove="wwwroot\pages\**" />
+    <EmbeddedResource Remove="Areas\MAS\Controllers\ViewComponents\**" />
+    <EmbeddedResource Remove="Areas\CAS\Views\RenterStatistics22\**" />
+
+	<EmbeddedResource Remove="FollowUpContract\**" />
+    <EmbeddedResource Remove="wwwroot\BranchSys\Renters\**" />
+    <EmbeddedResource Remove="wwwroot\BranchSys\ٌRenters\**" />
+    <EmbeddedResource Remove="wwwroot\pages\**" />
+    <None Remove="Areas\MAS\Controllers\ViewComponents\**" />
+	  <None Remove="Areas\CAS\Views\RenterStatistics22\**" />
+
+	  <None Remove="FollowUpContract\**" />
+    <None Remove="wwwroot\BranchSys\Renters\**" />
+    <None Remove="wwwroot\BranchSys\ٌRenters\**" />
+    <None Remove="wwwroot\pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\BS\Views\Shared\_ViewImports.cshtml" />
+    <Content Remove="Areas\BS\Views\Shared\_ViewStart.cshtml" />
+    <Content Remove="wwwroot\BranchSys\js\javascript\idleTimeoutHandler.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\BranchSys\js\javascript\idleTimeoutHandler.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\BS\Views\_ViewImports.cshtml" />
+    <None Include="Areas\BS\Views\_ViewStart.cshtml" />
+    <None Include="Areas\CAS\Views\Branches\Branches.cshtml" />
+    <None Include="Areas\CAS\Views\Branches\_DataTableBranches.cshtml" />
+    <None Include="Areas\CAS\Views\Home\Index.cshtml" />
+    <None Include="Areas\CAS\Views\Shared\_ExpirationModal.cshtml" />
+    <None Include="Areas\CAS\Views\Shared\_Layout.cshtml" />
+    <None Include="Areas\CAS\Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Areas\CAS\Views\_ViewImports.cshtml" />
+    <None Include="Areas\CAS\Views\_ViewStart.cshtml" />
+    <None Include="Areas\Identity\Views\Account\Login.cshtml" />
+    <None Include="Areas\Identity\Views\Account\Systems.cshtml" />
+    <None Include="Areas\Identity\Views\Shared\_Layout.cshtml" />
+    <None Include="Areas\Identity\Views\Shared\_LoginPartial.cshtml" />
+    <None Include="Areas\Identity\Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Areas\Identity\Views\_ViewImports.cshtml" />
+    <None Include="Areas\Identity\Views\_ViewStart.cshtml" />
+    <None Include="Areas\MAS\Views\Home\Index.cshtml" />
+    <None Include="Areas\MAS\Views\LessorsKSA\AddLessorKSA.cshtml" />
+    <None Include="Areas\MAS\Views\LessorsKSA\Edit.cshtml" />
+    <None Include="Areas\MAS\Views\LessorsKSA\Index.cshtml" />
+    <None Include="Areas\MAS\Views\Procedures\Add.cshtml" />
+    <None Include="Areas\MAS\Views\Procedures\Edit.cshtml" />
+    <None Include="Areas\MAS\Views\Procedures\GetProcedures.cshtml" />
+    <None Include="Areas\MAS\Views\Procedures\_DataTableProcedures.cshtml" />
+    <None Include="Areas\MAS\Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Areas\MAS\Views\Users\AddUser.cshtml" />
+    <None Include="Areas\MAS\Views\Users\Edit.cshtml" />
+    <None Include="Areas\MAS\Views\UsersSystemValiditions\EditSystemValiditions.cshtml" />
+    <None Include="Areas\MAS\Views\UsersSystemValiditions\SystemValiditions.cshtml" />
+    <None Include="Areas\MAS\Views\Users\Users.cshtml" />
+    <None Include="Areas\MAS\Views\Users\_DataTableUsers.cshtml" />
+    <None Include="Areas\MAS\Views\_ViewImports.cshtml" />
+    <None Include="Areas\MAS\Views\_ViewStart.cshtml" />
+    <None Include="wwwroot\BranchSys\CreateContract\img\cancel-2.svg" />
+    <None Include="wwwroot\BranchSys\CreateContract\img\undraw_posting_photo.svg" />
+    <None Include="wwwroot\BranchSys\CreateContract\img\undraw_profile.svg" />
+    <None Include="wwwroot\BranchSys\CreateContract\img\undraw_profile_1.svg" />
+    <None Include="wwwroot\BranchSys\CreateContract\img\undraw_profile_2.svg" />
+    <None Include="wwwroot\BranchSys\CreateContract\img\undraw_profile_3.svg" />
+    <None Include="wwwroot\BranchSys\CreateContract\img\undraw_rocket.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\Frame.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\Group %281%29.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\Group.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\icon.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\Rectangle 143.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\Rectangle 93.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\Rectangle 94.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\Rectangle 95.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\Rectangle 96.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\Rectangle 97.svg" />
+    <None Include="wwwroot\BranchSys\img\carDataIcons\Rectangle 98.svg" />
+    <None Include="wwwroot\BranchSys\img\rate\accepted.svg" />
+    <None Include="wwwroot\BranchSys\img\rate\average.svg" />
+    <None Include="wwwroot\BranchSys\img\rate\Bad.svg" />
+    <None Include="wwwroot\BranchSys\img\rate\excellent.svg" />
+    <None Include="wwwroot\BranchSys\img\rate\good.svg" />
+    <None Include="wwwroot\BranchSys\js\javascript\idleTimeoutHandler.js" />
+    <None Include="wwwroot\BranchSys\Pages\img\signature\file-signature_9795523 1.svg" />
+    <None Include="wwwroot\BranchSys\Pages\img\signature\Frame.svg" />
+    <None Include="wwwroot\BranchSys\Pages\img\signature\Pic.svg" />
+    <None Include="wwwroot\BranchSys\Pages\img\signature\save.svg" />
+    <None Include="wwwroot\BranchSys\Pages\img\undraw_posting_photo.svg" />
+    <None Include="wwwroot\BranchSys\Pages\img\undraw_profile.svg" />
+    <None Include="wwwroot\BranchSys\Pages\img\undraw_profile_1.svg" />
+    <None Include="wwwroot\BranchSys\Pages\img\undraw_profile_2.svg" />
+    <None Include="wwwroot\BranchSys\Pages\img\undraw_profile_3.svg" />
+    <None Include="wwwroot\BranchSys\Pages\img\undraw_rocket.svg" />
+    <None Include="wwwroot\BranchSys\Pages\js\report.js" />
+    <None Include="wwwroot\BranchSys\Pages\js\tenant.js" />
+    <None Include="wwwroot\BranchSys\Pages\js\validation.js" />
+    <None Include="wwwroot\CasSys\images\accounts.svg" />
+    <None Include="wwwroot\CasSys\images\arabic-man_21730-4132.avif" />
+    <None Include="wwwroot\CasSys\images\arrow icon %282%29.svg" />
+    <None Include="wwwroot\CasSys\images\arrow icon.svg" />
+    <None Include="wwwroot\CasSys\images\back to main.svg" />
+    <None Include="wwwroot\CasSys\images\bell-JiCNfglcRJ.svg" />
+    <None Include="wwwroot\CasSys\images\benan-icon.svg" />
+    <None Include="wwwroot\CasSys\images\bg %281%29.svg" />
+    <None Include="wwwroot\CasSys\images\bg.svg" />
+    <None Include="wwwroot\CasSys\images\Camera.svg" />
+    <None Include="wwwroot\CasSys\images\Car rental policy update.svg" />
+    <None Include="wwwroot\CasSys\images\car.svg" />
+    <None Include="wwwroot\CasSys\images\cars.svg" />
+    <None Include="wwwroot\CasSys\images\change pic.svg" />
+    <None Include="wwwroot\CasSys\images\Chevron_Left.svg" />
+    <None Include="wwwroot\CasSys\images\comany .svg" />
+    <None Include="wwwroot\CasSys\images\contract.svg" />
+    <None Include="wwwroot\CasSys\images\delete %282%29.svg" />
+    <None Include="wwwroot\CasSys\images\delete.svg" />
+    <None Include="wwwroot\CasSys\images\docs.svg" />
+    <None Include="wwwroot\CasSys\images\done.svg" />
+    <None Include="wwwroot\CasSys\images\down.svg" />
+    <None Include="wwwroot\CasSys\images\down1.svg" />
+    <None Include="wwwroot\CasSys\images\employees.svg" />
+    <None Include="wwwroot\CasSys\images\Existing file.svg" />
+    <None Include="wwwroot\CasSys\images\file not exist.svg" />
+    <None Include="wwwroot\CasSys\images\Frame %281%29.svg" />
+    <None Include="wwwroot\CasSys\images\Frame %282%29.svg" />
+    <None Include="wwwroot\CasSys\images\Frame %283%29.svg" />
+    <None Include="wwwroot\CasSys\images\Frame %284%29.svg" />
+    <None Include="wwwroot\CasSys\images\Frame %285%29.svg" />
+    <None Include="wwwroot\CasSys\images\Frame %286%29.svg" />
+    <None Include="wwwroot\CasSys\images\Frame %287%29.svg" />
+    <None Include="wwwroot\CasSys\images\Frame %288%29.svg" />
+    <None Include="wwwroot\CasSys\images\Frame %289%29.svg" />
+    <None Include="wwwroot\CasSys\images\Frame 2608795.svg" />
+    <None Include="wwwroot\CasSys\images\Frame 2608813.svg" />
+    <None Include="wwwroot\CasSys\images\Frame 2608853.svg" />
+    <None Include="wwwroot\CasSys\images\Frame 2608906.svg" />
+    <None Include="wwwroot\CasSys\images\Frame 2608953.svg" />
+    <None Include="wwwroot\CasSys\images\Frame.svg" />
+    <None Include="wwwroot\CasSys\images\Group %282%29.svg" />
+    <None Include="wwwroot\CasSys\images\Group.svg" />
+    <None Include="wwwroot\CasSys\images\icon.svg" />
+    <None Include="wwwroot\CasSys\images\input field.svg" />
+    <None Include="wwwroot\CasSys\images\Invoice.svg" />
+    <None Include="wwwroot\CasSys\images\Mask group down %281%29.svg" />
+    <None Include="wwwroot\CasSys\images\Mask group down.svg" />
+    <None Include="wwwroot\CasSys\images\Mask group up.svg" />
+    <None Include="wwwroot\CasSys\images\membership\Bronze Card.svg" />
+    <None Include="wwwroot\CasSys\images\membership\Diamond card.svg" />
+    <None Include="wwwroot\CasSys\images\membership\Frame.svg" />
+    <None Include="wwwroot\CasSys\images\membership\Gold Card.svg" />
+    <None Include="wwwroot\CasSys\images\membership\regular Card.svg" />
+    <None Include="wwwroot\CasSys\images\membership\Silver Card.svg" />
+    <None Include="wwwroot\CasSys\images\membership\vip card.svg" />
+    <None Include="wwwroot\CasSys\images\naql.svg" />
+    <None Include="wwwroot\CasSys\images\new bank.svg" />
+    <None Include="wwwroot\CasSys\images\new branch.svg" />
+    <None Include="wwwroot\CasSys\images\new driver.svg" />
+    <None Include="wwwroot\CasSys\images\new employee.svg" />
+    <None Include="wwwroot\CasSys\images\new owner.svg" />
+    <None Include="wwwroot\CasSys\images\new sale point.svg" />
+    <None Include="wwwroot\CasSys\images\pic %282%29.svg" />
+    <None Include="wwwroot\CasSys\images\pic %283%29.svg" />
+    <None Include="wwwroot\CasSys\images\Pic.svg" />
+    <None Include="wwwroot\CasSys\images\Property 1=active.svg" />
+    <None Include="wwwroot\CasSys\images\Property 1=recycle.svg" />
+    <None Include="wwwroot\CasSys\images\qrcode 1.svg" />
+    <None Include="wwwroot\CasSys\images\qrcode 2.svg" />
+    <None Include="wwwroot\CasSys\images\Rectangle 196.svg" />
+    <None Include="wwwroot\CasSys\images\red arrow icon %282%29.svg" />
+    <None Include="wwwroot\CasSys\images\red arrow icon.svg" />
+    <None Include="wwwroot\CasSys\images\reports.svg" />
+    <None Include="wwwroot\CasSys\images\save %282%29.svg" />
+    <None Include="wwwroot\CasSys\images\save %283%29.svg" />
+    <None Include="wwwroot\CasSys\images\save.svg" />
+    <None Include="wwwroot\CasSys\images\services.svg" />
+    <None Include="wwwroot\CasSys\images\signature.svg" />
+    <None Include="wwwroot\CasSys\images\signature\file-signature_9795523 1.svg" />
+    <None Include="wwwroot\CasSys\images\signature\Frame.svg" />
+    <None Include="wwwroot\CasSys\images\signature\Pic.svg" />
+    <None Include="wwwroot\CasSys\images\signature\save.svg" />
+    <None Include="wwwroot\CasSys\images\sms.svg" />
+    <None Include="wwwroot\CasSys\images\statics.svg" />
+    <None Include="wwwroot\CasSys\images\stop.svg" />
+    <None Include="wwwroot\CasSys\images\Tax return.svg" />
+    <None Include="wwwroot\CasSys\images\tenants.svg" />
+    <None Include="wwwroot\CasSys\images\up.svg" />
+    <None Include="wwwroot\CasSys\images\up1.svg" />
+    <None Include="wwwroot\CasSys\images\whatsapp-icon.svg" />
+    <None Include="wwwroot\CasSys\images\whatsup.svg" />
+    <None Include="wwwroot\CasSys\images\الرئيسية.svg" />
+    <None Include="wwwroot\CasSys\scripts\Scripts.js" />
+    <None Include="wwwroot\CasSys\scripts\signature.js" />
+    <None Include="wwwroot\CasSys\scripts\uploadPic.js" />
+    <None Include="wwwroot\CasSys\scripts\uploadpic2.js" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\animated.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\bordered-pulled.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\core.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\fixed-width.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\font-awesome.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\icons.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\larger.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\list.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\mixins.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\path.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\rotated-flipped.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\screen-reader.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\stacked.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\less\variables.less" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\font-awesome.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_animated.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_bordered-pulled.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_core.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_fixed-width.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_icons.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_larger.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_list.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_mixins.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_path.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_rotated-flipped.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_screen-reader.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_stacked.scss" />
+    <None Include="wwwroot\LoginAndSystems\fonts\font-awesome-4.7.0\scss\_variables.scss" />
+    <None Include="wwwroot\LoginAndSystems\images\خطوات الدخول على النظام.docx" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\css\bootstrap.css.map" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\js\bootstrap.js" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\js\bootstrap.min.js" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\js\popper.js" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\js\popper.min.js" />
+    <None Include="wwwroot\LoginAndSystems\vendor\bootstrap\js\tooltip.js" />
+    <None Include="wwwroot\MasSystem\images\accounts.svg" />
+    <None Include="wwwroot\MasSystem\images\arabic-man_21730-4132.avif" />
+    <None Include="wwwroot\MasSystem\images\arrow icon %282%29.svg" />
+    <None Include="wwwroot\MasSystem\images\arrow icon.svg" />
+    <None Include="wwwroot\MasSystem\images\back to main.svg" />
+    <None Include="wwwroot\MasSystem\images\bell-JiCNfglcRJ.svg" />
+    <None Include="wwwroot\MasSystem\images\benan-icon.svg" />
+    <None Include="wwwroot\MasSystem\images\bg %281%29.svg" />
+    <None Include="wwwroot\MasSystem\images\bg.svg" />
+    <None Include="wwwroot\MasSystem\images\C 1.svg" />
+    <None Include="wwwroot\MasSystem\images\calc.svg" />
+    <None Include="wwwroot\MasSystem\images\Camera.svg" />
+    <None Include="wwwroot\MasSystem\images\car.svg" />
+    <None Include="wwwroot\MasSystem\images\cars.svg" />
+    <None Include="wwwroot\MasSystem\images\change pic.svg" />
+    <None Include="wwwroot\MasSystem\images\Chevron_Left.svg" />
+    <None Include="wwwroot\MasSystem\images\Comanies.svg" />
+    <None Include="wwwroot\MasSystem\images\comany .svg" />
+    <None Include="wwwroot\MasSystem\images\contract.svg" />
+    <None Include="wwwroot\MasSystem\images\ContractIcon.svg" />
+    <None Include="wwwroot\MasSystem\images\delete.svg" />
+    <None Include="wwwroot\MasSystem\images\docs.svg" />
+    <None Include="wwwroot\MasSystem\images\done.svg" />
+    <None Include="wwwroot\MasSystem\images\down.svg" />
+    <None Include="wwwroot\MasSystem\images\down1.svg" />
+    <None Include="wwwroot\MasSystem\images\employees.svg" />
+    <None Include="wwwroot\MasSystem\images\employes.svg" />
+    <None Include="wwwroot\MasSystem\images\Existing file.svg" />
+    <None Include="wwwroot\MasSystem\images\file not exist.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame %281%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame %282%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame %283%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame %284%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame %285%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame %286%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame %287%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame %288%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame 2608795.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame 2608853.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame 2608906.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame 2608953.svg" />
+    <None Include="wwwroot\MasSystem\images\Frame.svg" />
+    <None Include="wwwroot\MasSystem\images\Group %282%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Group.svg" />
+    <None Include="wwwroot\MasSystem\images\icon.svg" />
+    <None Include="wwwroot\MasSystem\images\input field.svg" />
+    <None Include="wwwroot\MasSystem\images\Invoice.svg" />
+    <None Include="wwwroot\MasSystem\images\Mail %282%29.svg" />
+    <None Include="wwwroot\MasSystem\images\mail.svg" />
+    <None Include="wwwroot\MasSystem\images\Mask group down %281%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Mask group down.svg" />
+    <None Include="wwwroot\MasSystem\images\Mask group up.svg" />
+    <None Include="wwwroot\MasSystem\images\naql.svg" />
+    <None Include="wwwroot\MasSystem\images\new add-on.svg" />
+    <None Include="wwwroot\MasSystem\images\new area.svg" />
+    <None Include="wwwroot\MasSystem\images\new bank.svg" />
+    <None Include="wwwroot\MasSystem\images\new branch.svg" />
+    <None Include="wwwroot\MasSystem\images\new car brand.svg" />
+    <None Include="wwwroot\MasSystem\images\new car category.svg" />
+    <None Include="wwwroot\MasSystem\images\new car model.svg" />
+    <None Include="wwwroot\MasSystem\images\new car oil.svg" />
+    <None Include="wwwroot\MasSystem\images\new car trans.svg" />
+    <None Include="wwwroot\MasSystem\images\new city.svg" />
+    <None Include="wwwroot\MasSystem\images\new color.svg" />
+    <None Include="wwwroot\MasSystem\images\new country.svg" />
+    <None Include="wwwroot\MasSystem\images\new driver lecience.svg" />
+    <None Include="wwwroot\MasSystem\images\new driver.svg" />
+    <None Include="wwwroot\MasSystem\images\new employee.svg" />
+    <None Include="wwwroot\MasSystem\images\new feature.svg" />
+    <None Include="wwwroot\MasSystem\images\new fuel.svg" />
+    <None Include="wwwroot\MasSystem\images\new nationality.svg" />
+    <None Include="wwwroot\MasSystem\images\new option.svg" />
+    <None Include="wwwroot\MasSystem\images\new owner.svg" />
+    <None Include="wwwroot\MasSystem\images\new payement method.svg" />
+    <None Include="wwwroot\MasSystem\images\new payement reference.svg" />
+    <None Include="wwwroot\MasSystem\images\new profession.svg" />
+    <None Include="wwwroot\MasSystem\images\new registration.svg" />
+    <None Include="wwwroot\MasSystem\images\new sale point.svg" />
+    <None Include="wwwroot\MasSystem\images\new tenant sector.svg" />
+    <None Include="wwwroot\MasSystem\images\new virtual details.svg" />
+    <None Include="wwwroot\MasSystem\images\new virtual.svg" />
+    <None Include="wwwroot\MasSystem\images\new workplace.svg" />
+    <None Include="wwwroot\MasSystem\images\NotScannedQR.svg" />
+    <None Include="wwwroot\MasSystem\images\pic %282%29.svg" />
+    <None Include="wwwroot\MasSystem\images\pic %283%29.svg" />
+    <None Include="wwwroot\MasSystem\images\Pic.svg" />
+    <None Include="wwwroot\MasSystem\images\Property 1=active.svg" />
+    <None Include="wwwroot\MasSystem\images\Property 1=recycle.svg" />
+    <None Include="wwwroot\MasSystem\images\qrcode 1.svg" />
+    <None Include="wwwroot\MasSystem\images\qrcode 2.svg" />
+    <None Include="wwwroot\MasSystem\images\Rectangle 196.svg" />
+    <None Include="wwwroot\MasSystem\images\red arrow icon %282%29.svg" />
+    <None Include="wwwroot\MasSystem\images\red arrow icon.svg" />
+    <None Include="wwwroot\MasSystem\images\reports.svg" />
+    <None Include="wwwroot\MasSystem\images\save %283%29.svg" />
+    <None Include="wwwroot\MasSystem\images\save.svg" />
+    <None Include="wwwroot\MasSystem\images\services.svg" />
+    <None Include="wwwroot\MasSystem\images\signature.svg" />
+    <None Include="wwwroot\MasSystem\images\signature\file-signature_9795523 1.svg" />
+    <None Include="wwwroot\MasSystem\images\signature\Frame.svg" />
+    <None Include="wwwroot\MasSystem\images\signature\Pic.svg" />
+    <None Include="wwwroot\MasSystem\images\signature\save.svg" />
+    <None Include="wwwroot\MasSystem\images\sms.svg" />
+    <None Include="wwwroot\MasSystem\images\stat.svg" />
+    <None Include="wwwroot\MasSystem\images\statics.svg" />
+    <None Include="wwwroot\MasSystem\images\stop.svg" />
+    <None Include="wwwroot\MasSystem\images\Tax return.svg" />
+    <None Include="wwwroot\MasSystem\images\tenants.svg" />
+    <None Include="wwwroot\MasSystem\images\tenants2.svg" />
+    <None Include="wwwroot\MasSystem\images\test-image.svg" />
+    <None Include="wwwroot\MasSystem\images\up.svg" />
+    <None Include="wwwroot\MasSystem\images\up1.svg" />
+    <None Include="wwwroot\MasSystem\images\upload icon.svg" />
+    <None Include="wwwroot\MasSystem\images\whatsapp-icon.svg" />
+    <None Include="wwwroot\MasSystem\images\whatsup.svg" />
+    <None Include="wwwroot\MasSystem\images\الرئيسية.svg" />
+    <None Include="wwwroot\OwnersSys\js\demo\Cars.js" />
+    <None Include="wwwroot\OwnersSys\js\demo\chart-pie-demo.js" />
+    <None Include="wwwroot\OwnersSys\js\demo\Contracts.js" />
+    <None Include="wwwroot\OwnersSys\js\demo\employees.js" />
+    <None Include="wwwroot\OwnersSys\js\demo\tenant.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bnan.Core\Bnan.Core.csproj" />
+    <ProjectReference Include="..\Bnan.Inferastructure\Bnan.Inferastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="Grpc.Core" Version="2.46.6" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18" />
+    <PackageReference Include="NToastNotify" Version="8.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="toastr" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\Bnan\Models\" />
+    <Folder Include="wwwroot\images\Company\" />
+    <Folder Include="wwwroot\images\CAS\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Areas\CAS\Views\RenterDriver\Index.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\CAS\Views\RenterDriver\_DataTableRenterDriver.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+
+</Project>

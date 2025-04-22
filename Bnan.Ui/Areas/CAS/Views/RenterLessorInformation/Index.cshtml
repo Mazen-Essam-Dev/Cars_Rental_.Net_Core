@@ -1,0 +1,144 @@
+﻿
+
+@using Bnan.Core.Extensions
+@using Bnan.Ui.ViewModels.CAS;
+@* @model IEnumerable<CrCasRenterLessor>
+*@
+@model RenterLessorInformation_CASVM
+@inject IViewLocalizer localizer
+@inject IOptions<RequestLocalizationOptions> options
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+       ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}"; 
+    ViewData["Page-title"] = @localizer["RenterInformations Data"];
+    ViewData["Page-Hint"] = @localizer["RenterInformations Hint"];
+}
+<link href="~/css/toastr.css" rel="stylesheet" />
+
+
+@*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">*@
+
+
+<div class="container main-container">
+
+    <form action="">
+        <div class="row g-3 mb-2">
+            <div class="col">
+                    <h3> @localizer["RenterInformations_Data"] </h3>
+            </div>
+            <div class="col-12 col-lg-6 d-flex justify-content-end">
+
+                <div class="col-12 col-md-8 search-input-col">
+                    <div class="form-outline w-100" data-mdb-input-init>
+                        <span class="fa fa-search"></span>
+                        <input type="search" id="search2" class="form-control inputs search-input"
+                               name="search2" aria-label="Search" autofocus autocomplete="off" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12 filters-col">
+                <div class="filters-custom-order">
+
+                    <label class="form-check-label" for="all">@localizer["All"]</label>
+                    <input class="form-check-input custom" type="radio" id="all" name="customRadio" value="All" checked />
+                </div>
+
+                <div class="filters-custom-order">
+
+                    <label class="form-check-label filter2" for="NotRenter">@localizer["NotRented"]</label>
+                    <input class="form-check-input custom" type="radio" id="NotRenter" name="customRadio" value="@Status.Active" />
+                </div>
+
+                <div class="filters-custom-order">
+
+                    <label class="form-check-label filter6" for="Renter" style="color:Green">@localizer["Rented_n"]</label>
+                    <input class="form-check-input custom" type="radio" id="Renter" name="customRadio" value="@Status.Rented" />
+                </div>
+
+            </div>
+        </div>
+        <div class="row table-row px-3">
+            <div class="col  scroll-table-div  table-responsive-sm w-100 dataTable">
+                <partial name="_DataTableRenterLessorInformation" />
+            </div>
+        </div>             
+
+    </form>
+    <a asp-area="CAS" asp-controller="Home" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="top"
+           data-bs-custom-class="custom-tooltip" data-bs-title="@localizer["BackToHome"]"
+       class="new-Page-icon"><img src="~/CasSys/images/back to main.svg" alt="man"></a>
+</div>
+
+
+
+@section scripts {
+    <script src="~/js/toastr.js"></script>
+
+    <script>
+        // لجعل الحالة حسب ما هي جاية من index نشط او الكل
+        $(document).ready(function () {
+            $("input[name='customRadio'][value='" + '@ViewBag.radio' + "']").prop("checked", true);
+            $("#min-loader").toggleClass("d-none", true); // اخفاء loader بعد انتهاء تحميل الصفحة
+        });
+        ///////
+
+        function showErrorToast_NoUpdate() {
+            toastr.options = { "positionClass": "@localizer["toastPostion"]" };
+            toastr.error("@localizer["AuthEmplpoyee_NoUpdate"]");
+        }
+
+        function showErrorToast_whitController(messageText) {
+            $.ajax({
+                url: '@Url.Action("DisplayToastError_NoUpdate", "RenterLessorInformation")',
+                type: 'POST',
+                data: { messageText: messageText },
+                success: function (response) {
+                    if (response.success) {
+                        console.log('showErrorToast_whitController : ', messageText);
+                    }
+                },
+                error: function () {
+                    toastr.error('تعذر الاتصال بالخادم');
+                }
+            });
+        }
+    </script>
+    @*Get RenterLessorInformation Using filter*@
+    <script>
+        // To Handle Background
+        $("#wrapper").addClass("Branches-wrapper");
+    </script>
+    <script>
+        //get RenterLessorInformation By Status function
+        function GetRenterLessorInformationFitler(status, search) {
+            $("#min-loader").removeClass("d-none");// اظهار loader تحميل
+            $.ajax({
+                type: "GET",
+                data: {
+                    status: status, search: search
+                },
+                url: "@Url.Action("GetRenterLessorInformationByStatus", "RenterLessorInformation", new { Area = "CAS" })",
+                success: function (response) {
+                    $(".dataTable").html(response);
+                },
+            })
+            $("#min-loader").toggleClass("d-none", true); // اخفاء loader بعد انتهاء تحميل الصفحة
+        }
+
+        $("input[name='customRadio']").on("click", function () {
+            const status = $(this).val();
+            const search = $("#search2").val(); // الحصول على قيمة البحث
+            GetRenterLessorInformationFitler(status, search);
+        });
+
+        // عند كتابة أي شيء في حقل البحث، تحديث الفلتر
+        $("#search2").on("keyup", function () {
+            const status = $("input[name='customRadio']:checked").val(); // الحصول على القيمة المحددة من الراديو
+            const search = $(this).val(); // الحصول على قيمة البحث
+            GetRenterLessorInformationFitler(status, search);
+        });
+    </script>
+}

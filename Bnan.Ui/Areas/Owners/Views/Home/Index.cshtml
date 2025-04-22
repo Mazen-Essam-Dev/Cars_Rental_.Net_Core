@@ -1,0 +1,812 @@
+﻿@using Bnan.Core.Extensions
+@using Bnan.Ui.ViewModels.Owners
+@using Microsoft.AspNetCore.Localization;
+@using Microsoft.AspNetCore.Http.Features;
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer localizer
+@model OwnersLayoutVM
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+
+
+
+
+<div class="row mb-3 g-3">
+    <div class="col-xl-4">
+        <div class="card charts-card">
+            <!-- Card Body -->
+            <div class="card-body ">
+                <h5> @localizer["Balance"]</h5>
+                <div class="row align-items-center chart-area mx-1 px-2">
+                    <canvas id="barChart" style="max-height: 10rem;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-xl-4">
+        <div class="card charts-card">
+            <!-- Card Body -->
+            <div class="card-body ">
+                <h5> @localizer["Liabilities"] </h5>
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="chart-pie2" id="chart-creditor">
+                            <span class="chart-label">@localizer["Creditors"]</span>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="chart-pie2" id="chart-debtors">
+                            <span class="chart-label">@localizer["Debtors"]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pie Chart -->
+    <div class="col-lg-6 col-xl-4">
+        <div class="card charts-card">
+            <!-- Card Body -->
+            <div class="card-body  ">
+                <h5> @localizer["ActiveContractsCount"] </h5>
+                <div class="row align-items-center">
+                    <div class="col-lg-12 ">
+                        <div class="chart-pie pt-2 pb-2">
+                            <canvas id="myPieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row tables-row g-3 mb-3">
+    <div class="col-xl-6">
+        <div class="table-card bg-white pt-3">
+            <div class="scrollTable">
+                <h5 id="Branches-card-title"> @localizer["Branches"] </h5>
+                <table class="spacing-table  table-borderless" id="Branches-data">
+                    <thead class="sticky-top pb-1">
+                        <tr>
+                            <th scope="col"></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            var noAuto = 1;
+                        }
+                        @if(Model.BranchsInformations!=null){
+                            @foreach (var item in Model.BranchsInformations)
+                            {
+                                <tr data-content="@item.CrCasBranchInformationCode">
+                                    <td>
+                                        <p class="FirstLineP">
+                                            @if (@requestCulture?.RequestCulture.UICulture.Name == "en-US")
+                                            {
+                                                @item.CrCasBranchInformationEnShortName
+                                            }
+                                            else
+                                            {
+                                                @item.CrCasBranchInformationArShortName
+                                            }
+                                            @if (item.CrCasBranchInformationStatus == Status.Hold) // Check if the status is "H"
+                                            {
+                                                <span style="color: red;font-size: .75rem"> (@localizer["Holded"]) </span>
+                                                // Add the label in red
+                                            }
+                                        </p>
+                                        <p class="secondLineP">
+                                            @if (@requestCulture?.RequestCulture.UICulture.Name == "en-US")
+                                            {
+                                                @item.CrCasBranchInformationDirectorEnName
+                                            }
+                                            else
+                                            {
+                                                @item.CrCasBranchInformationDirectorArName
+                                            }
+                                        </p>
+                                    </td>
+                                    <td class="notify-td">
+                                        <div class="filter-number-td">
+                                            <div class="filters @((bool)item.RedPointInBranch ? "" : "filter2-div")"></div>
+                                            <div>@noAuto</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                noAuto++;
+                            }
+                        }
+                        
+                    </tbody>
+                </table>
+                <div id="contentContainer" style="display:none;"></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-xl-6">
+        <div class="table-card bg-white pt-3">
+            <div class="scrollTable">
+                <h5 id="employee-card-title"> @localizer["Employees"] </h5>
+                <table class="spacing-table  table-borderless" id="employee-data">
+                    <thead class="sticky-top pb-1">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            var AutoNo = 1;
+                        }
+                        @foreach (var Employee in Model.Employees)
+                        {
+                            <tr data-content="@Employee.CrMasUserInformationCode">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <div class="col">
+                                            <p class="FirstLineP">
+                                                @if (@requestCulture?.RequestCulture.UICulture.Name == "en-US")
+                                                {
+                                                    @Employee.CrMasUserInformationEnName
+                                                }
+                                                else
+                                                {
+                                                    @Employee.CrMasUserInformationArName
+                                                }
+                                                @if (Employee.CrMasUserInformationStatus == Status.Hold) // Check if the status is "H"
+                                                {
+                                                    <span style="color: red;font-size: .75rem"> (@localizer["Holded"]) </span>
+                                                }
+                                            </p>
+                                            <p class="secondLineP">
+                                                @if (@requestCulture?.RequestCulture.UICulture.Name == "en-US")
+                                                {
+                                                    @Employee.CrMasUserInformationTasksEnName
+                                                }
+                                                else
+                                                {
+                                                    @Employee.CrMasUserInformationTasksArName
+                                                }
+                                            </p>
+                                            <div class="d-flex justify-content-end gap-4">
+                                                <p class="secondLineP">@Employee.CrMasUserInformationEntryLastDate?.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)</p>
+                                                @if (Employee.CrMasUserInformationEntryLastTime != null)
+                                                {
+                                                    // Convert TimeSpan to DateTime for AM/PM formatting
+                                                    var time = DateTime.Today.Add(Employee.CrMasUserInformationEntryLastTime.Value);
+                                                    <p class="secondLineP time">@time.ToString("hh:mm tt")</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-auto d-flex justify-content-end gap-1">
+                                            <div class="employee">
+                                                <img src="@Url.Content(Employee.CrMasUserInformationPicture?.ToString())" alt="empolyee-photo" class="employee border-0 w-100 h-100">
+                                                <div class="active_statue @((bool) Employee.OnlineOrOflline ? "bg-success" : "bg-danger")"></div>
+                                            </div>
+                                            @if ((bool)Employee.HaveCustodyNotAccepted && (bool)Employee.CreditLimitExceeded)
+                                            {
+                                                <img src="/OwnersSys/img/Frame 2608955.svg" />
+                                            }
+                                            else if ((bool)Employee.HaveCustodyNotAccepted)
+                                            {
+                                                <img src="/OwnersSys/img/Frame 2608948 (2).svg" />
+                                            }
+                                            else if ((bool)Employee.CreditLimitExceeded)
+                                            {
+                                                <img src="/OwnersSys/img/Frame 2608948.svg" />
+                                            }
+                                        </div>
+
+                                    </div>
+                                </td>
+                                <td class="notify-td">
+                                    @AutoNo
+                                </td>
+                            </tr>
+                            AutoNo++;
+                        }
+                    </tbody>
+                </table>
+
+                <div id="contentContainer2" style="display:none;"></div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+@section scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <!--Charts-->
+    <script>
+        // Pie Chart contracts "transformation": "تحويل",
+        const pieChartEl = document.getElementById('myPieChart');
+        const pieChartData = {
+            labels: ['@localizer["ExpiredContract"]', '@localizer["ExpiresTomorrow"]', '@localizer["ExpiresToday"]', '@localizer["ExpiresLater"]'],
+            datasets: [{
+                data: [@Model.AlertContracts?.FindAll(x => x.CrCasRenterContractAlertContractStatus == "E").Count(),
+        @Model.AlertContracts?.FindAll(x => x.CrCasRenterContractAlertContractActiviteStatus == "1" && x.CrCasRenterContractAlertContractStatus == "A").Count(),
+        @Model.AlertContracts?.FindAll(x => x.CrCasRenterContractAlertContractActiviteStatus == "2" && x.CrCasRenterContractAlertContractStatus == "A").Count(),
+        @Model.AlertContracts?.FindAll(x => x.CrCasRenterContractAlertContractActiviteStatus == "0" && x.CrCasRenterContractAlertContractStatus == "A").Count()
+                                                                                ,
+                ],
+                backgroundColor: ['rgba(242, 36, 36, 1)', '#9966FF', 'rgba(242, 143, 36, 1)', 'rgba(54, 162, 235, 1)'],
+            }]
+        };
+
+        const pieChart = new Chart(pieChartEl, {
+            type: 'doughnut',
+            data: pieChartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        backgroundColor: "#7A7A7A",
+                        bodyFontColor: "#060A10",
+                        borderColor: '#ffffff',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        caretPadding: 10,
+
+                    },
+                    legend: {
+                        position: 'right',
+                        rtl: true,
+                        labels: {
+                            font: {
+                                family: "'Cairo', sans-serif",
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // // Pie Chart debts
+        // const debtsChartEl = document.getElementById('debtsChart');
+        // // Convert string formatted numbers to actual numbers
+        // var debtors = parseFloat('@Model.Debtors?.ToString("N2", CultureInfo.InvariantCulture)'.replace(/,/g, ''));
+        // var creditors = parseFloat('@Model.Creditors?.ToString("N2", CultureInfo.InvariantCulture)'.replace(/,/g, ''));
+
+        // const debtsChartData = {
+        //     labels: ['@localizer["Debtors"]', '@localizer["Creditors"]'],
+        //     datasets: [{
+        //         data: [debtors, creditors],
+        //         backgroundColor: ['#FF4069', '#36A2EB'],
+        //         hoverBackgroundColor: ['#FF4069', '#36A2EB'],
+        //         hoverBorderColor: "rgba(234, 236, 244, 1)",
+        //     }]
+        // };
+
+        // const debtsChart = new Chart(debtsChartEl, {
+        //     type: 'doughnut',
+        //     data: debtsChartData,
+        //     options: {
+        //         responsive: true,
+        //         maintainAspectRatio: false,
+        //         plugins: {
+        //             tooltip: {
+        //                 backgroundColor: "#7A7A7A",
+        //                 bodyFontColor: "#060A10",
+        //                 borderColor: '#ffffff',
+        //                 borderWidth: 1,
+        //                 xPadding: 15,
+        //                 yPadding: 15,
+        //                 displayColors: false,
+        //                 caretPadding: 10,
+        //                 callbacks: {
+        //                     label: function (tooltipItem) {
+        //                         // Format the number with commas
+        //                         return `${tooltipItem.label}: ${tooltipItem.raw.toLocaleString()}`;
+        //                     }
+        //                 }
+        //             },
+        //             legend: {
+        //                 display: false
+        //             }
+        //         }
+        //     }
+        // });
+
+        // Bar Chart
+        $(document).ready(function () {
+            var paymentMethodslessorData = @Html.Raw(Json.Serialize(Model.OwnPaymentMethods));
+            console.log(paymentMethodslessorData);
+            var labelsLessor;
+            if ('@requestCulture?.RequestCulture.UICulture.Name' == "en-US") {
+
+                labelsLessor = paymentMethodslessorData.map(function (paymentMethod) {
+                    return paymentMethod.enName;
+                });
+            }
+            else {
+                labelsLessor = paymentMethodslessorData.map(function (paymentMethod) {
+                    return paymentMethod.arName;
+                });
+            }
+
+
+            var data = paymentMethodslessorData.map(function (paymentMethod) {
+                return paymentMethod.value;
+            });
+            var barChart = document.getElementById("barChart").getContext("2d");
+            var myChart = new Chart(barChart, {
+                type: "bar",
+                data: {
+                    labels: labelsLessor,
+                    datasets: [
+                        {
+                            data: data,
+                            backgroundColor: [
+                                "rgba(255, 99, 132, 1)",
+                                "rgba(54, 162, 235, 1)",
+                                "rgba(255, 206, 86, 1)",
+                                "rgba(75, 192, 192, 1)",
+                                "rgba(153, 102, 255, 1)"
+                            ],
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: true
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: true
+                            },
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+
+                    }
+                }
+            });
+        });
+
+        var creditors = parseFloat('@Model.Creditors?.ToString("N2", CultureInfo.InvariantCulture)'.replace(/,/g, ''));
+        var debtors = parseFloat('@Model.Debtors?.ToString("N2", CultureInfo.InvariantCulture)'.replace(/,/g, ''));
+        var total = Math.abs(creditors) + Math.abs(debtors);  // إجمالي دائنون ومدينون
+        var creditorPercentage = (Math.abs(creditors) / total) * 100;  // النسبة المئوية للدائنون
+        var debtorPercentage = (Math.abs(debtors) / total) * 100;  // النسبة المئوية للمدينون
+        // دائنون
+        var palette = anychart.palettes.distinctColors();
+        var label = anychart.standalones.label();
+        label
+            .useHtml(true)
+            .text(
+                '<span style = "color: #313136; font-weight:600 ; font-family: "Cairo", sans-serif;">' + creditors.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</span>'
+            )
+            .position('center')
+            .anchor('center')
+            .hAlign('center')
+            .vAlign('middle');
+        var data = anychart.data.set([
+            ['فورد', creditorPercentage],
+            [' اخري', 100 - creditorPercentage]
+        ]);
+
+        palette.items([
+            { color: '#FF9FB3' },
+            { color: '#E6E6E6' },
+        ]);
+
+        var chart = anychart.pie(data)
+        chart.palette(palette);
+        chart.innerRadius('70%');
+        chart.container('chart-creditor');
+        chart.legend(false);
+        chart.labels(false)
+        chart.tooltip(false)
+        chart.center().content(label);
+        chart.draw();
+
+        // مدينون
+        var palette = anychart.palettes.distinctColors();
+        var label = anychart.standalones.label();
+        label
+            .useHtml(true)
+            .text(
+                '<span style = "color: #313136; font-weight:600 ; font-family: "Cairo", sans-serif;">' + Math.abs(debtors).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</span>'
+            )
+            .position('center')
+            .anchor('center')
+            .hAlign('center')
+            .vAlign('middle');
+        var data = anychart.data.set([
+            ['فورد', debtorPercentage],
+            [' اخري', 100 - debtorPercentage]
+        ]);
+
+        palette.items([
+            { color: '#9AD0F4' },
+            { color: '#E6E6E6' },
+        ]);
+
+        var chart = anychart.pie(data)
+        chart.palette(palette);
+        chart.innerRadius('70%');
+        chart.container('chart-debtors');
+        chart.legend(false);
+        chart.labels(false)
+        chart.tooltip(false)
+        chart.center().content(label);
+        chart.draw();
+
+        //
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('#Branches-data tr').forEach(function (row) {
+                row.addEventListener('click', function () {
+                    console.log(5555555555555);
+                    document.getElementById('Branches-data').style.display = 'none';
+                    document.getElementById('Branches-card-title').style.display = 'none';
+
+                    const dataKey = row.getAttribute('data-content');
+                    console.log("dataKey", dataKey);
+                    displayBranchData(dataKey);
+                });
+            });
+        });
+
+        function displayBranchData(dataKey) {
+            const branches = @Html.Raw(Json.Serialize(Model.BranchsInformations)); // Serialize your model into JS object
+            const branch = branches.find(b => b.crCasBranchInformationCode == dataKey); // Assuming you have an 'Id' field in your model
+            console.log("branches", branches)
+            console.log("branch", branch)
+            if (branch) {
+                var branchPost;
+                var branchName;
+                var branchDirectorName;
+                var redPointForBalance = '';
+                var redPointForDocsOrMaintaince = '';
+                var redPointForExpiredContracts = '';
+                var redPointForUnActiveCarsCount = '';
+                var redMessageForHoldBranch = '';
+                // Display the branch details dynamically based on the selected branch
+                if ('@requestCulture?.RequestCulture.UICulture.Name' == "en-US") {
+                    branchPost = branch.branchPostEn
+                    branchName = branch.crCasBranchInformationEnShortName
+                    branchDirectorName = branch.crCasBranchInformationDirectorEnName
+                }
+                else {
+                    branchPost = branch.branchPostAr
+                    branchName = branch.crCasBranchInformationArShortName
+                    branchDirectorName = branch.crCasBranchInformationDirectorArName
+                }
+                //Check To put red point in the headline
+                if (branch.haveCustodyNotAccepted) {
+                    redPointForBalance = '<div class="filters filter2-div"></div>'; // Add quotes
+                }
+                if (branch.mainForCarExpireCount > 0 || branch.docsForCarExpireCount > 0 || branch.docsForCompanyExpireCount > 0) {
+                    redPointForDocsOrMaintaince = '<div class="filters filter2-div"></div>'; // Add quotes
+                }
+                if (branch.expiredContractsCount > 0) {
+                    redPointForExpiredContracts = '<div class="filters filter2-div"></div>'; // Add quotes
+                }
+                if (branch.unActiveCarsCount > 0) {
+                    redPointForUnActiveCarsCount = '<div class="filters filter2-div"></div>'; // Add quotes
+                }
+                if (branch.crCasBranchInformationStatus == '@Status.Hold') // Check if the status is "H"
+                {
+                    redMessageForHoldBranch = `(@localizer["Holded"])`;
+                };
+                const contentContainer = document.getElementById('contentContainer');
+                contentContainer.style.display = 'block';
+                contentContainer.innerHTML = `
+                                                                                <div class="row mx-1">
+                                                                                    <div class="col">
+                                                                                        <h5 class="tr-title">${branchName} <span style="color: red;font-size: .75rem">${redMessageForHoldBranch}</span> - ${branchDirectorName}</h5>
+                                                                                        <p class="secondLineP">${branchPost}</p>
+                                                                                    </div>
+                                                                                    <div class="col-auto">
+                                                                                        <img id="backButton" style="cursor:pointer;" onclick="goBack1()" src="/OwnersSys/img/back icon.svg">
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="row mx-1 g-2">
+                                                                                    <div class="col-lg-6">
+                                                                                        <div class="card border-left-primary h-100 py-2">
+                                                                                            <div class="card-body">
+                                                                                                <div class="row no-gutters align-items-center">
+                                                                                                    <div class="col-sm-6 data-card">
+                                                                                                        ${redPointForExpiredContracts}
+                                                                                                        <span>@localizer["Contracts"]</span>
+                                                                                                    </div>
+                                                                                                    <div class="col-sm-6 data-icon">
+                                                                                                        <span class="data-card"> ${branch.contractsCount} </span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <hr class="card-hr">
+                                                                                                <div class="row">
+                                                                                                            <div class="col-md-6 data-card2"><span>@localizer["Closed_count"]</span> <span>${branch.closedContractsCount}</span></div>
+                                                                                                            <div class="col-md-auto data-card2"><span>@localizer["Suspended_count"]</span> <span>${branch.suspendedContractsCount}</span></div>
+                                                                                                </div>
+                                                                                                <div class="row mt-2">
+                                                                                                            <div class="col-md-6 data-card2"><span>@localizer["List_count"]</span> <span>${branch.activeContractsCount}</span></div>
+                                                                                                            <div class="col-md-auto data-card2"><span>@localizer["Saved_count"]</span> <span>${branch.savedContractsCount}</span></div>
+                                                                                                </div>
+                                                                                                <div class="row mt-2">
+                                                                                                            <div class="col-md-6 data-card2"><span>@localizer["ExpiredC"]</span> <span>${branch.expiredContractsCount}</span></div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div class="col-lg-6">
+                                                                                        <div class="card border-left-primary h-100 py-2">
+                                                                                            <div class="card-body">
+                                                                                                <div class="row no-gutters align-items-center">
+                                                                                                    <div class="col-sm-6 data-card">
+                                                                                                        ${redPointForBalance}
+                                                                                                        <span>@localizer["Balance"]</span>
+                                                                                                    </div>
+                                                                                                    <div class="col-sm-6 data-icon">
+                                                                                                        <span class="data-card">${branch.crCasBranchInformationTotalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <hr class="card-hr">
+                                                                                                <div class="row">
+                                                                                                    <div class="col data-card2"><span>@localizer["Available_balance"]</span> <span>${branch.crCasBranchInformationAvailableBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
+                                                                                                </div>
+                                                                                                <div class="row mt-2">
+                                                                                                    <div class="col data-card2"><span>@localizer["Reserved_balance"]</span> <span>${branch.crCasBranchInformationReservedBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
+                                                                                                </div>
+                                                                                                <div class="row mt-2">
+                                                                                                            <div class="col-md-6 data-card2"><span></span> <span></span></div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="row mx-1 g-2 mt-1">
+                                                                                    <div class="col-lg-6">
+                                                                                        <div class="card border-left-primary h-100 py-2">
+                                                                                            <div class="card-body">
+                                                                                                <div class="row align-items-center">
+                                                                                                    <div class="col-7 data-card">
+                                                                                                        ${redPointForDocsOrMaintaince}
+                                                                                                         <span>@localizer["Alerts"]</span>
+                                                                                                    </div>
+                                                                                                    <div class="col"style="font-size : 12px">@localizer["AboutToExpire"]</div> <div class="col" style="font-size : 12px" >@localizer["Expired"]</div>
+                                                                                                </div>
+                                                                                                <hr class="card-hr">
+                                                                                                <div class="row">
+                                                                                                    <div class="col-md-7 data-card2"><span>@localizer["ContractBranch"]</span></div>
+                                                                                                    <div class="col aboutToEnd">${branch.docsForCompanyAboutExpireCount}</div>
+                                                                                                    <div class="col ended">${branch.docsForCompanyExpireCount}</div>
+                                                                                                </div>
+                                                                                                <div class="row">
+                                                                                                    <div class="col-md-7 data-card2"><span>@localizer["DocumentsCar_Cas Data"]</span></div>
+                                                                                                    <div class="col aboutToEnd">${branch.docsForCarAboutExpireCount}</div>
+                                                                                                    <div class="col ended">${branch.docsForCarExpireCount}</div>
+                                                                                                </div>
+                                                                                                <div class="row">
+                                                                                                    <div class="col-md-7 data-card2"><span>@localizer["MaintainceCar Data"]</span></div>
+                                                                                                    <div class="col aboutToEnd">${branch.mainForCarAboutExpireCount}</div>
+                                                                                                    <div class="col ended">${branch.mainForCarExpireCount}</div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div class="col-lg-6">
+                                                                                        <div class="card border-left-primary h-100 py-2">
+                                                                                            <div class="card-body">
+                                                                                                <div class="row no-gutters align-items-center">
+                                                                                                    <div class="col-sm-6 data-card">
+                                                                                                        ${redPointForUnActiveCarsCount}
+                                                                                                        <span>@localizer["Cars"]</span>
+                                                                                                    </div>
+                                                                                                    <div class="col-sm-6 data-icon">
+                                                                                                        <span class="data-card">${branch.carsCount}</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <hr class="card-hr">
+                                                                                                <div class="row">
+                                                                                                    <div class="col data-card2"><span>@localizer["Rented"]</span> <span>${branch.rentedCarsCount}</span></div>
+                                                                                                </div>
+                                                                                                <div class="row mt-2">
+                                                                                                    <div class="col data-card2"><span>@localizer["Available"]</span> <span>${branch.activeCarsCount}</span></div>
+                                                                                                </div>
+                                                                                                <div class="row mt-2">
+                                                                                                    <div class="col data-card2"><span>@localizer["UnAvailable"]</span> <span>${branch.unActiveCarsCount}</span></div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            `;
+            } else {
+                console.error("Branch not found");
+            }
+        }
+        function goBack1() {
+            document.getElementById('contentContainer').style.display = 'none';
+            document.getElementById('backButton').style.display = 'none';
+
+            document.getElementById('Branches-data').style.display = 'table';
+            document.getElementById('Branches-card-title').style.display = 'block';
+
+        }
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('#employee-data tr').forEach(function (row) {
+                row.addEventListener('click', function () {
+                    document.getElementById('employee-data').style.display = 'none';
+                    document.getElementById('employee-card-title').style.display = 'none';
+
+                    const dataKey = row.getAttribute('data-content'); // Assuming 'data-content' contains the employee ID.
+
+                    displayNewData2(dataKey);
+                });
+            });
+        });
+        function displayNewData2(dataKey) {
+            const employees = @Html.Raw(Json.Serialize(Model.Employees)); // Convert Model.Employees to a JavaScript array.
+            const employee = employees.find(b => b.crMasUserInformationCode == dataKey); // Find the employee by ID.
+            var pictureOfEmployee = employee.crMasUserInformationPicture;
+
+            // إزالة أول حرف "~" إذا كان موجودًا
+            if (pictureOfEmployee.startsWith('~')) {
+                pictureOfEmployee = pictureOfEmployee.substring(1);
+
+            } if (!employee) {
+                console.error('Employee not found');
+                return;
+            }
+            var name;
+            var position;
+            // Display the branch details dynamically based on the selected branch
+            if ('@requestCulture?.RequestCulture.UICulture.Name' == "en-US") {
+                name = employee.crMasUserInformationEnName
+                position = employee.crMasUserInformationTasksEnName
+            }
+            else {
+                name = employee.crMasUserInformationArName
+                position = employee.crMasUserInformationTasksArName
+            }
+            // First image (for "haveCustodyNotAccepted")
+            var imageMain = '';
+            let firstImage = employee.haveCustodyNotAccepted
+                ? `<img src="/OwnersSys/img/Frame 2608948 (2).svg">`
+                : '';
+
+            // Second image (for "creditLimitExceeded")
+            let secondImage = employee.creditLimitExceeded
+                ? `<img src="/OwnersSys/img/Frame 2608948.svg" >`
+                : '';
+
+            // إذا كانت كلتا الصورتين موجودتين، عرض الصورة الأخيرة
+            if (firstImage && secondImage) {
+                imageMain = `<img src="/OwnersSys/img/Frame 2608955.svg">`;
+            } else if (firstImage) {
+                // إذا كانت الصورة الأولى فقط موجودة
+                imageMain = firstImage;
+            } else if (secondImage) {
+                // إذا كانت الصورة الثانية فقط موجودة
+                imageMain = secondImage;
+            }
+            var redMessageForHoldEmployee = '';
+            if (employee.crMasUserInformationStatus == '@Status.Hold') // Check if the status is "H"
+            {
+                redMessageForHoldEmployee = `(@localizer["Holded"])`;
+            };
+            let onlineOrOffline = employee.onlineOrOflline ? 'bg-success' : 'bg-danger';
+            const contentContainer = document.getElementById('contentContainer2');
+            contentContainer.style.display = 'block';
+
+            let newContent = `
+                                                                        <div class="row mx-1">
+                                                                            <div class="col d-flex gap-2 align-items-center">
+                                                                                <div class="col-auto d-flex justify-content-end gap-1">
+                                                                                ${imageMain}
+                                                                                <div class="employee">
+                                                                                <img src="${pictureOfEmployee}" alt="employee-photo" class="employee border-0 w-100 h-100">
+                                                                                <div class="active_statue bg-success">
+                                                                                </div>
+                                                                                </div>
+                                                                                </div>
+                                                                                <div class="col">
+                                                                                    <p class="FirstLineP">${name} <span style="color: red;font-size: .75rem">${redMessageForHoldEmployee}</span></p>
+                                                                                    <div class="d-flex gap-3">
+                                                                                        <p class="secondLineP">${position}</p>
+                                                                                        <div class="d-flex gap-1">
+                                                                                            <p class="secondLineP time">${employee.entryLastTimeString ?? ''}</p>
+                                                                                            <p class="secondLineP">${employee.entryLastDateString ?? ''}</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-auto">
+                                                                                    <img id="backButton2" style="cursor:pointer;" onclick="goBack2()" src="/OwnersSys/img/back icon.svg">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row mx-1 g-2 mt-2">
+                                                                                <div class="col-lg-6">
+                                                                                    <div class="card border-left-primary h-100 py-2">
+                                                                                        <div class="card-body">
+                                                                                            <div class="row no-gutters align-items-center">
+                                                                                                <div class="col-sm-6 data-card">
+                                                                                                <span>@localizer["Contracts"]</span></div>
+                                                                                                <div class="col-sm-6 data-icon"><span class="data-card">${employee.contractsCount}</span></div>
+                                                                                            </div>
+                                                                                            <hr class="card-hr">
+                                                                                            <div class="row">
+                                                                                                <div class="col data-card2"><span>@localizer["Closed"]</span> <span>${employee.closedContract}</span></div>
+                                                                                            </div>
+                                                                                            <div class="row mt-2">
+                                                                                                <div class="col data-card2"><span>@localizer["Active"]</span> <span>${employee.activeContract}</span></div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <div class="card border-left-primary h-100 py-2">
+                                                                                        <div class="card-body">
+                                                                                            <div class="row no-gutters align-items-center">
+                                                                                                <div class="col-sm-6 data-card">
+                                                                                                <span>@localizer["Balance"]</span>
+                                                                                                </div>
+                                                                                                <div class="col-sm-6 data-icon"><span class="data-card">${employee.crMasUserInformationTotalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
+                                                                                            </div>
+                                                                                            <hr class="card-hr">
+                                                                                            <div class="row">
+                                                                                                <div class="col data-card2"><span>@localizer["Availablebalance"]</span> <span>${employee.crMasUserInformationAvailableBalance.toLocaleString()}</span></div>
+                                                                                            </div>
+                                                                                            <div class="row mt-2">
+                                                                                                <div class="col data-card2"><span>@localizer["Reservedbalance"]</span> <span>${employee.crMasUserInformationReservedBalance.toLocaleString()}</span></div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    `;
+
+            contentContainer.innerHTML = newContent;
+        }
+
+        function goBack2() {
+            document.getElementById('contentContainer2').style.display = 'none';
+            document.getElementById('backButton2').style.display = 'none';
+
+            document.getElementById('employee-data').style.display = 'table';
+            document.getElementById('employee-card-title').style.display = 'block';
+        }
+
+    </script>
+}

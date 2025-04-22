@@ -1,0 +1,80 @@
+﻿@using Bnan.Core.Extensions
+@model IEnumerable<CrCasRenterPrivateDriverInformation>
+@inject IViewLocalizer localizer
+@inject IOptions<RequestLocalizationOptions> options
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+<table class=" tables-style table table-borderless " id="Table">
+    <thead class="sticky-top">
+        <tr>
+            <th> @localizer["LicenseExpireDate"]</th>
+            <th class="DifferAlign"> @localizer["RenterDriverLicenseType_s"]</th>
+            <th class="DifferAlign"> @localizer["RenterDriverNationality"]</th>
+            <th class="DifferAlign"> @localizer["RenterDriverType"]</th>
+            <th class="DifferAlign"> @localizer["RenterDriverName"]</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int no = 1;
+        }
+        @foreach (var item in Model)
+        {
+            var licenceName = " ";
+            var IdType = " ";
+            var nationality = " ";
+            var DriverName = " ";
+            var expiryLicenseDate = " ";
+            if (requestCulture?.RequestCulture.UICulture.Name == "en-US")
+            {
+                licenceName = item.CrCasRenterPrivateDriverInformationLicenseTypeNavigation?.CrMasSupRenterDrivingLicenseEnName;
+                IdType = item.CrCasRenterPrivateDriverInformationIdtrypeNavigation?.CrMasSupRenterIdtypeEnName;
+                nationality = item.CrCasRenterPrivateDriverInformationNationalityNavigation?.CrMasSupRenterNationalitiesEnName;
+                DriverName = item.CrCasRenterPrivateDriverInformationEnName;
+                expiryLicenseDate = item.CrCasRenterPrivateDriverInformationLicenseExpiry?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                licenceName = item.CrCasRenterPrivateDriverInformationLicenseTypeNavigation?.CrMasSupRenterDrivingLicenseArName;
+                IdType = item.CrCasRenterPrivateDriverInformationIdtrypeNavigation?.CrMasSupRenterIdtypeArName;
+                nationality = item.CrCasRenterPrivateDriverInformationNationalityNavigation?.CrMasSupRenterNationalitiesArName;
+                DriverName = item.CrCasRenterPrivateDriverInformationArName;
+                expiryLicenseDate = item.CrCasRenterPrivateDriverInformationLicenseExpiry?.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture);
+            }
+            <tr onclick="location.href='@Url.Action("Edit", "RenterDriver", new { id = item.CrCasRenterPrivateDriverInformationId ,lessor= item.CrCasRenterPrivateDriverInformationLessor })'">
+                <td><p>@expiryLicenseDate</p></td>
+                <td class="DifferAlign">
+                    <p class="FirstLineP">@licenceName</p>
+                    <p class="secondLineP">@item.CrCasRenterPrivateDriverInformationLicenseNo</p>
+                </td>
+                <td class="DifferAlign"><p>@nationality</p></td>
+                <td class="DifferAlign"><p>@IdType</p></td>
+
+                <td class="DifferAlign">
+                    <p class="FirstLineP">@DriverName</p>
+                    <p class="secondLineP">@item.CrCasRenterPrivateDriverInformationId</p>
+                </td>
+
+                <td>
+                    <div class="filter-number-td">
+                        @{
+                            var filterColor = "";
+                            var filterStyleColor = "";
+                            if (item.CrCasRenterPrivateDriverInformationStatus == Status.Active) filterColor = "filter2-div";
+                            if (item.CrCasRenterPrivateDriverInformationStatus == Status.Rented) { filterColor = "filter2-div"; filterStyleColor = "background-color:green"; }
+                            else if (item.CrCasRenterPrivateDriverInformationStatus == Status.Hold) filterColor = "filter1-div";
+                            else if (item.CrCasRenterPrivateDriverInformationStatus == Status.Deleted) filterColor = "filter3-div";
+                        }
+                        <div class="filters @filterColor" style="@filterStyleColor"></div>
+                        <div>@no</div>
+                    </div>
+                </td>
+            </tr>
+            no++;
+        }
+
+    </tbody>
+</table>

@@ -1,0 +1,52 @@
+﻿@using Bnan.Ui.ViewModels.MAS
+@using Bnan.Core.Extensions
+@model MasAccountReferenceVM
+@inject IViewLocalizer localizer
+@inject IOptions<RequestLocalizationOptions> options
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+<table class=" tables-style table table-borderless " id="Table">
+    <thead class="sticky-top">
+        <tr>
+            <th>@localizer["Count_Referances"]</th>
+            <th class="DifferAlign"> @localizer["AccountReferenceName_view"]</th>
+            <th class="DifferAlign"> @localizer["the_Code"]</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int no = 1;
+        }
+        @foreach (var item in Model.crMasSupAccountReference)
+        {
+            <tr onclick="location.href='@Url.Action("Edit", "AccountReference", new { id = item.CrMasSupAccountReceiptReferenceCode })'">
+                <td><p>@(Model.AccountReferences_count?.Find(x => x.Column.ToString() == item.CrMasSupAccountReceiptReferenceCode)?.RowCount.ToString("N0") ?? "0")</p></td>
+                <td class="DifferAlign">
+                    <p>
+                        @(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? item.CrMasSupAccountReceiptReferenceEnName : item.CrMasSupAccountReceiptReferenceArName)
+                    </p>
+                </td>
+                <td class="DifferAlign">
+                    <p>@item.CrMasSupAccountReceiptReferenceCode</p>
+                </td>
+                <td>
+                    <div class="filter-number-td">
+                        @{
+                            var filterColor = "";
+                            if (item.CrMasSupAccountPaymentMethodStatus == Status.Active) filterColor = "filter2-div";
+                            else if (item.CrMasSupAccountPaymentMethodStatus == Status.Hold) filterColor = "filter1-div";
+                            else if (item.CrMasSupAccountPaymentMethodStatus == Status.Deleted) filterColor = "filter3-div";
+                        }
+                        <div class="filters @filterColor"></div>
+                        <div>@no</div>
+                    </div>
+                </td>
+            </tr>
+            no++;
+        }
+
+    </tbody>
+</table>

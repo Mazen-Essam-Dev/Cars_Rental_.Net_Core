@@ -1,0 +1,781 @@
+﻿@using Bnan.Core.Extensions;
+@using Bnan.Ui.ViewModels.CAS;
+@model IEnumerable<MechanismVM>
+@inject IViewLocalizer localizer
+@inject IOptions<RequestLocalizationOptions> options
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+
+}
+
+
+
+
+<div class="col my-2 d-flex align-items-center justify-content-center">
+    <div class="container NewUpdate-container">
+        <form class="needs-validation">
+            <div class="row">
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="row g-3 my-5">
+                            <div class="col-md-6">
+                                <h3> @localizer["Alerts"] </h3>
+                            </div>
+                            <div class="col-md-6 save-col">
+                                <button type="button" class="custom-img-btn" onclick="getValues()">
+                                    <img src="~/CasSys/images/save.svg" />
+                                </button>
+                            </div>
+                        </div>
+                        <main>
+                            <div class="accordion inputs-accordion">
+                                <div class=" inputs-accordion-item">
+                                    <div class=" inputs-accordion-item-header">
+                                        <span class="accordion-item-header-title">
+                                            @localizer["ContractCompany"]
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                             viewBox="0 0 24 24" fill="none" stroke="#666666"
+                                             stroke-width="3" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="lucide lucide-chevron-down accordion-item-header-icon">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div class="accordion-item-description-wrapper">
+                                        <div class="accordion-item-description">
+
+                                            <hr class="accordion-items-hr">
+
+                                            <div class="container-fluid">
+                                                <div class="row g-2">
+                                                    @foreach (var item in Model.Where(x => x.CrCasLessorMechanismProceduresClassification == "10"))
+                                                    {@if (item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresSubjectAlert == true)
+                                                        {
+
+                                                            <div class="col-12  alert-col">
+                                                                <div class="col-8 col-md-6 checkbox-alert-col">
+                                                                    <input class="form-check-input checkbox ContractValiditionCheckBox" type="checkbox" data-id="@item.CrCasLessorMechanismProcedures"
+                                                                           value="checked" @((bool)item.CrCasLessorMechanismActivate ? "checked='checked'" : "") value="@item.CrCasLessorMechanismActivate">
+                                                                    <label class="form-check-label" for="CommercialRegistry">
+                                                                        @(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? @item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresEnName : @item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresArName)
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col col-md-6 d-flex align-items-center gap-2">
+                                                                    <div class="number-input-container Documents-days-input ">
+                                                                        <div class="col">
+                                                                            <input type="number" min="10" max="90" class="alert-input ContractValiditionCheckInput"
+                                                                                   data-id="@item.CrCasLessorMechanismProcedures" asp-for="@item.CrCasLessorMechanismDaysAlertAboutExpire" maxlength="3" />
+                                                                        </div>
+                                                                        <div class="col d-flex flex-column-reverse">
+                                                                            <button type="button" class="deincrement" disabled></button>
+                                                                            <button type="button" class="increment" disabled></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    @localizer["TheDay"]
+                                                                </div>
+                                                            </div>
+
+
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" inputs-accordion-item">
+                                    <div class=" inputs-accordion-item-header">
+                                        <span class="accordion-item-header-title">
+                                            @localizer["CarsDocuments"]
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                             viewBox="0 0 24 24" fill="none" stroke="#666666"
+                                             stroke-width="3" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="lucide lucide-chevron-down accordion-item-header-icon">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div class="accordion-item-description-wrapper">
+                                        <div class="accordion-item-description">
+                                            <hr class="accordion-items-hr">
+
+                                            <div class="container-fluid">
+                                                <div class="row g-2">
+                                                    @foreach (var item in Model.Where(x => x.CrCasLessorMechanismProceduresClassification == "12"))
+                                                    {
+
+                                                        @if (item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresSubjectAlert == true)
+                                                        {
+                                                            <div class="col-12  alert-col">
+                                                                <div class="col-8 col-md-6 checkbox-alert-col">
+                                                                    <input class="form-check-input checkbox CarsDocumentsCheckBox" type="checkbox" data-id="@item.CrCasLessorMechanismProcedures"
+                                                                           value="checked" @((bool)item.CrCasLessorMechanismActivate ? "checked='checked'" : "") value="@item.CrCasLessorMechanismActivate">
+                                                                    <label class="form-check-label" for="Driving-license">
+                                                                        @(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? @item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresEnName : @item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresArName)
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col col-md-6 d-flex align-items-center gap-2">
+                                                                    <div class="number-input-container Documents-days-input ">
+                                                                        <div class="col">
+                                                                            <input type="number" min="10" max="90" class="alert-input CarsDocumentsCheckInput"
+                                                                                   data-id="@item.CrCasLessorMechanismProcedures" asp-for="@item.CrCasLessorMechanismDaysAlertAboutExpire" maxlength="3" />
+                                                                        </div>
+                                                                        <div class="col d-flex flex-column-reverse">
+                                                                            <button type="button" class="deincrement" disabled></button>
+                                                                            <button type="button" class="increment" disabled></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    @localizer["TheDay"]
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" inputs-accordion-item">
+                                    <div class=" inputs-accordion-item-header">
+                                        <span class="accordion-item-header-title">
+                                            @localizer["CarsFixed"]
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                             viewBox="0 0 24 24" fill="none" stroke="#666666"
+                                             stroke-width="3" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="lucide lucide-chevron-down accordion-item-header-icon">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div class="accordion-item-description-wrapper">
+                                        <div class="accordion-item-description">
+                                            <hr class="accordion-items-hr">
+
+                                            <div class="container-fluid">
+                                                <div class="row g-2">
+                                                    @foreach (var item in Model.Where(x => x.CrCasLessorMechanismProceduresClassification == "13"))
+                                                    {
+                                                        @if (item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresSubjectAlert == true)
+                                                        {
+                                                            <div class="col-12  alert-col ">
+                                                                <div class="col-8 col-md-4 mb-2 checkbox-alert-col">
+                                                                    <input class="form-check-input checkbox CarsFixedCheckBox" type="checkbox" id="@item.CrCasLessorMechanismProcedures" data-id="@item.CrCasLessorMechanismProcedures" @((bool)item.CrCasLessorMechanismActivate ? "checked='checked'" : "") value="@item.CrCasLessorMechanismActivate">
+                                                                    <label class="form-check-label" for="@item.CrCasLessorMechanismProcedures">
+                                                                        @(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? @item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresEnName : @item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresArName)
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-6  col-md-4 d-flex align-items-center gap-2">
+                                                                    <div class="number-input-container  car-maintenance-period ">
+                                                                        <div class="col">
+                                                                            <input type="number" min="1" max="15" class="alert-input CarsFixedCheckInput" data-id="@item.CrCasLessorMechanismProcedures" asp-for="@item.CrCasLessorMechanismDaysAlertAboutExpire" maxlength="3" />
+                                                                        </div>
+                                                                        <div class="col d-flex flex-column-reverse">
+                                                                            <button type="button" class="deincrement" disabled></button>
+                                                                            <button type="button" class="increment" disabled></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    @localizer["TheDay"]
+                                                                </div>
+                                                                <div class="col-6  col-md-4 d-flex align-items-center gap-2">
+                                                                    <div class="number-input-container car-maintenance-kilos ">
+                                                                        <div class="col">
+                                                                            <input type="number" min="500" max="9000" class="alert-input CarsFixedCheckInputKm" data-id="@item.CrCasLessorMechanismProcedures" asp-for="@item.CrCasLessorMechanismKmAlertAboutExpire" maxlength="5" />
+                                                                        </div>
+                                                                        <div class="col d-flex flex-column-reverse">
+                                                                            <button type="button" class="deincrement" disabled></button>
+                                                                            <button type="button" class="increment" disabled></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    @localizer["KiloMetre"]
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" inputs-accordion-item">
+                                    <div class=" inputs-accordion-item-header">
+                                        <span class="accordion-item-header-title">
+                                            @localizer["Additional"]
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                             viewBox="0 0 24 24" fill="none" stroke="#666666"
+                                             stroke-width="3" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="lucide lucide-chevron-down accordion-item-header-icon">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div class="accordion-item-description-wrapper">
+                                        <div class="accordion-item-description">
+                                            <hr class="accordion-items-hr">
+
+                                            <div class="container-fluid">
+                                                <div class="row g-2">
+                                                    @foreach (var item in Model.Where(x => x.CrCasLessorMechanismProceduresClassification == "20"))
+                                                    {
+
+                                                        @if (item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresSubjectAlert == true)
+                                                        {
+                                                            <div class="col-12  alert-col">
+                                                                <div class="col-8 col-md-6 checkbox-alert-col">
+                                                                    <input class="form-check-input checkbox AdditionalCheckBox" type="checkbox" id="Update-prices"
+                                                                      data-id="@item.CrCasLessorMechanismProcedures" @((bool)item.CrCasLessorMechanismActivate ? "checked='checked'" : "") value="@item.CrCasLessorMechanismActivate">
+                                                                    <label class="form-check-label"  for="Update-prices">
+                                                                        @(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? @item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresEnName : @item.CrCasLessorMechanismProceduresNavigation.CrMasSysProceduresArName)
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col col-md-6 d-flex align-items-center gap-2">
+                                                                    <div class="number-input-container car-prices">
+                                                                        <div class="col">
+                                                                            <input type="number" min="5" max="30" class="alert-input AdditionalCheckInput" 
+                                                                              data-id="@item.CrCasLessorMechanismProcedures" asp-for="@item.CrCasLessorMechanismDaysAlertAboutExpire" maxlength="3" />
+                                                                        </div>
+                                                                        <div class="col d-flex flex-column-reverse">
+                                                                            <button type="button" class="deincrement" disabled></button>
+                                                                            <button type="button" class="increment" disabled></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    @localizer["TheDay"]
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <a href="/MAS/Home/Index" data-bs-toggle="tooltip" data-bs-placement="top"
+           data-bs-custom-class="custom-tooltip" data-bs-title="@localizer["CompanyMessages_BackToHome"]"
+           class="new-Page-icon"><img src="~/CasSys/images/back to main.svg" alt="man"></a>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- adding disabled to input is checkbox not checked -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.col-12.alert-col').forEach(function (container) {
+                const checkbox = container.querySelector('.checkbox');
+                const inputContainers = container.querySelectorAll('.number-input-container');
+                const numberInputs = container.querySelectorAll('.alert-input');
+                const decrementButtons = container.querySelectorAll('.deincrement');
+                const incrementButtons = container.querySelectorAll('.increment');
+
+                // إضافة "disabled" عند تحميل الصفحة
+                inputContainers.forEach(inputContainer => {
+                    if (inputContainer) {
+                        inputContainer.classList.add('disabled');
+                    }
+                });
+
+                decrementButtons.forEach(decrementButton => {
+                    decrementButton.style.backgroundImage = "url('/CasSys/images/down1.svg')";
+                });
+                incrementButtons.forEach(incrementButton => {
+                    incrementButton.style.backgroundImage = "url('/CasSys/images/up1.svg')";
+                });
+                numberInputs.forEach(numberInput => {
+                    numberInput.style.color = "rgb(110, 110, 110)";
+                });
+
+                // التحقق مما إذا كان الـ checkbox مفعلًا أم لا عند تحميل الصفحة
+                if (checkbox.checked) {
+                    numberInputs.forEach(numberInput => {
+                        numberInput.disabled = false;
+                    });
+
+                    inputContainers.forEach(inputContainer => {
+                        inputContainer.classList.remove('disabled');
+                    });
+
+                    decrementButtons.forEach(decrementButton => {
+                        decrementButton.style.backgroundImage = "";
+                        decrementButton.disabled = false;
+                    });
+
+                    incrementButtons.forEach(incrementButton => {
+                        incrementButton.style.backgroundImage = "";
+                        incrementButton.disabled = false;
+                    });
+
+                    numberInputs.forEach(numberInput => {
+                        numberInput.style.color = "";
+                    });
+                }
+
+                // إضافة الـ Event Listener للـ checkbox لتغيير الحالة عند التغيير
+                checkbox.addEventListener('change', function () {
+                    const isChecked = this.checked;
+
+                    numberInputs.forEach(numberInput => {
+                        numberInput.disabled = !isChecked;
+                    });
+
+                    inputContainers.forEach(inputContainer => {
+                        if (isChecked) {
+                            inputContainer.classList.remove('disabled');
+                            decrementButtons.forEach(decrementButton => {
+                                decrementButton.style.backgroundImage = "";
+                            });
+                            incrementButtons.forEach(incrementButton => {
+                                incrementButton.style.backgroundImage = "";
+                            });
+                            numberInputs.forEach(numberInput => {
+                                numberInput.style.color = "";
+                            });
+                        } else {
+                            inputContainer.classList.add('disabled');
+                            decrementButtons.forEach(decrementButton => {
+                                decrementButton.style.backgroundImage = "url('/CasSys/images/down1.svg')";
+                            });
+                            incrementButtons.forEach(incrementButton => {
+                                incrementButton.style.backgroundImage = "url('/CasSys/images/up1.svg')";
+                            });
+                            numberInputs.forEach(numberInput => {
+                                numberInput.style.color = "rgb(110, 110, 110)";
+                            });
+                        }
+                    });
+
+                    decrementButtons.forEach(decrementButton => {
+                        decrementButton.disabled = !isChecked;
+                        if (!isChecked) {
+                            decrementButton.style.backgroundImage = "url('/CasSys/images/down1.svg')";
+                        } else {
+                            decrementButton.style.backgroundImage = "";
+                        }
+                    });
+
+                    incrementButtons.forEach(incrementButton => {
+                        incrementButton.disabled = !isChecked;
+                        if (!isChecked) {
+                            incrementButton.style.backgroundImage = "url('/CasSys/images/up1.svg')";
+                        } else {
+                            incrementButton.style.backgroundImage = "";
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+
+    <!-- script for inputs in collapses 1 , 2 ,3 -->
+    <script>
+        document.querySelectorAll('.Documents-days-input').forEach(function (container) {
+            let deincrement = container.querySelector(".deincrement");
+            let increment = container.querySelector(".increment");
+            let number = container.querySelector(".alert-input");
+
+            let step = 10;
+            let max = 90;
+            let min = 10;
+
+            number.addEventListener('input', () => {
+
+            });
+
+            number.addEventListener('blur', () => {
+                let currentValue = parseInt(number.value);
+                if (isNaN(currentValue)) {
+                    number.value = min;
+                } else if (currentValue > max) {
+                    number.value = max;
+                } else if (currentValue < min) {
+                    number.value = min;
+                }
+
+            });
+            increment.addEventListener("click", () => {
+                if (parseInt(number.value) + step >= max) {
+                    number.value = max;
+                    increment.style.backgroundImage = "url('/CasSys/images/up1.svg')";
+                    deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+
+                    return;
+                }
+                increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+                deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+                number.value = parseInt(number.value) + step;
+            });
+
+            deincrement.addEventListener("click", () => {
+                if (parseInt(number.value) - step <= min) {
+                    number.value = min;
+                    deincrement.style.backgroundImage = "url('/CasSys/images/down1.svg')";
+                    increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+
+                    return;
+                }
+                deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+                increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+
+                number.value = parseInt(number.value) - step;
+            });
+        });
+
+    </script>
+
+    <script>
+        document.querySelectorAll('.car-maintenance-period').forEach(function (container) {
+            let deincrement = container.querySelector(".deincrement");
+            let increment = container.querySelector(".increment");
+            let number = container.querySelector(".alert-input");
+
+            let step = 1;
+            let max = 15;
+            let min = 1;
+
+            number.addEventListener('input', () => {
+
+            });
+
+            number.addEventListener('blur', () => {
+                let currentValue = parseInt(number.value);
+                if (isNaN(currentValue)) {
+                    number.value = min;
+                } else if (currentValue > max) {
+                    number.value = max;
+                } else if (currentValue < min) {
+                    number.value = min;
+                }
+
+            });
+
+            increment.addEventListener("click", () => {
+                if (parseInt(number.value) + step >= max) {
+                    number.value = max;
+                    increment.style.backgroundImage = "url('/CasSys/images/up1.svg')";
+                    deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+
+                    return;
+                }
+                increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+                deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+                number.value = parseInt(number.value) + step;
+            });
+
+            deincrement.addEventListener("click", () => {
+                if (parseInt(number.value) - step <= min) {
+                    number.value = min;
+                    deincrement.style.backgroundImage = "url('~/CasSys/images/down1.svg')";
+                    increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+
+                    return;
+                }
+                deincrement.style.backgroundImage = "url('~/CasSys/images/down.svg')";
+                increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+
+                number.value = parseInt(number.value) - step;
+            });
+        });
+
+    </script>
+    <script>
+        document.querySelectorAll('.car-maintenance-kilos').forEach(function (container) {
+            let deincrement = container.querySelector(".deincrement");
+            let increment = container.querySelector(".increment");
+            let number = container.querySelector(".alert-input");
+
+            let step = 500;
+            let max = 9000;
+            let min = 500;
+
+            number.addEventListener('input', () => {
+
+            });
+
+            number.addEventListener('blur', () => {
+                let currentValue = parseInt(number.value);
+                if (isNaN(currentValue)) {
+                    number.value = min;
+                } else if (currentValue > max) {
+                    number.value = max;
+                } else if (currentValue < min) {
+                    number.value = min;
+                }
+
+            });
+
+            increment.addEventListener("click", () => {
+                if (parseInt(number.value) + step >= max) {
+                    number.value = max;
+                    increment.style.backgroundImage = "url('/CasSys/images/up1.svg')";
+                    deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+
+                    return;
+                }
+                increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+                deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+                number.value = parseInt(number.value) + step;
+            });
+
+            deincrement.addEventListener("click", () => {
+                if (parseInt(number.value) - step <= min) {
+                    number.value = min;
+                    deincrement.style.backgroundImage = "url('/CasSys/images/down1.svg')";
+                    increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+
+                    return;
+                }
+                deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+                increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+
+                number.value = parseInt(number.value) - step;
+            });
+        });
+    </script>
+    <script>
+        document.querySelectorAll('.car-prices').forEach(function (container) {
+            let deincrement = container.querySelector(".deincrement");
+            let increment = container.querySelector(".increment");
+            let number = container.querySelector(".alert-input");
+
+            let step = 5;
+            let max = 30;
+            let min = 5;
+
+            number.addEventListener('input', () => {
+
+            });
+
+            number.addEventListener('blur', () => {
+                let currentValue = parseInt(number.value);
+                if (isNaN(currentValue)) {
+                    number.value = min;
+                } else if (currentValue > max) {
+                    number.value = max;
+                } else if (currentValue < min) {
+                    number.value = min;
+                }
+
+            });
+
+            increment.addEventListener("click", () => {
+                if (parseInt(number.value) + step >= max) {
+                    number.value = max;
+                    increment.style.backgroundImage = "url('/CasSys/images/up1.svg')";
+                    deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+
+                    return;
+                }
+                increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+                deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+                number.value = parseInt(number.value) + step;
+            });
+
+            deincrement.addEventListener("click", () => {
+                if (parseInt(number.value) - step <= min) {
+                    number.value = min;
+                    deincrement.style.backgroundImage = "url('/CasSys/images/down1.svg')";
+                    increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+
+                    return;
+                }
+                deincrement.style.backgroundImage = "url('/CasSys/images/down.svg')";
+                increment.style.backgroundImage = "url('/CasSys/images/up.svg')";
+
+                number.value = parseInt(number.value) - step;
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var checkboxs = document.querySelectorAll("input[type='checkbox']")
+            checkboxs.forEach(function (checkbox) {
+                checkbox.checked = checkbox.checked !== null ? checkbox.checked : false;
+            });
+        });
+
+        $(document).on("click", "[type='checkbox']", function (e) {
+            if (this.checked) {
+                $(this).attr("value", "true");
+            } else {
+                $(this).attr("value", "false");
+            }
+        });
+
+    </script>
+    <script>
+
+        function getValues() {
+            // ContractValidition
+            $("#min-loader").removeClass("d-none");
+            var checkBoxesContractValidition = document.getElementsByClassName("ContractValiditionCheckBox");
+            var inputsContractValidition = document.getElementsByClassName("ContractValiditionCheckInput");
+            var ContractValiditions = [];
+            for (var i = 0; i < checkBoxesContractValidition.length; i++) {
+                var checkbox = checkBoxesContractValidition[i];
+                var valueCheckBox = checkbox.checked;
+                var idCheckBox = checkbox.getAttribute("data-id");
+                for (var b = 0; b < inputsContractValidition.length; b++) {
+                    var input = inputsContractValidition[b];
+                    var valueInput = input.value;
+                    var idInput = input.getAttribute("data-id");
+                    if (idInput == idCheckBox) {
+                        ContractValiditions.push({ id: idCheckBox, valueCheckBox: valueCheckBox, Days: valueInput });
+                    }
+                }
+            }
+            console.log(ContractValiditions)
+
+            // CarsDocuments
+            var checkBoxesCarsDocuments = document.getElementsByClassName("CarsDocumentsCheckBox");
+            var inputsCarsDocuments = document.getElementsByClassName("CarsDocumentsCheckInput");
+            var CarsDocuments = [];
+            for (var i = 0; i < checkBoxesCarsDocuments.length; i++) {
+                var checkbox = checkBoxesCarsDocuments[i];
+                var valueCheckBox = checkbox.checked;
+                var idCheckBox = checkbox.getAttribute("data-id");
+                for (var b = 0; b < inputsCarsDocuments.length; b++) {
+                    var input = inputsCarsDocuments[b];
+                    var valueInput = input.value;
+                    var idInput = input.getAttribute("data-id");
+                    if (idInput == idCheckBox) {
+                        CarsDocuments.push({ id: idCheckBox, valueCheckBox: valueCheckBox, Days: valueInput });
+                    }
+                }
+            }
+            console.log(CarsDocuments)
+
+           
+            //RenterAndDriver
+            var checkBoxesCarsFixed = document.getElementsByClassName("CarsFixedCheckBox");
+            var inputsDaysCarsFixed = document.getElementsByClassName("CarsFixedCheckInput");
+            var inputsKmCarsFixed = document.getElementsByClassName("CarsFixedCheckInputKm");
+            var CarsFixed = [];
+            for (var i = 0; i < checkBoxesCarsFixed.length; i++) {
+                var checkbox = checkBoxesCarsFixed[i];
+                var valueCheckBox = checkbox.checked;
+                var idCheckBox = checkbox.getAttribute("data-id");
+
+                var inputDays = inputsDaysCarsFixed[i];
+                var valueInput = inputDays.value;
+                var idInput = inputDays.getAttribute("data-id");
+
+                var inputKm = inputsKmCarsFixed[i];
+                var valueInputKm = inputKm.value;
+                var idInputKm = inputKm.getAttribute("data-id");
+
+                if (idInputKm == idInput) {
+                    CarsFixed.push({ id: idInputKm, valueCheckBox: valueCheckBox, Days: valueInput, Km: valueInputKm });
+                }
+            }
+            console.log(CarsFixed)
+
+
+            // Additional
+            var checkBoxesAdditional = document.getElementsByClassName("AdditionalCheckBox");
+            var inputsContractAdditional = document.getElementsByClassName("AdditionalCheckInput");
+            var Additional = [];
+            for (var i = 0; i < checkBoxesAdditional.length; i++) {
+                var checkbox = checkBoxesAdditional[i];
+                var valueCheckBox = checkbox.checked;
+                var idCheckBox = checkbox.getAttribute("data-id");
+                var inputDays = inputsContractAdditional[i];
+                var valueInput = inputDays.value;
+                var idInput = inputDays.getAttribute("data-id");
+                Additional.push({ id: idCheckBox, valueCheckBox: valueCheckBox, Days: valueInput });
+
+            }
+
+            console.log(Additional)
+
+            $.ajax({
+                url: "@Url.Action("EditMechanism", "LessorMechanism", new { Area = "CAS" })",
+                type: 'POST',
+                dataType: 'JSON',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    ContractValiditions: ContractValiditions,
+                    CarsDocuments: CarsDocuments,
+                    CarsFixed: CarsFixed,
+                    Additional: Additional
+                }),
+                success: function (response) {
+                    window.location.href = '@Url.Action("SuccessToast", "LessorMechanism", new { Area = "CAS" })';
+                }
+            });
+
+
+
+        }
+    </script>
+     <script>
+        $('.ContractValiditionCheckInput').each(function () {
+            // Store the initial value as the old value for each input element
+            $(this).data('old-value', $(this).val());
+        });
+        $('.ContractValiditionCheckInput').on('input change', function () {
+            var newValue = $(this).val();
+            var oldValue = $(this).data('old-value');
+            console.log(oldValue);
+            console.log(newValue);
+
+            if (newValue !== oldValue) {
+                console.log('Value has changed!');
+            }
+            $(this).data('old-value', newValue);
+        });
+
+
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

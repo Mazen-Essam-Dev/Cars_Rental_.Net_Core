@@ -1,0 +1,243 @@
+﻿
+
+@using Bnan.Ui.ViewModels.MAS
+@using Bnan.Core.Extensions
+@model Bnan.Ui.ViewModels.MAS.RenterInformationVM
+
+@inject IViewLocalizer localizer
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+       ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+@{
+    ViewData["Page-title"] = localizer["Edit RenterInformations Data"];
+    ViewData["Page-Hint"] = localizer["Edit RenterInformations Hint"];
+}
+<div class="col my-2 d-flex align-items-center justify-content-center">
+    <input hidden asp-for="CrMasRenterInformationId" />
+    <input hidden asp-for="CrMasRenterInformationBirthDate" />
+    <div class="container NewUpdate-container">
+        <form action="" class="needs-validation" novalidate>
+            <div class="row mt-3 g-3">
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-9">
+                        <div class="row g-3 mt-1">
+                            <div class="col">
+                                <h3>@localizer["RenterInformation_one_Data"]</h3>
+                            </div>
+                            <div class="col-auto save-col">
+                                <button type="button" class="custom-img-btn"> <a href="/MAS/RenterInformation/Index"><img class="Chevron" src="~/MasSystem/images/Chevron_Left.svg" /></a></button>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-12 mt-5 mb-2">
+                                <h4 class="subtitle">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.CrMasRenterInformationEnName : Model.CrMasRenterInformationArName)</h4>
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <p class="m-0">@Model.CrMasRenterInformationId</p>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="row align-items-center justify-content-end">
+                                            <div class="col-auto">
+                                                <div class="signatureee">
+                                                    @{
+                                                        var image_Signature = ""; if (Model.CrMasRenterInformationSignature != null && Model.CrMasRenterInformationSignature != "") { image_Signature = Model.CrMasRenterInformationSignature?.ToString().Replace("~", ""); } else { image_Signature = "/MasSystem/images/signature.svg"; }
+                                                    }
+                                                    <img src="@image_Signature"
+                                                         id="previewSignature"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["BirthDate"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@Model.CrMasRenterInformationBirthDate?.ToString("dd/MM/yyyy")</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["RenterIDType"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.IDtypeEnName : Model.IDtypeArName)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["Date_end"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@Model.CrMasRenterInformationExpiryIdDate?.ToString("dd/MM/yyyy")</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["Gender"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.GenderEnName : Model.GenderArName)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["Nationality"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.NationalityEnName : Model.NationalityArName)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["Profession"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.ProffessionEnName : Model.ProffessionArName)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["RenterInformationWorkPlace"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.WorkPlaceEnName : Model.WorkPlaceArName)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["DrivingType"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.DrivingLicesnseEnName : Model.DrivingLicesnseArName)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["the_no"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@Model.CrMasRenterInformationDrivingLicenseNo</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["Date_end"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@Model.CrMasRenterInformationExpiryDrivingLicenseDate?.ToString("dd/MM/yyyy")</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["Bank_name"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.BankEnName : Model.BankArName) </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="DataTitle">@localizer["Account_bank_numper"]</p>
+                                            </div>
+                                            <div class="col-auto ">
+                                                <p class="Saved-data">@Model.CrMasRenterInformationIban</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <p class="DataTitle">@localizer["RenterInformationAddress"]</p>
+                                    </div>
+                                    <div class="col-auto ">
+                                        <p class="Saved-data">@(requestCulture?.RequestCulture.UICulture.Name == "en-US" ? Model.addressEnName : Model.addressArName)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <div class="innerCard">
+                                            <div class="Imagecard">
+                                                @{
+                                                    var image_ID = ""; if (Model.CrMasRenterInformationRenterIdImage != null && Model.CrMasRenterInformationRenterIdImage != "") { image_ID = Model.CrMasRenterInformationRenterIdImage?.ToString().Replace("~", ""); } else { image_ID = "/MasSystem/images/id-card_8518288 1.svg"; }
+                                                }
+                                                <img src="@image_ID" class="w-100"/>
+                                            </div>
+                                            <p class="text-center m-1">@localizer["RenterIDType"]</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="innerCard">
+                                            <div class="Imagecard">
+                                                @{
+                                                    var imagelicense = ""; if (Model.CrMasRenterInformationRenterLicenseImage != null && Model.CrMasRenterInformationRenterLicenseImage != "") { imagelicense = Model.CrMasRenterInformationRenterLicenseImage?.ToString().Replace("~", ""); } else { imagelicense = "/MasSystem/images/driving-license_7830866 1.svg"; }
+                                                }
+                                                <img src="@imagelicense" class="w-100"/>
+                                            </div>
+                                            <p class="text-center m-1">@localizer["DrivingType"]</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+
+}
+

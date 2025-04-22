@@ -1,0 +1,662 @@
+﻿﻿@using Bnan.Ui.ViewModels.MAS
+@model CrMasLessorInformationVM
+
+@inject IViewLocalizer localizer
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+<div class="col my-2 d-flex align-items-center justify-content-center">
+    <div class="container NewUpdate-container">
+        <form id="myForm" asp-area="MAS" asp-controller="LessorsKSA" asp-action="AddLessorKSA" class="needs-validation" novalidate>
+            <input asp-for="CrMasLessorInformationCode" value="@ViewBag.LessorCode" hidden />
+            <input name="WelcomeImg" id="WelcomeImg" hidden />
+            <div class="row mt-3 g-3">
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-9">
+                        <div class="row g-3 my-2">
+                            <div class="col">
+                                <h3>@localizer["AddLessor"]</h3>
+                            </div>
+                            <div class="col-md-auto save-col">
+                                <button id="submitBtn" class="custom-img-btn">
+                                    <img src="~/MasSystem/images/save.svg" />
+                                </button>
+                                <button type="button" class="custom-img-btn"> <a asp-area="MAS" asp-controller="LessorsKSA" asp-action="Index"><img class="Chevron" src="~/MasSystem/images/Chevron_Left.svg" /></a></button>
+                            </div>
+                        </div>
+                        <main class="mt-3 g-3">
+                            <div class="accordion inputs-accordion">
+                                <div class=" inputs-accordion-item">
+                                    <div class=" inputs-accordion-item-header">
+                                        <span class="accordion-item-header-title">
+                                            <i class="fa-solid fa-check data-check"></i> @localizer["Data"]
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                             viewBox="0 0 24 24" fill="none" stroke="#666666"
+                                             stroke-width="3" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="lucide lucide-chevron-down accordion-item-header-icon">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div class="accordion-item-description-wrapper">
+                                        <div class="accordion-item-description">
+                                            <hr class="accordion-items-hr">
+                                            <div class="container-fluid data-scroll-container">
+                                                <div class="row">
+                                                    <div class="col-md-7">
+                                                        <label for="company-name-ar"
+                                                               class="form-label">@localizer["LessorNameAr"] <i class="fa-solid fa-star-of-life RequirdStar"></i> </label>
+                                                        <input type="text" id="company-name-ar" asp-for="CrMasLessorInformationArLongName"
+                                                               class="form-control inputs arabic-input" maxlength="100" oninput="this.value=this.value.replace(/[^\u0600-\u06FF\ufb50-\ufdff\ufe70-\ufeff\s]/g, '')" required>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationArLongName" class="text-danger"></span>
+                                                                <span class="text-danger" id="CrMasLessorInformationArLongName-Error"></span>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label for="company-name-ar-abstract"
+                                                               class="form-label">@localizer["LessorNameArShort"] <i class="fa-solid fa-star-of-life RequirdStar"></i> </label>
+                                                        <input type="text" id="company-name-ar-abstract" asp-for="CrMasLessorInformationArShortName"
+                                                               class="form-control inputs  arabic-input" maxlength="30" oninput="this.value=this.value.replace(/[^\u0600-\u06FF\ufb50-\ufdff\ufe70-\ufeff\s]/g, '')" required>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationArShortName" class="text-danger"></span>
+                                                                <span class="text-danger" id="CrMasLessorInformationArShortName-Error"></span>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-7">
+                                                        <label for="company-name-en"
+                                                               class="form-label">@localizer["LessosorNameEn"]<i class="fa-solid fa-star-of-life RequirdStar"></i> </label>
+                                                        <input type="text" asp-for="CrMasLessorInformationEnLongName" id="company-name-en" class="form-control inputs english-input" maxlength="100" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" required>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationEnLongName" class="text-danger"></span>
+                                                                <span class="text-danger" id="CrMasLessorInformationEnLongName-Error"></span>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label for="company-name-en-abstract" class="form-label">@localizer["LessosorNameEnShort"] <i class="fa-solid fa-star-of-life RequirdStar"></i> </label>
+                                                        <input type="text" asp-for="CrMasLessorInformationEnShortName" id="company-name-en-abstract" class="form-control inputs english-input" maxlength="30" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" required>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationEnShortName" class="text-danger"></span>
+                                                                <span class="text-danger" id="CrMasLessorInformationEnShortName-Error"></span>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="manager-name-ar"
+                                                               class="form-label">@localizer["DirNameAr"]<i class="fa-solid fa-star-of-life RequirdStar"></i> </label>
+                                                        <input type="text" id="manager-name-ar" asp-for="CrMasLessorInformationDirectorArName" class="form-control inputs arabic-input"
+                                                               oninput="this.value=this.value.replace(/[^\u0600-\u06FF\ufb50-\ufdff\ufe70-\ufeff\s]/g, '')" maxlength="50" required>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationDirectorArName" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="manager-name-en" class="form-label">
+                                                            @localizer["DirNameEn"] <i class="fa-solid fa-star-of-life RequirdStar"></i>
+                                                        </label>
+                                                        <input type="text" id="manager-name-en" asp-for="CrMasLessorInformationDirectorEnName"
+                                                               class="form-control inputs english-input" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')"
+                                                               maxlength="50" required>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationDirectorEnName" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="Tax-number" class="form-label">
+                                                            @localizer["TaxNo"]
+                                                            <i class="fa-solid fa-star-of-life RequirdStar"></i>
+                                                        </label>
+                                                        <input type="text" id="Tax-number" asp-for="CrMasLessorInformationTaxNo"
+                                                               class="form-control inputs"
+                                                               data-val-regex="@localizer["requiredNoLengthFiled","15"]" maxlength="15" required>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationTaxNo" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="government-number" class="form-label">
+                                                            @localizer["governmentNo"]
+                                                            <i class="fa-solid fa-star-of-life RequirdStar"></i>
+                                                        </label>
+                                                        <input type="text" id="government-number" class="form-control inputs" asp-for="CrMasLessorInformationGovernmentNo" maxlength="10" required>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationGovernmentNo" data-error="@localizer["requiredNoStartWithFiled7"]" class="text-danger" id="gov-error" style="white-space: initial;"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 ">
+                                                        <label for="Category" class="form-label"> @localizer["Classification"] <i class="fa-solid fa-star-of-life RequirdStar"></i> </label>
+                                                        <select class="form-select select-style " asp-for="@Model.CrMasLessorInformationClassification"
+                                                                id="Category" required>
+                                                            @if (requestCulture?.RequestCulture.UICulture.Name == "ar-EG")
+                                                            {
+                                                                @foreach (var classification in (List<SelectListItem>)ViewData["ClassificationDropDownAr"])
+                                                                {
+
+                                                                    <option value="@classification.Value" selected="@(classification.Value.Trim() == "" ? "selected" : null)">@classification.Text</option>
+
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                @foreach (var classification in (List<SelectListItem>)ViewData["ClassificationDropDownEn"])
+                                                                {
+
+                                                                    <option value="@classification.Value" selected="@(classification.Value.Trim() == "" ? "selected" : null)">@classification.Text</option>
+
+                                                                }
+                                                            }
+                                                        </select>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationClassification" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="phone1" class="form-label">
+                                                            @localizer["TelePhone"]
+                                                        </label>
+                                                        <div class="input-group has-validation">
+                                                            <input type="tel" asp-for="CrMasLessorInformationCallFree" class="form-control inputs tel-input" id="phone1" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="15">
+                                                            <select class="input-group-text select-style counterCode" asp-for="CrMasLessorInformationCallFreeKey">
+                                                                @foreach (var callingKey in (List<SelectListItem>)ViewData["CallingKeys"])
+                                                                {
+                                                                    <option value="@callingKey.Text">@callingKey.Text</option>
+                                                                }
+                                                            </select>
+                                                            <div class="invaild">
+                                                                <div class="invalid-feedback">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="phone2" class="form-label">
+                                                            @localizer["LessorPhone"] <i class="fa-solid fa-star-of-life RequirdStar"></i>
+                                                        </label>
+                                                        <div class="input-group ">
+                                                            <input type="tel" class="form-control inputs tel-input" id="phone2" asp-for="CrMasLessorInformationCommunicationMobile" maxlength="15" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
+                                                            <select class="input-group-text select-style counterCode" asp-for="CrMasLessorInformationCommunicationMobileKey">
+                                                                @foreach (var callingKey in (List<SelectListItem>)ViewData["CallingKeys"])
+                                                                {
+                                                                    <option value="@callingKey.Text">@callingKey.Text</option>
+                                                                }
+                                                            </select>
+                                                            <div class="invaild">
+                                                                <div class="invalid-feedback">
+                                                                    <span asp-validation-for="@Model.CrMasLessorInformationCommunicationMobile" class="text-danger" id="CommunicationMobileError"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="email"
+                                                               class="form-label">@localizer["LessorEmail"] </label>
+                                                        <input type="email" id="email"
+                                                               class="form-control inputs english-input"
+                                                               asp-for="CrMasLessorInformationEmail" maxlength="100">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationEmail" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="contact-mail"
+                                                               class="form-label">@localizer["LessorContractEmail"]</label>
+                                                        <input type="email" id="contact-mail"
+                                                               class="form-control inputs english-input"
+                                                               asp-for="CrMasLessorInformationContEmail" maxlength="100">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="@Model.CrMasLessorInformationContEmail" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row align-items-center g-3 ">
+                                                    <div class="col-md-8">
+                                                        <label>@localizer["reasons"]</label>
+                                                        <textarea class=" form-control textarea-inputs" rows="1" maxlength="100" asp-for="CrMasLessorInformationReasons" type="text"></textarea>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="row align-items-center justify-content-end">
+                                                            <div class="col-auto">
+                                                                <button type="button" class="custom-img-btn"><img src="~/MasSystem/images/icon.svg" data-bs-toggle="modal" href="#signature-modal" /></button>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <img src="~/MasSystem/images/signature.svg" id="previewSignature">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="inputs-accordion-item">
+                                    <div class="inputs-accordion-item-header">
+                                        <span class="accordion-item-header-title">
+                                            <i class="fa-solid fa-check data-check"></i> @localizer["LessorAddress"]
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                             viewBox="0 0 24 24" fill="none" stroke="#666666"
+                                             stroke-width="3" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="lucide lucide-chevron-down accordion-item-header-icon">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div class="accordion-item-description-wrapper">
+                                        <div class="accordion-item-description">
+                                            <hr class="accordion-items-hr">
+                                            <div class="container-fluid data-scroll-container">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="City-Area"
+                                                               class="form-label">
+                                                            @localizer["PostCityConcateAr"]
+                                                            <i class="fa-solid fa-star-of-life RequirdStar"></i>
+                                                        </label>
+                                                        <input type="text" id="CityField" name="BranchPostVM.CrCasBranchPostCity"
+                                                               class="form-control inputs" maxlength="50" required>
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="BranchPostVM.CrCasBranchPostCity" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="street-name-ar"
+                                                               class="form-label">@localizer["StreetNameAr"]</label>
+                                                        <input type="text" id="street-name-ar" asp-for="BranchPostVM.CrCasBranchPostArStreet"
+                                                               class="form-control inputs arabic-input" oninput="this.value=this.value.replace(/[^\u0600-\u06FF\ufb50-\ufdff\ufe70-\ufeff\s]/g, '')" maxlength="50">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="BranchPostVM.CrCasBranchPostArStreet" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="street-name-en"
+                                                               class="form-label">
+                                                            @localizer["StreetNameEn"]
+                                                        </label>
+                                                        <input type="text" id="street-name-en"
+                                                               class="form-control inputs english-input"
+                                                               asp-for="BranchPostVM.CrCasBranchPostEnStreet" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" maxlength="50">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="BranchPostVM.CrCasBranchPostEnDistrict" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="District-name-ar" class="form-label">@localizer["DistrictNameAr"]</label>
+                                                        <input type="text" id="District-name-ar"
+                                                               class="form-control inputs arabic-input"
+                                                               asp-for="BranchPostVM.CrCasBranchPostArDistrict" oninput="this.value=this.value.replace(/[^\u0600-\u06FF\ufb50-\ufdff\ufe70-\ufeff\s]/g, '')" maxlength="50">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="BranchPostVM.CrCasBranchPostArDistrict" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="District-name-en" class="form-label"> @localizer["DistrictNameEn"]</label>
+                                                        <input type="text" id="District-name-en"
+                                                               class="form-control inputs english-input"
+                                                               asp-for="BranchPostVM.CrCasBranchPostEnDistrict" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" maxlength="50">
+                                                        <div class="invaild">
+                                                            <div class="invalid-feedback">
+                                                                <span asp-validation-for="BranchPostVM.CrCasBranchPostEnDistrict" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 ">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label for="Building-number"
+                                                                       class="form-label">
+                                                                    @localizer["BulidingNumber"]
+                                                                </label>
+                                                                <input type="text" id="Building-number" class="form-control inputs text-center"
+                                                                       asp-for="BranchPostVM.CrCasBranchPostBuilding" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="10">
+                                                                <div class="invaild">
+                                                                    <div class="invalid-feedback">
+                                                                        <span asp-validation-for="BranchPostVM.CrCasBranchPostBuilding" class="text-danger"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="Unit-number"
+                                                                       class="form-label">
+                                                                    @localizer["UnitNumber"]
+                                                                </label>
+                                                                <input type="text" id="Unit-number"
+                                                                       class="form-control inputs text-center"
+                                                                       asp-for="BranchPostVM.CrCasBranchPostUnitNo" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="20">
+                                                                <div class="invaild">
+                                                                    <div class="invalid-feedback">
+                                                                        <span asp-validation-for="BranchPostVM.CrCasBranchPostUnitNo" class="text-danger"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 ">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label for="zip-code"
+                                                                       class="form-label">
+                                                                    @localizer["symbolMailAr"]
+                                                                </label>
+                                                                <input type="text" id="zip-code" class="form-control inputs text-center" asp-for="BranchPostVM.CrCasBranchPostZipCode" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="10">
+                                                                <div class="invaild">
+                                                                    <div class="invalid-feedback">
+                                                                        <span asp-validation-for="BranchPostVM.CrCasBranchPostZipCode" class="text-danger"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="Additional-number"
+                                                                       class="form-label">
+                                                                    @localizer["AdditionalNumber"]
+                                                                </label>
+                                                                <input type="text"
+                                                                       id="Additional-number"
+                                                                       class="form-control inputs text-center"
+                                                                       asp-for="BranchPostVM.CrCasBranchPostAdditionalNumbers" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="10">
+                                                                <div class="invaild">
+                                                                    <div class="invalid-feedback">
+                                                                        <span asp-validation-for="BranchPostVM.CrCasBranchPostAdditionalNumbers" class="text-danger"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <canvas hidden id="myCanvas"></canvas>
+</div>
+@section Scripts {
+    @* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const loadImageOnCanvasAndThenWriteText = (canvas, imageUrl, textStyleOptions, lessorAr, lessorEn) => {
+            let ctx = canvas.getContext("2d");
+            let img = new Image();
+
+            img.onload = () => {
+                let loadedImageWidth = img.width;
+                let loadedImageHeight = img.height;
+
+                // ضبط أبعاد الـ canvas بناءً على الصورة
+                canvas.width = loadedImageWidth;
+                canvas.height = loadedImageHeight;
+                console.log("Image Width:", loadedImageWidth); // عرض الصورة
+                console.log("Image Height:", loadedImageHeight); // ارتفاع الصورة
+                ctx.drawImage(img, 0, 0);
+
+                let canvas_width = loadedImageWidth;
+
+                let texts = [
+                    { content: lessorAr, x: canvas_width - 270, y: 1151, align: "right" },
+                    { content: lessorEn, x: canvas_width - 1150, y: 1557, align: "left" },
+                ];
+                console.log("x:ar right canvas_width - 270", canvas_width - 270); // عرض الصورة
+                console.log("x:en left canvas_width - 1150:", canvas_width - 1150); // ارتفاع الصورة
+                let qrImg = new Image();
+                qrImg.src = "/MasSystem/images/WelcomeImg/QR.png";
+
+                qrImg.onload = () => {
+                    let Images = [
+                        { content: qrImg, x: canvas_width - 945, y: 635, width: 395, height: 400 },
+                    ];
+
+                    // رسم النصوص
+                    texts.forEach(text => {
+                        ctx.textAlign = "start";
+                        ctx.direction = "ltr";
+                        ctx.font = `${textStyleOptions.fontWeight} ${textStyleOptions.fontSize}px ${textStyleOptions.fontFamily}`;
+                        ctx.fillStyle = textStyleOptions.textColor;
+
+                        let textWidth = ctx.measureText(text.content).width;
+                        let x = text.x;
+
+                        const align = text.align || textStyleOptions.textAlign;
+
+                        if (align == "right") {
+                            x -= textWidth;
+                        } else if (align == "center") {
+                            x -= textWidth / 2;
+                        }
+
+                        ctx.fillText(text.content, x, text.y);
+                        console.log("X:", x);
+                    });
+
+                    // رسم الصور
+                    Images.forEach(img => {
+                        let imgWidth = ctx.measureText(img.content).width;
+
+                        let x = img.x;
+
+                        if (textStyleOptions.textAlign === "right") {
+                            x -= imgWidth;
+                        } else if (textStyleOptions.textAlign === "center") {
+                            x -= imgWidth / 2;
+                        }
+
+                        ctx.drawImage(img.content, x, img.y, img.width, img.height);
+                        console.log(img);
+                    });
+
+                    // إنشاء رابط Base64 للصورة
+                    let base64Link = canvas.toDataURL("image/png");
+                    console.log(base64Link);
+
+                    // تحديث حقل الإدخال المخفي بالقيمة
+                    let welcomeImgInput = document.getElementById("WelcomeImg");
+                    welcomeImgInput.value = base64Link; // تحديث قيمة الإدخال
+                    console.log("welcomeImgInput", base64Link);
+
+                    // إرسال النموذج بعد الانتهاء
+                    let form = document.getElementById("myForm");
+                    form.submit(); // تنفيذ الإرسال
+                };
+
+                qrImg.onerror = () => {
+                    console.error("Failed to load the QR image. Please check the image path.");
+                };
+            };
+
+            img.onerror = () => {
+                console.error("Failed to load the main image. Please check the image path.");
+            };
+
+            img.src = imageUrl;
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("submitBtn").addEventListener("click", (event) => {
+                event.preventDefault(); // منع الإرسال الافتراضي للفورم حتى انتهاء العملية
+                // تحقق من صحة النموذج أولاً
+                if ($("#myForm").valid()) {
+
+
+                    let theCanvas = document.getElementById("myCanvas");
+                    let imageUrl = "/MasSystem/images/WelcomeImg/Welcome Messege.png";
+                    let textStyleOptions = {
+                        fontWeight: "bold",
+                        fontSize: 50,
+                        fontFamily: "Sakkal Majalla Bold",
+                        textColor: "#4c3715",
+                    };
+                    // قراءة النصوص من الإدخالات
+                    let lessorAr = document.getElementById("company-name-ar").value;
+                    let lessorEn = document.getElementById("company-name-en").value;
+                    // تحميل الخطوط وضبط العملية
+                    document.fonts.load(`bold 50px "${textStyleOptions.fontFamily}"`).then(() => {
+                        loadImageOnCanvasAndThenWriteText(theCanvas, imageUrl, textStyleOptions, lessorAr, lessorEn);
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        function validateInput(event, inId, InEr, No) {
+            event.target.value = event.target.value.replace(/[^0-9]/g, '');
+
+            const inputElement = document.getElementById(inId);
+            const errorMessageElement = document.getElementById(InEr);
+
+            const inputValue = inputElement.value;
+            const isValid = inputValue.startsWith(No);
+
+            if (!isValid) {
+                errorMessageElement.textContent = errorMessageElement.getAttribute('data-error');
+                inputElement.value = "";
+            } else {
+                errorMessageElement.textContent = '';
+            }
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetCities", "LessorsKSA", new { Area = "MAS" })",
+                success: function (response) {
+                    console.log(response)
+                    const newArray = response.map(obj => obj.text);
+                    $("#CityField").autocomplete({
+                        source: newArray
+                    });
+                },
+            })
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            // // This To Focus On input when page load
+            // if ('@requestCulture?.RequestCulture.UICulture.Name' == "en-US") {
+            //     $("#CrMasSupAccountBankEnName").focus();
+            // }
+            // else {
+            //     $("#CrMasSupAccountBankArName").focus();
+            // }
+            // //////////////////////////////////////////
+
+
+            function Check_onChange_input(existName, dataField) {
+                $.ajax({
+                    type: "GET",
+                    url: "/MAS/LessorsKSA/CheckChangedField",
+                    data: { existName: existName, dataField: dataField },
+                    success: function (result) {
+                        console.log("feedback", result);
+                        // Hide all previous error messages
+                        $('.invalid-feedback').show();
+
+                        // Show new error messages if they exist
+                        if (result.errors && result.errors.length > 0) {
+                            result.errors.forEach(function (error) {
+                                // Use the ID from the error object to find the correct element
+                                $(`#${error.field}-Error`).text(error.message).show();
+                            });
+                        } else {
+                            // Hide the error message if no errors
+                            $(`#${existName}-Error`).text("");
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+
+
+            // جلب جميع العناصر التي تحتوي على خاصية name معينة
+            $('[name="CrMasLessorInformationArLongName"], [name="CrMasLessorInformationEnLongName"], [name="CrMasLessorInformationArShortName"], [name="CrMasLessorInformationEnShortName"]')
+                .on('change', function () {
+                    var fieldName = $(this).attr('name'); // الحصول على قيمة الخاصية name
+                    var newValue = $(this).val(); // الحصول على القيمة الجديدة
+                    Check_onChange_input(fieldName, newValue); // استدعاء الدالة
+                });
+
+        });
+    </script>
+
+}

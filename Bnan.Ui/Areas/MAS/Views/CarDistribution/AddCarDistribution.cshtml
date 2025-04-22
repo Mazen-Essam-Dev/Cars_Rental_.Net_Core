@@ -1,0 +1,266 @@
+﻿@using Bnan.Ui.ViewModels.MAS
+@model CrMasSupCarDistributionVM
+
+@inject IViewLocalizer localizer
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    ViewData["returnUrl"] = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+
+<div class="col my-2 d-flex align-items-center justify-content-center">
+    <div class="container NewUpdate-container">
+        <form asp-area="MAS" asp-action="AddCarDistribution" asp-controller="CarDistribution" class="needs-validation" novalidate enctype="multipart/form-data">
+            <div class="row  mt-3 g-3">
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-9">
+                        <div class="row g-3 my-2">
+                            <div class="col">
+                                <h3> @localizer["AddDistribution"] </h3>
+                            </div>
+                            <div class="col-md-auto save-col">
+                                <button type="submit" class="custom-img-btn">
+                                    <img src="~/MasSystem/images/save.svg" />
+                                </button>
+                                <button type="button" class="custom-img-btn"> <a href="/MAS/CarDistribution/CarDistribution"><img class="Chevron" src="~/MasSystem/images/Chevron_Left.svg" /></a></button>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row  mt-3 g-3 ">
+                                <div class="col-md-12">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-6">
+                                            <label for="Number" class="form-label">
+                                                @localizer["DistributionNo"]
+                                                <i class="fa-solid fa-star-of-life RequirdStar"></i>
+                                            </label>
+                                            <input type="text" id="CrMasSupCarDistributionCode" class="form-control inputs number-input" asp-for="CrMasSupCarDistributionCode" readonly>
+                                            <div class="invaild">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 ">
+                                            <label for="CrMasSupCarDistributionModel" class="form-label">@localizer["DistributionBrandCategory"] <i class="fa-solid fa-star-of-life RequirdStar"></i> </label>
+                                            <select class="form-select select-style " asp-for="CrMasSupCarDistributionModel" id="CrMasSupCarDistributionModel"
+                                                    onchange="CheckIfDistributionIsExist(this.value, document.getElementById('CrMasSupCarDistributionYear').value,document.getElementById('CrMasSupCarDistributionCategory').value)" required>
+                                                @if (requestCulture?.RequestCulture.UICulture.Name == "ar-EG")
+                                                {
+                                                    @foreach (var modell in (List<SelectListItem>)ViewData["ModelAr"])
+                                                    {
+                                                        <option value="@modell.Value" selected="@(modell.Value.Trim() == "" ? "selected" : null)">@modell.Text</option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var modell in (List<SelectListItem>)ViewData["ModelEn"])
+                                                    {
+                                                        <option value="@modell.Value" selected="@(modell.Value.Trim() == "" ? "selected" : null)">@modell.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                            <div class="invaild">
+                                                <div class="invalid-feedback">
+                                                    <span asp-validation-for="@Model.CrMasSupCarDistributionModel" class="text-danger"></span>
+                                                    @Html.ValidationMessage("IsExist", null, new { @class = "text-danger IsExist" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6 ">
+                                            <label for="CrMasSupCarDistributionYear" class="form-label">@localizer["DistributionYear"] <i class="fa-solid fa-star-of-life RequirdStar"></i> </label>
+                                            <select class="form-select select-style " asp-for="@Model.CrMasSupCarDistributionYear" id="CrMasSupCarDistributionYear"
+                                                    onchange="CheckIfDistributionIsExist(document.getElementById('CrMasSupCarDistributionModel').value, this.value,document.getElementById('CrMasSupCarDistributionCategory').value)" required>
+                                                <option value=""></option>
+                                                @for (int year = 2000; year <= DateTime.Now.Year + 1; year++)
+                                                {
+                                                    <option value="@year">@year</option>
+                                                }
+                                            </select>
+                                            <div class="invaild">
+                                                <div class="invalid-feedback">
+                                                    <span asp-validation-for="@Model.CrMasSupCarDistributionYear" class="text-danger"></span>
+                                                    @Html.ValidationMessage("IsExist", null, new { @class = "text-danger IsExist" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 ">
+                                            <label for="CrMasSupCarDistributionCategory" class="form-label"> @localizer["DistributionCategory"] <i class="fa-solid fa-star-of-life RequirdStar"></i> </label>
+                                            <select class="form-select select-style " asp-for="CrMasSupCarDistributionCategory" id="CrMasSupCarDistributionCategory"
+                                                    onchange="CheckIfDistributionIsExist( document.getElementById('CrMasSupCarDistributionModel').value , document.getElementById('CrMasSupCarDistributionYear').value, this.value)" required>
+                                                @if (requestCulture?.RequestCulture.UICulture.Name == "ar-EG")
+                                                {
+                                                    @foreach (var category in (List<SelectListItem>)ViewData["categoryAr"])
+                                                    {
+                                                        <option value="@category.Value" selected="@(category.Value.Trim() == "" ? "selected" : null)">@category.Text</option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var category in (List<SelectListItem>)ViewData["categoryEn"])
+                                                    {
+                                                        <option value="@category.Value" selected="@(category.Value.Trim() == "" ? "selected" : null)">@category.Text</option>
+                                                    }
+                                                }
+                                                
+                                            </select>
+                                            <div class="invaild">
+                                                <div class="invalid-feedback">
+                                                    <span asp-validation-for="@Model.CrMasSupCarDistributionCategory" class="text-danger"></span>
+                                                    @Html.ValidationMessage("IsExist", null, new { @class = "text-danger IsExist"})
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6 ">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="CrMasSupCarDistributionDoor" class="form-label"> @localizer["Doors"]</label>
+                                                    <input type="number" id="CrMasSupCarDistributionDoor" class="form-control inputs number-input " asp-for="CrMasSupCarDistributionDoor" maxlength="2">
+                                                    <div class="invaild">
+                                                        <div class="invalid-feedback">
+                                                            <span asp-validation-for="@Model.CrMasSupCarDistributionDoor" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="CrMasSupCarDistributionPassengers" class="form-label"> @localizer["Passengers"]</label>
+                                                    <input type="number" id="CrMasSupCarDistributionPassengers" class="form-control inputs number-input " asp-for="CrMasSupCarDistributionPassengers" maxlength="2">
+                                                    <div class="invaild">
+                                                        <div class="invalid-feedback">
+                                                            <span asp-validation-for="@Model.CrMasSupCarDistributionPassengers" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 ">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="CrMasSupCarDistributionBagBags"
+                                                           class="form-label">
+                                                        @localizer["BigBags"]
+                                                    </label>
+                                                    <input type="number" id="CrMasSupCarDistributionBagBags"
+                                                           class="form-control inputs number-input "
+                                                           asp-for="CrMasSupCarDistributionBagBags" maxlength="2">
+                                                    <div class="invaild">
+                                                        <div class="invalid-feedback">
+                                                            <span asp-validation-for="@Model.CrMasSupCarDistributionBagBags" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="CrMasSupCarDistributionSmallBags"
+                                                           class="form-label">
+                                                        @localizer["SmallBags"]
+                                                    </label>
+                                                    <input type="number"
+                                                           id="CrMasSupCarDistributionSmallBags"
+                                                           class="form-control inputs number-input "
+                                                           asp-for="CrMasSupCarDistributionSmallBags" maxlength="2">
+                                                    <div class="invaild">
+                                                        <div class="invalid-feedback">
+                                                            <span asp-validation-for="@Model.CrMasSupCarDistributionSmallBags" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row ">
+                                        <div class="col-lg-12">
+                                            <label>@localizer["reasons"]</label>
+                                            <textarea class=" form-control textarea-inputs" rows="1" maxlength="100" asp-for="CrMasSupCarDistributionReasons" type="text"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="dropzone-Card">
+                                        <div class="drop-zone">
+                                            <div class="layer" style="display: none;">
+                                                <i class="fa-regular fa-circle-xmark removeImage"></i>
+                                            </div>
+                                            <span class="drop-zone__prompt">
+                                                <img src="~/MasSystem/images/upload icon.svg" class="mb-3"> <br>@localizer["DropAndDragImage"]
+                                            </span>
+                                            <input type="file" name="CarDistributionFile" class="drop-zone__input">
+                                        </div>
+                                        <div class="fileNameDiv">
+                                            <p class="text-center pt-1 mb-1 fileNameP"> @localizer["Car"] </p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/toastr.js"></script>
+    <script src="~/MasSystem/js/DragDropImage.js"></script>
+    <script>
+
+        function GetDistributionNo(year) {
+            $.ajax({
+                type: "GET",
+                url: "/MAS/CarDistribution/GetDistributionCode",
+                data: { year: year},
+                success: function (result) {
+                    console.log("Code", result);
+                    $("#CrMasSupCarDistributionCode").val(result);
+                },
+                error: function (error) {
+                    toastr.options = { "positionClass": "@localizer["toastPostion"]" };
+                    toastr.error("@localizer["ToastFailed"]");
+                }
+            });
+        }
+
+        function CheckIfDistributionIsExist(model, year,category) {
+            GetDistributionNo(year);
+
+            $.ajax({
+                type: "GET",
+                url: "/MAS/CarDistribution/CheckIfDistributionIsExist",
+                data: { model: model, year: year, category: category },
+                success: function (result) {
+                    if (result) {
+                        // Distribution exists, show the message in "IsExist" field and potentially fetch the code
+                        $(".IsExist").text("@localizer["IsExistModel"]"); // Replace placeholder with your actual message
+                        $(".IsExist").show();  // Show the message field
+
+                        // Optionally call GetDistributionNo to fetch the code if needed
+                    } else {
+                        // Distribution does not exist, remove the message
+                        $(".IsExist").text("");
+                        $(".IsExist").hide(); // Hide the message field
+                    }
+                },
+                error: function (error) {
+                    toastr.options = { "positionClass": "@localizer["toastPostion"]" };
+                    toastr.error("@localizer["ToastFailed"]");
+                }
+            });
+        }
+    </script>
+
+}
